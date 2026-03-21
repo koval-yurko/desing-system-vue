@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "mcp__context7__*",
+      "Bash(uv *)",
+      "Bash(specify *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+      "Bash(pnpm *)",
+      "Bash(yarn *)",
+      "Bash(git *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(find *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(rm *)",
+      "Bash(echo *)",
+      "Bash(which *)",
+      "Bash(cd *)",
+      "Bash(curl *)",
+      "Bash(vue *)",
+      "Bash(vite *)",
+      "Bash(tsc *)"
+    ]
+  }
+}
