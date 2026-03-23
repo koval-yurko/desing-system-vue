@@ -2,7 +2,7 @@
 stepsCompleted: [1, 2, 3, 4, 5]
 inputDocuments:
   - Readme.md
-  - "Figma: Design-Systems (3qP5xnwc6gXhZR3AnFAMFe) - Unframe AI Design System"
+  - "Figma: Design-Systems (3qP5xnwc6gXhZR3AnFAMFe) - Vue Design System"
 date: 2026-03-23
 author: Yurii
 ---
