@@ -80,7 +80,7 @@ NFR15: Documentation must stay current — no component changes without correspo
 - Single barrel export via `src/index.ts`
 - Single preset file `src/theme/ds-preset.ts` using `definePreset()` with Aura as the base preset
 - Co-located file structure: each component in `src/components/DsComponentName/` with `.vue`, `.stories.ts`, `.test.ts`, `index.ts`
-- AI knowledge base in `docs/ai-kb/` (note: architecture uses `ai-kb`, not `ai-guidelines`)
+- AI knowledge base in `docs/ai-guidelines/`
 - CI/CD: three GitHub Actions workflows — `test.yml` (PR: Biome + Vitest), `publish.yml` (tag: npm publish as `@failwin/desing-system-vue`), `storybook.yml` (main: GitHub Pages deploy)
 - Component wrapper pattern: `inheritAttrs: false` + `v-bind="$attrs"` for PrimeVue wrappers
 - Props validated via TypeScript types (build-time), not runtime validators
@@ -660,12 +660,12 @@ So that I can generate correct import statements and component usage matching Fi
 
 **Acceptance Criteria:**
 
-**Given** each MVP component has a dedicated markdown file in `docs/ai-kb/`
+**Given** each MVP component has a dedicated markdown file in `docs/ai-guidelines/`
 **When** an AI agent reads `ds-button.md`
 **Then** it finds: component name (DsButton), when to use, available props with valid values, all variants and sizes, usage examples with correct imports, and Figma reference (FR25)
 
 **Given** per-component entries exist for all 5 MVP components
-**When** files are listed in `docs/ai-kb/`
+**When** files are listed in `docs/ai-guidelines/`
 **Then** `ds-button.md`, `ds-icon-button.md`, `ds-icon.md`, `ds-input-text.md`, `ds-link.md` all exist
 
 **Given** each entry follows the same consistent template structure
@@ -729,7 +729,7 @@ So that I can extend the library predictably whether adding a PrimeVue wrapper o
 **And** 4. Verify light + dark theme rendering
 **And** 5. Write Storybook stories for all variants/states
 **And** 6. Write Vitest tests
-**And** 7. Add AI KB entry in `docs/ai-kb/`
+**And** 7. Add AI KB entry in `docs/ai-guidelines/`
 **And** 8. Export from barrel `src/index.ts`
 
 **Given** the guide covers custom Tailwind components
