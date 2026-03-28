@@ -1,0 +1,51 @@
+{
+  "name": "@failwin/desing-system-vue",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit -p tsconfig.build.json && vite build",
+    "test": "vitest run --passWithNoTests",
+    "lint": "biome check ./src",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "@primeuix/themes": "^2.0.0",
+    "primevue": "^4.0.0",
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.9",
+    "@primeuix/themes": "^2.0.3",
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/node": "^24.12.0",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.9.0",
+    "jsdom": "^29.0.1",
+    "primevue": "^4.5.4",
+    "tailwindcss": "^4.2.2",
+    "typescript": "~5.9.3",
+    "vite": "^8.0.1",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^4.1.2",
+    "vue": "^3.5.30",
+    "vue-tsc": "^3.2.5"
+  }
+}
