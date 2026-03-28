@@ -45,8 +45,8 @@ development_status:
   # Epic 1: Project Foundation, Design Tokens & Approach Validation (DsButton)
   epic-1: in-progress
   1-1-project-scaffold-build-configuration: done
-  1-2-design-token-preset-with-light-dark-themes: backlog
-  1-3-dsbutton-component-approach-validation: backlog
+  1-2-design-token-preset-with-light-dark-themes: done
+  1-3-dsbutton-component-approach-validation: ready-for-dev
   1-4-package-distribution-consumption-validation: backlog
   epic-1-retrospective: optional
 
