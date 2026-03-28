@@ -7,6 +7,7 @@ dist-ssr/
 *.log
 .DS_Store
 coverage/
+tmp/
 .vite/
 *.local
 

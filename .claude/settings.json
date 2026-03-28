@@ -4,27 +4,9 @@
       "WebSearch",
       "mcp__context7__*",
       "mcp__figma__*",
-      "Bash(bash *)",
-      "Bash(cat *)",
-      "Bash(cd *)",
-      "Bash(cp *)",
-      "Bash(curl *)",
-      "Bash(echo *)",
-      "Bash(find *)",
-      "Bash(git *)",
-      "Bash(ls *)",
-      "Bash(mkdir *)",
-      "Bash(mv *)",
-      "Bash(node *)",
-      "Bash(npm *)",
-      "Bash(npx *)",
-      "Bash(pnpm *)",
-      "Bash(python3 -c \":*)",
-      "Bash(rm *)",
-      "Bash(tsc *)",
-      "Bash(uv *)",
-      "Bash(vite *)",
-      "Bash(which *)"
+      "Edit(tmp/**)",
+      "Write(tmp/**)",
+      "Read(tmp/**)"
     ]
   }
 }
