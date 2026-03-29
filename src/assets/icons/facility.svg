@@ -1,0 +1,16 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Floor line -->
+<path d="M4.75 19.75H19.75" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
+<!-- Building body -->
+<path d="M5.75 20.375V7.875C5.75 7.32272 6.19772 6.875 6.75 6.875H7.73548C8.05838 6.875 8.3614 6.71909 8.54912 6.45637L8.75472 6.16863C8.94244 5.90591 9.24547 5.75 9.56836 5.75H15.2355C15.5584 5.75 15.8614 5.90591 16.0491 6.16863L16.2547 6.45637C16.4424 6.71909 16.7455 6.875 17.0684 6.875H17.75C18.3023 6.875 18.75 7.32272 18.75 7.875V20.375" stroke="#314158" stroke-width="1.5"/>
+<!-- Window top-left -->
+<path d="M9.25 9.375H11.25" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
+<!-- Window top-right -->
+<path d="M13.25 9.375H15.25" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
+<!-- Window bottom-left -->
+<path d="M9.25 12.375H11.25" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
+<!-- Window bottom-right -->
+<path d="M13.25 12.375H15.25" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
+<!-- Door -->
+<path d="M15.25 19.75V16.25C15.25 15.9738 15.0261 15.75 14.75 15.75H11.75C11.4738 15.75 11.25 15.9738 11.25 16.25V19.75" stroke="#314158" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>

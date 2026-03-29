@@ -1,0 +1,16 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Document body -->
+<path d="M4.75 7.67V5.75C4.75 5.0779 4.75 4.7419 4.8808 4.4852C4.9958 4.2594 5.1794 4.0758 5.4052 3.9608C5.6619 3.83 5.9979 3.83 6.67 3.83H16.83C17.5021 3.83 17.8381 3.83 18.0948 3.9608C18.3206 4.0758 18.5042 4.2594 18.6192 4.4852C18.75 4.7419 18.75 5.0779 18.75 5.75V17.83C18.75 18.5021 18.75 18.8381 18.6192 19.0948C18.5042 19.3206 18.3206 19.5042 18.0948 19.6192C17.8381 19.75 17.5021 19.75 16.83 19.75H6.67C5.9979 19.75 5.6619 19.75 5.4052 19.6192C5.1794 19.5042 4.9958 19.3206 4.8808 19.0948C4.75 18.8381 4.75 18.5021 4.75 17.83V17.75" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- Line bottom -->
+<path d="M14.75 16.75H8.75" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- Line middle -->
+<path d="M14.75 12.75H11.75" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- Line top -->
+<path d="M14.75 8.75H8.75" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- Arrow shaft -->
+<path d="M3 12H6.707" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
+<!-- Arrow head top -->
+<path d="M3 12L5.5 9.5" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
+<!-- Arrow head bottom -->
+<path d="M3 12L5.5 14.5" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

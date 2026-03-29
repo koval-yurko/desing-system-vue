@@ -1,0 +1,8 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Document -->
+<path d="M18.75 17.75V7.75C18.75 6.64543 17.8546 5.75 16.75 5.75H11.2104C10.8659 5.75 10.5386 5.90029 10.3141 6.16154L8.03551 8.8129C7.85129 9.02725 7.75 9.30053 7.75 9.58317V17.75C7.75 18.8546 8.64543 19.75 9.75 19.75H16.75C17.8546 19.75 18.75 18.8546 18.75 17.75Z" stroke="#314158" stroke-width="1.5"/>
+<!-- Arrow down chevron -->
+<path d="M15.31 13.75L13.25 15.81L11.19 13.75" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- Arrow down line -->
+<path d="M13.25 11.75L13.25 15.5" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

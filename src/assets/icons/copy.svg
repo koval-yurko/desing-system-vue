@@ -1,0 +1,6 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Back rectangle -->
+<path d="M7.48077 16.7115C6.52489 16.7115 5.75 15.9366 5.75 14.9808V8.05769C5.75 6.78319 6.78319 5.75 8.05769 5.75H14.4039C15.3597 5.75 16.1346 6.52489 16.1346 7.48077" stroke="#314158" stroke-width="1.5"/>
+<!-- Front rectangle -->
+<rect x="9.55" y="9.55" width="9.15" height="9.82" rx="1.731" stroke="#314158" stroke-width="1.5"/>
+</svg>
