@@ -109,7 +109,7 @@ UX-DR11: Form validation must trigger on blur (not keystroke), show error below 
 UX-DR12: All interactive components must follow universal state behavior — Default, Hover, Focus, Active/Pressed, Disabled, Loading — with state priority: Disabled > Loading > Active > Focus > Hover > Default
 UX-DR13: All state transitions must use 150ms ease timing (no transitions on disabled state changes)
 UX-DR14: DsLink must implement three types — Regular (underlined blue), Smart (blue text with blue background on hover), Quiet (blue text, underline on hover) — with High and Low visibility levels
-UX-DR15: Component sizing must follow uniform size token table — XS (24px/12px icon/12px font/8px padding), S (32px/16px/14px/12px), M (36px/20px/16px/16px), L (40px/20px/16px/20px)
+UX-DR15: Component sizing must follow uniform size token table — xsmall (24px/12px icon/12px font/8px padding), small (32px/16px/14px/12px), medium (36px/20px/16px/16px), large (40px/24px/16px/20px)
 UX-DR16: DsIcon must inherit text color by default, explicit color only for semantic meaning; icon size always matches component size tier
 UX-DR17: DsIconButton must contain DsIcon as a child (slot), not via props — allows flexible icon composition
 UX-DR18: Components must be fluid (fill container width) with touch targets meeting 44x44px minimum on all sizes; text uses rem-based sizing
@@ -127,7 +127,7 @@ FR4: Epic 1 — Spacing tokens in PrimeVue preset
 FR5: Epic 1 — Light theme preset
 FR6: Epic 1 — Dark theme preset
 FR7: Epic 1 — Theme switching API
-FR8: Epic 2 — DsIcon component
+FR8: Epic 1 — DsIcon component (Story 1.2.1, moved from Epic 2 as foundation dependency)
 FR9: Epic 1 — DsButton component (approach validation)
 FR10: Epic 2 — DsIconButton component
 FR11: Epic 2 — DsInputText component
@@ -154,8 +154,8 @@ FR30: Epic 3 — Visual validation against Figma in Storybook
 ## Epic List
 
 ### Epic 1: Project Foundation, Design Tokens & Approach Validation (DsButton)
-A consuming Vue 3 project can install the library, apply the Figma design token preset (colors, typography, spacing, shadows), and use DsButton with all 6 variants, 4 sizes, and all states in both light and dark themes — validating the Styled Mode approach end-to-end.
-**FRs covered:** FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR9, FR13, FR14, FR15, FR16, FR17, FR18
+A consuming Vue 3 project can install the library, apply the Figma design token preset (colors, typography, spacing, shadows), and use DsButton with all 6 variants, 4 sizes, and all states in both light and dark themes — validating the Styled Mode approach end-to-end. DsIcon is included as a foundation dependency required by DsButton and DsIconButton.
+**FRs covered:** FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR8, FR9, FR13, FR14, FR15, FR16, FR17, FR18
 
 ### Epic 2: Complete MVP Component Set
 Developers can implement common Figma UI patterns — icons, icon buttons, text inputs, and navigation links — using library components with full variant/state coverage, all matching Figma in both themes.
@@ -242,6 +242,48 @@ So that my application matches the Figma Design System in both light and dark mo
 **Given** the preset is exported from `src/index.ts`
 **When** a consumer imports `{ dsPreset }` from the library
 **Then** the import resolves correctly and the preset is usable
+
+### Story 1.2.1: Icon Component
+
+As a developer implementing a Figma design,
+I want to use DsIcon to render SVG icons from the design system with configurable size,
+so that icons in my application match the Figma Design System consistently across both themes.
+
+**Acceptance Criteria:**
+
+**Given** DsIcon is a custom Vue component (no PrimeVue equivalent)
+**When** a developer uses `<DsIcon name="search" size="medium" />`
+**Then** the icon renders the correct SVG at the size tier dimensions (12px XS, 16px S, 20px M, 24px L)
+
+**Given** SVG icon assets are exported from Figma (node `2014:12648`)
+**When** the component library is built
+**Then** all ~150 icons are available as inline SVGs — no external font files or image requests at runtime
+
+**Given** DsIcon follows semantic HTML and accessibility rules (UX-DR19)
+**When** the component renders
+**Then** decorative icons have `aria-hidden="true"` by default
+**And** informational icons accept an `aria-label` prop for accessible naming
+
+**Given** DsIcon inherits text color by default (UX-DR16)
+**When** no explicit color class is provided
+**Then** the icon color matches the surrounding text color via `currentColor`
+**And** the color adapts automatically in dark mode
+
+**Given** DsIcon accepts a `class` attribute (standard Vue behavior)
+**When** a developer uses `<DsIcon name="search" class="text-primary-500" />`
+**Then** the class is applied to the wrapper element, overriding the inherited `currentColor` with the Tailwind utility color. No `color` prop exists — color is controlled exclusively via CSS classes.
+
+**Given** DsIcon has TypeScript types and a co-located test file
+**When** the component is used in TypeScript and tests are run
+**Then** all props have type definitions and tests verify rendering at all size tiers, color inheritance, class passthrough, and accessibility attributes
+
+**Given** DsIcon is exported from `src/index.ts`
+**When** a consumer imports `{ DsIcon }` from the library
+**Then** the import resolves correctly and the component renders
+
+**Given** some icons have variants (e.g., Star outline/filled, Arrow directions, Check states)
+**When** the developer needs a variant
+**Then** variants are accessible via the `name` prop using a consistent naming convention (e.g., `"star-outline"`, `"star-filled"`, `"arrow-left"`)
 
 ### Story 1.3: DsButton Component (Approach Validation)
 
@@ -341,42 +383,7 @@ So that I can use design system components in my Vue 3 application with zero con
 
 Developers can implement common Figma UI patterns — icons, icon buttons, text inputs, and navigation links — using library components with full variant/state coverage, all matching Figma in both themes.
 
-### Story 2.1: DsIcon Component
-
-As a developer implementing a Figma design,
-I want to use DsIcon to render icons with configurable name, size, and color,
-So that icons in my application match the Figma Design System consistently.
-
-**Acceptance Criteria:**
-
-**Given** DsIcon is a custom Tailwind component (no PrimeVue equivalent)
-**When** a developer uses `<DsIcon name="search" size="medium" />`
-**Then** the icon renders at the correct size for the size tier (12px XS, 16px S, 20px M, 20px L)
-
-**Given** DsIcon follows semantic HTML and accessibility rules
-**When** the component renders
-**Then** it uses a semantic element (not a `<div>` with click handler)
-**And** decorative icons have `aria-hidden="true"`
-**And** informational icons have an accessible name via `aria-label`
-
-**Given** DsIcon inherits text color by default
-**When** no explicit `color` prop is provided
-**Then** the icon color matches the surrounding text color
-**And** the color adapts automatically in dark mode via CSS custom properties
-
-**Given** DsIcon accepts an explicit color prop
-**When** `color` is set to a semantic value
-**Then** the icon renders in that color, overriding the inherited text color
-
-**Given** DsIcon has TypeScript types and a co-located test file
-**When** the component is used in TypeScript and tests are run
-**Then** all props have type definitions and tests verify rendering at all size tiers, color inheritance, and explicit color override
-
-**Given** DsIcon is exported from `src/index.ts`
-**When** a consumer imports `{ DsIcon }` from the library
-**Then** the import resolves correctly and the component renders
-
-### Story 2.2: DsIconButton Component
+### Story 2.1: DsIconButton Component
 
 As a developer implementing a Figma design,
 I want to use DsIconButton for icon-only buttons with all sizes,
@@ -415,7 +422,7 @@ So that icon buttons match the Figma Design System and behave consistently with 
 **When** the component is used and tests are run
 **Then** all props have type definitions and tests verify all sizes, slot rendering, accessibility attributes, and state behavior
 
-### Story 2.3: DsInputText Component
+### Story 2.2: DsInputText Component
 
 As a developer implementing a Figma form design,
 I want to use DsInputText with all sizes and visual states,
@@ -466,7 +473,7 @@ So that text inputs in my application match the Figma Design System with correct
 **When** the component is used and tests are run
 **Then** all props have type definitions and tests verify both sizes, all states, error message rendering, accessibility attributes, and PrimeVue passthrough
 
-### Story 2.4: DsLink Component
+### Story 2.3: DsLink Component
 
 As a developer implementing navigation in a Figma design,
 I want to use DsLink with all types, sizes, and visibility levels,

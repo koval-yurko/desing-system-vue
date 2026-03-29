@@ -452,7 +452,7 @@ Components without PrimeVue equivalents — built with Tailwind CSS, following P
 
 | Component | Purpose | Key Props |
 |-----------|---------|-----------|
-| DsIcon | Standalone icon rendering | name, size, color |
+| DsIcon | Standalone icon rendering | name, size (no color prop — use Tailwind classes e.g. `class="text-primary-500"`) |
 | DsLink | Navigational links | type (Regular, Smart, Quiet), size (S, M), visibility (high, low), disabled |
 | DsCodeInput | Code/monospace input field | — |
 | DsMentionBadge | @mention display badge | removable |
@@ -584,10 +584,10 @@ Disabled > Loading > Active > Focus > Hover > Default
 
 | Size | Component Height | Icon Size | Font Size | Padding (horizontal) |
 |------|-----------------|-----------|-----------|---------------------|
-| XS | 24px | 12px | 12px | 8px |
-| S | 32px | 16px | 14px (h10) | 12px |
-| M | 36px | 20px | 16px (h9) | 16px |
-| L | 40px | 20px | 16px (h9) | 20px |
+| xsmall | 24px | 12px | 12px | 8px |
+| small | 32px | 16px | 14px (h10) | 12px |
+| medium | 36px | 20px | 16px (h9) | 16px |
+| large | 40px | 24px | 16px (h9) | 20px |
 
 **Size selection rule:** Components that appear together should use the same size. A form with Size M inputs should use Size M buttons and Size M selects.
 
@@ -595,8 +595,8 @@ Disabled > Loading > Active > Focus > Hover > Default
 
 **DsIcon (standalone):**
 - Used for decorative or informational icons outside of interactive components
-- Props: `name`, `size` (matches component size scale: 12/16/20px), `color`
-- Inherits text color by default — only set explicit color for semantic meaning
+- Props: `name`, `size` (matches component size scale: 12/16/20/24px) — no `color` prop
+- Inherits text color by default via `currentColor` — override with Tailwind utility classes (e.g., `class="text-primary-500"`)
 
 **Icons inside components:**
 - DsIconButton contains a DsIcon as a child (slot), not via props — allows flexible icon composition
@@ -604,7 +604,7 @@ Disabled > Loading > Active > Focus > Hover > Default
 - DsLink supports left and right icon slots
 - DsSearchField has a built-in search icon (not customizable)
 
-**Icon sizing rule:** Icon size always matches the component's size tier (S component = 16px icon, M component = 20px icon)
+**Icon sizing rule:** Icon size always matches the component's size tier (S component = 16px icon, M component = 20px icon, L component = 24px icon)
 
 ### Dark Mode Patterns
 
