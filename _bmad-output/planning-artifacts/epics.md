@@ -30,7 +30,7 @@ FR5: The library can provide a light theme preset derived from Figma light mode 
 FR6: The library can provide a dark theme preset derived from Figma dark mode tokens
 FR7: Consuming applications can switch between light and dark themes via PrimeVue's theme switching API
 FR8: Developers can import and render DsIcon with configurable name, size, and color
-FR9: Developers can import and render DsButton with variants (Primary, Outlined, Tertiary, Text, Negative), sizes (XS, S, M, L), and states (Default, Hover, Focus, Active, Disabled, Loading)
+FR9: Developers can import and render DsButton with variants (Primary, Outlined, Tertiary, Text, Text/link, Negative), sizes (XS, S, M, L), and states (Default, Hover, Focus, Active, Disabled, Loading)
 FR10: Developers can import and render DsIconButton containing a DsIcon internally, with all DsButton sizes
 FR11: Developers can import and render DsInputText with sizes (S, M) and states (Default, Hover, Focus, Filled, Error, Disabled)
 FR12: Developers can import and render DsLink with types (Regular, Smart, Quiet), sizes (S, M), and visibility levels (high, low)
@@ -102,17 +102,17 @@ UX-DR4: Implement border radius token system — non (0px), md (4px), lg (8px), 
 UX-DR5: Implement border width token system — 50 (1px), 100 (1.2px), 200 (1.5px)
 UX-DR6: Implement shadow/effects token system — XS, SM, Shadow 3, Key light shadow, and Error-100 focus ring shadow
 UX-DR7: DsButton must implement 6 variant types (Primary, Outlined, Tertiary, Text, Text/link, Negative) with usage rules — max one Primary per section, Negative always paired with cancel
-UX-DR8: DsButton must implement loading/shimmer state that replaces button content while preserving button width
+UX-DR8: DsButton must implement loading state that replaces button content while preserving button width
 UX-DR9: DsButton disabled state must retain type styling at reduced opacity (0.5) — never change type when disabling
 UX-DR10: DsInputText must implement 8 visual states — Default (gray border), Hover (darkened border), Focus (primary color border), Filled (subtle background change), Filled-Hover, Disabled (reduced opacity), Error (red border + error message below), Skip
 UX-DR11: Form validation must trigger on blur (not keystroke), show error below field, clear on typing, re-validate on next blur
 UX-DR12: All interactive components must follow universal state behavior — Default, Hover, Focus, Active/Pressed, Disabled, Loading — with state priority: Disabled > Loading > Active > Focus > Hover > Default
 UX-DR13: All state transitions must use 150ms ease timing (no transitions on disabled state changes)
 UX-DR14: DsLink must implement three types — Regular (underlined blue), Smart (blue text with blue background on hover), Quiet (blue text, underline on hover) — with High and Low visibility levels
-UX-DR15: Component sizing must follow uniform size token table — xsmall (24px/12px icon/12px font/8px padding), small (32px/16px/14px/12px), medium (36px/20px/16px/16px), large (40px/24px/16px/20px)
+UX-DR15: Component sizing must follow uniform size token table — xsmall (24px/12px icon/12px font/8px padding), small (32px/16px/14px/12px), medium (36px/20px/14px/16px), large (40px/20px icon/14px font/32px padding)
 UX-DR16: DsIcon must inherit text color by default, explicit color only for semantic meaning; icon size always matches component size tier
 UX-DR17: DsIconButton must contain DsIcon as a child (slot), not via props — allows flexible icon composition
-UX-DR18: Components must be fluid (fill container width) with touch targets meeting 44x44px minimum on all sizes; text uses rem-based sizing
+UX-DR18: Components must be fluid (fill container width); text uses rem-based sizing
 UX-DR19: Custom Tailwind components must use semantic HTML elements (button, input, a — not div with click handlers), include ARIA attributes, implement keyboard handlers (Enter/Space, Escape, Arrow keys), use focus-visible: for focus rings, add motion-safe: prefix to transitions
 UX-DR20: Error states in form components must use `aria-describedby` to associate error messages; loading states must announce via `aria-live="polite"`
 UX-DR21: Dark mode token mapping — backgrounds invert, text inverts, shadows reduce intensity, focus rings remain visible, borders shift to dark-appropriate subtle dividers, icons inherit adapted text color
@@ -303,11 +303,11 @@ So that buttons in my application are pixel-accurate to the Figma source in both
 **And** the Negative variant uses the Red palette from the preset
 
 **Given** DsButton supports 4 sizes following the uniform size token table
-**When** the `size` prop is set to xs, small, medium, or large
+**When** the `size` prop is set to xsmall, small, medium, or large
 **Then** XS renders at 24px height with 12px icon, 12px font, 8px horizontal padding
 **And** Small renders at 32px height with 16px icon, 14px font, 12px horizontal padding
-**And** Medium renders at 36px height with 20px icon, 16px font, 16px horizontal padding
-**And** Large renders at 40px height with 20px icon, 16px font, 20px horizontal padding
+**And** Medium renders at 36px height with 20px icon, 14px font, 16px horizontal padding
+**And** Large renders at 40px height with 20px icon, 14px font, 32px horizontal padding
 
 **Given** DsButton implements universal state behavior
 **When** the button transitions through Default, Hover, Focus, Active/Pressed, Disabled, and Loading states
@@ -317,7 +317,7 @@ So that buttons in my application are pixel-accurate to the Figma source in both
 **And** focus shows visible focus ring using `focus-visible:` (not `focus:`)
 **And** disabled retains variant styling at reduced opacity (0.5) with `pointer-events: none` and `aria-disabled="true"`
 
-**Given** DsButton supports a loading/shimmer state
+**Given** DsButton supports a loading state
 **When** the `loading` prop is set to true
 **Then** button content is replaced by a loading indicator
 **And** button width is preserved (does not collapse)

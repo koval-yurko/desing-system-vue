@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-27
-last_updated: 2026-03-30
+last_updated: 2026-03-30T00:00:00
 project: desing-system-vue
 project_key: NOKEY
 tracking_system: file-system
@@ -47,7 +47,7 @@ development_status:
   1-1-project-scaffold-build-configuration: done
   1-2-design-token-preset-with-light-dark-themes: done
   1-2-1-icon-component: done
-  1-3-dsbutton-component-approach-validation: ready-for-dev
+  1-3-dsbutton-component-approach-validation: review
   1-4-package-distribution-consumption-validation: backlog
   epic-1-retrospective: optional
 

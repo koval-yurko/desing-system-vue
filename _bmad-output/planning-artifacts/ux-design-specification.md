@@ -520,7 +520,7 @@ Components without PrimeVue equivalents — built with Tailwind CSS, following P
 **Button rules:**
 - Maximum one Primary button per visual section
 - Negative buttons never appear as the sole action — always paired with a cancel/back option
-- Loading/shimmer state replaces button content, preserves button width
+- Loading state replaces button content, preserves button width
 - Disabled buttons retain their type styling at reduced opacity — never change type when disabling
 
 **Size selection:**
@@ -569,7 +569,7 @@ Components without PrimeVue equivalents — built with Tailwind CSS, following P
 | **Focus** | Keyboard navigation indicator | Visible focus ring (primary color outline), never removed for accessibility |
 | **Active/Pressed** | Momentary feedback during click | Darker shade than hover |
 | **Disabled** | Non-interactive, visually muted | Reduced opacity (0.5), `pointer-events: none`, `aria-disabled="true"` |
-| **Loading** | Async operation in progress | Shimmer animation or spinner, preserves component dimensions |
+| **Loading** | Async operation in progress | Loading indicator (e.g. animated dots), preserves component dimensions |
 
 **State priority (highest wins):**
 Disabled > Loading > Active > Focus > Hover > Default
@@ -586,8 +586,8 @@ Disabled > Loading > Active > Focus > Hover > Default
 |------|-----------------|-----------|-----------|---------------------|
 | xsmall | 24px | 12px | 12px | 8px |
 | small | 32px | 16px | 14px (h10) | 12px |
-| medium | 36px | 20px | 16px (h9) | 16px |
-| large | 40px | 24px | 16px (h9) | 20px |
+| medium | 36px | 20px | 14px (h10) | 16px |
+| large | 40px | 20px | 14px (h10) | 32px |
 
 **Size selection rule:** Components that appear together should use the same size. A form with Size M inputs should use Size M buttons and Size M selects.
 
@@ -604,7 +604,7 @@ Disabled > Loading > Active > Focus > Hover > Default
 - DsLink supports left and right icon slots
 - DsSearchField has a built-in search icon (not customizable)
 
-**Icon sizing rule:** Icon size always matches the component's size tier (S component = 16px icon, M component = 20px icon, L component = 24px icon)
+**Icon sizing rule:** Icon size always matches the component's size tier (S component = 16px icon, M component = 20px icon, L component = 20px icon)
 
 ### Dark Mode Patterns
 
@@ -634,7 +634,7 @@ Disabled > Loading > Active > Focus > Hover > Default
 | **Success** | Green indicator | Badges, dot indicators |
 | **Warning** | Orange indicator | Badges, dot indicators |
 | **Info** | Blue indicator | Badges, dot indicators |
-| **Loading** | Shimmer animation | Buttons (Loaded/Shimmer variant) |
+| **Loading** | Dot-based animation | Buttons (Loaded variant) |
 | **Disabled** | Reduced opacity | All interactive components |
 
 **Severity color mapping (follows PrimeVue convention):**
@@ -669,7 +669,7 @@ Disabled > Loading > Active > Focus > Hover > Default
 **Component-level responsiveness (library's responsibility):**
 - Components are fluid by default — they fill their container width unless explicitly sized
 - No fixed-width components; all use relative/percentage widths or `auto`
-- Touch targets meet minimum 44x44px on all interactive components at all sizes (XS size = 24px height but 44px touch area via padding)
+- Component sizes follow the uniform size token table; no additional touch target padding is applied
 - Text uses rem-based sizing to respect user font-size preferences
 
 **Application-level layout (consuming project's responsibility):**
@@ -684,7 +684,7 @@ Disabled > Loading > Active > Focus > Hover > Default
 | Context | Width | Purpose |
 |---------|-------|---------|
 | Mobile | 320–767px | Verify components don't overflow or break at narrow widths |
-| Tablet | 768–1023px | Verify touch targets and spacing |
+| Tablet | 768–1023px | Verify spacing and layout |
 | Desktop | 1024px+ | Default Storybook viewport |
 
 **Component-specific responsive behavior:**
