@@ -1,4 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="7" stroke="#314158" stroke-width="1.5"/>
-<line x1="7.05" y1="16.95" x2="16.95" y2="7.05" stroke="#314158" stroke-width="1.5"/>
-</svg>
+<svg fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.5"/><path stroke="currentColor" stroke-width="1.5" d="m7.05 16.95 9.9-9.9"/></svg>

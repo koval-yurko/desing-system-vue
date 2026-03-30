@@ -1,6 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<!-- Arrow head -->
-<path d="M9.83 4.61L7.11 4.61L7.11 7.33" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<!-- Arc -->
-<path d="M7.532 8.28C8.78 6.93 10.56 6.11 12.55 6.11C16.43 6.11 19.57 9.25 19.57 13.13C19.57 17.01 16.43 20.15 12.55 20.15C9.24 20.15 6.47 17.87 5.73 14.79" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
-</svg>
+<svg fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.83 4.61H7.11v2.72"/><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M7.532 8.28C8.78 6.93 10.56 6.11 12.55 6.11c3.88 0 7.02 3.14 7.02 7.02s-3.14 7.02-7.02 7.02c-3.31 0-6.08-2.28-6.82-5.36"/></svg>

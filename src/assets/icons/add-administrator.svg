@@ -1,7 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="10" cy="8" r="3.25" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M3.75 18C4.66698 14.5496 7.90106 12 11.75 12C13.5076 12 15.1373 12.5317 16.4764 13.438" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="18" cy="18" r="4" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M18 16.5V19.5" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M16.5 18H19.5" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+<svg fill="none" viewBox="0 0 24 24"><circle cx="10" cy="8" r="3.25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 18c.917-3.45 4.151-6 8-6a8.4 8.4 0 0 1 4.726 1.438"/><circle cx="18" cy="18" r="4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18 16.5v3M16.5 18h3"/></svg>

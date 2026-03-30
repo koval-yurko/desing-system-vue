@@ -1,8 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<!-- Bottom cylinder body -->
-<path d="M5.75 7.75V17.724C5.75 18.8429 8.88401 19.75 12.75 19.75C16.616 19.75 19.75 18.8429 19.75 17.724V7.75" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
-<!-- Top ellipse -->
-<ellipse cx="12.75" cy="7.75" rx="7" ry="2" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
-<!-- Middle arc -->
-<path d="M19.75 12.75C19.75 13.8546 16.616 14.75 12.75 14.75C8.88401 14.75 5.75 13.8546 5.75 12.75" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
-</svg>
+<svg fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M5.75 7.75v9.974c0 1.119 3.134 2.026 7 2.026s7-.907 7-2.026V7.75"/><ellipse cx="12.75" cy="7.75" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" rx="7" ry="2"/><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19.75 12.75c0 1.105-3.134 2-7 2s-7-.895-7-2"/></svg>

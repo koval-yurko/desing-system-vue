@@ -1,14 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<!-- Document body -->
-<path d="M18.1457 11.5052V8.58331C18.1457 7.59156 18.1457 7.09568 17.9527 6.71689C17.783 6.38368 17.5121 6.11278 17.1789 5.94301C16.8001 5.75 16.3042 5.75 15.3124 5.75H8.58331C7.59156 5.75 7.09568 5.75 6.71689 5.94301C6.38368 6.11278 6.11278 6.38368 5.94301 6.71689C5.75 7.09568 5.75 7.59156 5.75 8.58331V17.0833C5.75 18.075 5.75 18.5709 5.94301 18.9497C6.11278 19.2829 6.38368 19.5538 6.71689 19.7236C7.09568 19.9166 7.59156 19.9166 8.58331 19.9166H11.0625" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<!-- Line 1 (bottom) -->
-<path d="M15.042 16.35H11.5" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<!-- Line 2 (middle) -->
-<path d="M16.198 13.35H9.5" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<!-- Line 3 (top) -->
-<path d="M14.624 10.35H9.5" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<!-- Dot -->
-<circle cx="8.635" cy="8.635" r="0.885" fill="#314158"/>
-<!-- Pen -->
-<path d="M17.25 13.8854C17.25 13.3964 17.6464 13 18.1354 13H19.0208C19.5098 13 19.9062 13.3964 19.9062 13.8854V18.3533L18.5065 20.0833L17.25 18.3533V13.8854Z" stroke="#314158" stroke-width="1.5" stroke-linejoin="round"/>
-</svg>
+<svg fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.146 11.505V8.583c0-.991 0-1.487-.193-1.866a1.77 1.77 0 0 0-.774-.774c-.379-.193-.875-.193-1.867-.193H8.583c-.991 0-1.487 0-1.866.193a1.77 1.77 0 0 0-.774.774c-.193.379-.193.875-.193 1.866v8.5c0 .992 0 1.488.193 1.867.17.333.44.604.774.774.379.193.875.193 1.866.193h2.48M15.042 16.35H11.5M16.198 13.35H9.5M14.624 10.35H9.5"/><circle cx="8.635" cy="8.635" r=".885" fill="currentColor"/><path stroke="currentColor" stroke-linejoin="round" stroke-width="1.5" d="M17.25 13.885c0-.489.396-.885.885-.885h.886c.489 0 .885.396.885.885v4.468l-1.4 1.73-1.256-1.73z"/></svg>

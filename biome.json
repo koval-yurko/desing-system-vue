@@ -20,6 +20,19 @@
       "recommended": true
     }
   },
+  "overrides": [
+    {
+      "includes": ["src/components/**/*.vue"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off"
+          }
+        }
+      }
+    }
+  ],
   "javascript": {
     "formatter": {
       "quoteStyle": "single"

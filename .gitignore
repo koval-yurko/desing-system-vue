@@ -18,3 +18,5 @@ tmp/
 *.njsproj
 *.sln
 *.sw?
+
+docs/design_system.fig

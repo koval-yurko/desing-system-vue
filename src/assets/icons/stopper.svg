@@ -1,12 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<!-- Clock hand base -->
-<path d="M10.62 10.626V13.3587C10.62 13.5225 10.7125 13.6723 10.859 13.7455L12.62 14.626" stroke="#314158" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-<!-- Circle arc -->
-<path d="M6.167 15.0706C7.16755 17.7174 9.7291 19.6 12.7312 19.6C16.6047 19.6 19.7447 16.466 19.7447 12.6C19.7447 8.73401 16.6047 5.6 12.7312 5.6C9.42476 5.6 6.65273 7.88363 5.91202 10.9569" stroke="#314158" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-<!-- Top stem vertical -->
-<path d="M12 4V6" stroke="#314158" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-<!-- Top stem horizontal -->
-<path d="M10.5 4H13.5" stroke="#314158" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-<!-- Arrow tail -->
-<path d="M7.375 9.376L7.585 11.376L9.775 10.976" stroke="#314158" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+<svg fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="1.5" d="M10.62 10.626v2.733c0 .164.093.313.239.386l1.761.881"/><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="1.5" d="M6.167 15.07a7.02 7.02 0 0 0 6.564 4.53c3.874 0 7.014-3.134 7.014-7s-3.14-7-7.014-7a7.014 7.014 0 0 0-6.819 5.357M12 4v2M10.5 4h3"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1.5" d="m7.375 9.376.21 2 2.19-.4"/></svg>

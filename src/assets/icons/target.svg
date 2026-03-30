@@ -1,8 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<!-- Inner circle -->
-<path d="M7.75 12.75C7.75 13.4066 7.87933 14.0568 8.13061 14.6634C8.38188 15.2701 8.75017 15.8212 9.21447 16.2855C9.67876 16.7498 10.23 17.1181 10.8366 17.3694C11.4432 17.6207 12.0934 17.75 12.75 17.75C13.4066 17.75 14.0568 17.6207 14.6634 17.3694C15.27 17.1181 15.8212 16.7498 16.2855 16.2855C16.7498 15.8212 17.1181 15.27 17.3694 14.6634C17.6207 14.0568 17.75 13.4066 17.75 12.75C17.75 11.4239 17.2232 10.1521 16.2855 9.21447C15.3479 8.27678 14.0761 7.75 12.75 7.75C11.4239 7.75 10.1521 8.27678 9.21447 9.21447C8.27678 10.1521 7.75 11.4239 7.75 12.75Z" stroke="#314158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<!-- Horizontal crosshair -->
-<path d="M5.75 12.75H9.75M19.75 12.75H15.75" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
-<!-- Vertical crosshair -->
-<path d="M12.75 5.75V9.75M12.75 19.75V15.75" stroke="#314158" stroke-width="1.5" stroke-linecap="round"/>
-</svg>
+<svg fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.75 12.75a5 5 0 1 0 10 0 5 5 0 0 0-10 0"/><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M5.75 12.75h4m10 0h-4M12.75 5.75v4m0 10v-4"/></svg>

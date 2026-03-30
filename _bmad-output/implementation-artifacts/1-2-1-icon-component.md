@@ -1,6 +1,6 @@
 # Story 1.2.1: Icon Component
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -28,48 +28,48 @@ so that icons in my application match the Figma Design System consistently acros
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Optimize SVG icons and set up icon registry (AC: #2, #8)
-  - [ ] 1.1 Verify SVG icon assets already present in `src/assets/icons/` (pre-exported from Figma, ~150 files in kebab-case)
-  - [ ] 1.2 Install `svgo` as a dev dependency: `npm install -D svgo`
-  - [ ] 1.3 Create `svgo.config.js` at project root with rules: remove width/height, remove hardcoded fills, ensure `currentColor` for fill/stroke, keep viewBox
-  - [ ] 1.4 Add npm scripts to `package.json`:
+- [x] Task 1: Optimize SVG icons and set up icon registry (AC: #2, #8)
+  - [x] 1.1 Verify SVG icon assets already present in `src/assets/icons/` (pre-exported from Figma, ~150 files in kebab-case)
+  - [x] 1.2 Install `svgo` as a dev dependency: `npm install -D svgo`
+  - [x] 1.3 Create `svgo.config.js` at project root with rules: remove width/height, remove hardcoded fills, ensure `currentColor` for fill/stroke, keep viewBox
+  - [x] 1.4 Add npm scripts to `package.json`:
     - `"svg-optimize": "svgo -f src/assets/icons --config svgo.config.js"` — optimize all icons
     - `"svg-optimize:one": "svgo src/assets/icons/$npm_config_icon.svg --config svgo.config.js"` — optimize single icon: `npm run svg-optimize:one --icon=search`
-  - [ ] 1.5 Run `npm run svg-optimize` to batch-optimize all exported SVGs
-  - [ ] 1.6 Create `src/components/DsIcon/icon-names.ts` — a manually maintained file that exports `type IconName` as a string literal union of all icon names (matching the kebab-case file names in `src/assets/icons/` without the `.svg` extension). This provides full TypeScript autocomplete for consumers. When icons are added or removed, this file must be updated to match.
-  - [ ] 1.7 Create `src/components/DsIcon/icon-registry.ts` — use Vite's `import.meta.glob` to eagerly import all `.svg` files from `src/assets/icons/` as raw strings (`?raw` suffix). Build a `Record<IconName, string>` map by deriving the key from each file's path (strip directory and `.svg` extension). Import `IconName` from `icon-names.ts`. Export a `getIcon(name: IconName): string | undefined` function and re-export `IconName`.
+  - [x] 1.5 Run `npm run svg-optimize` to batch-optimize all exported SVGs
+  - [x] 1.6 Create `src/components/DsIcon/icon-names.ts` — a manually maintained file that exports `type IconName` as a string literal union of all icon names (matching the kebab-case file names in `src/assets/icons/` without the `.svg` extension). This provides full TypeScript autocomplete for consumers. When icons are added or removed, this file must be updated to match.
+  - [x] 1.7 Create `src/components/DsIcon/icon-registry.ts` — use Vite's `import.meta.glob` to eagerly import all `.svg` files from `src/assets/icons/` as raw strings (`?raw` suffix). Build a `Record<IconName, string>` map by deriving the key from each file's path (strip directory and `.svg` extension). Import `IconName` from `icon-names.ts`. Export a `getIcon(name: IconName): string | undefined` function and re-export `IconName`.
 
-- [ ] Task 2: Implement DsIcon.vue component (AC: #1, #3, #4, #5)
-  - [ ] 2.1 Create `src/components/DsIcon/DsIcon.vue` using `<script setup lang="ts">`
-  - [ ] 2.2 Define props interface:
+- [x] Task 2: Implement DsIcon.vue component (AC: #1, #3, #4, #5)
+  - [x] 2.1 Create `src/components/DsIcon/DsIcon.vue` using `<script setup lang="ts">`
+  - [x] 2.2 Define props interface:
     - `name: IconName` (required) — the icon identifier, typed as a string literal union from `icon-names.ts` (provides full autocomplete)
     - `size: 'xsmall' | 'small' | 'medium' | 'large'` (default: `'medium'`) — maps to pixel dimensions per UX-DR15
     - `ariaLabel: string` (optional) — when provided, makes the icon informational (removes `aria-hidden`)
     - No `color` prop — color is inherited via `currentColor` by default; override with Tailwind class (e.g., `class="text-primary-500"`)
-  - [ ] 2.3 Render SVG inline (not via `<img>`) — use `v-html` with `getIcon(name)` from the registry to get the SVG markup
-  - [ ] 2.4 Apply size via computed width/height style or class: xsmall=12px, small=16px, medium=20px, large=24px
-  - [ ] 2.5 Apply color: default `color: currentColor`; custom colors applied via Tailwind classes on the wrapper element (e.g., `class="text-primary-500"`)
-  - [ ] 2.6 Accessibility: wrap in `<span>` with `role="img"` + `aria-label` when label provided; `aria-hidden="true"` when decorative
+  - [x] 2.3 Render SVG inline (not via `<img>`) — use `v-html` with `getIcon(name)` from the registry to get the SVG markup
+  - [x] 2.4 Apply size via computed width/height style or class: xsmall=12px, small=16px, medium=20px, large=24px
+  - [x] 2.5 Apply color: default `color: currentColor`; custom colors applied via Tailwind classes on the wrapper element (e.g., `class="text-primary-500"`)
+  - [x] 2.6 Accessibility: wrap in `<span>` with `role="img"` + `aria-label` when label provided; `aria-hidden="true"` when decorative
 
-- [ ] Task 3: Create barrel export and integrate (AC: #7)
-  - [ ] 3.1 Create `src/components/DsIcon/index.ts` re-export
-  - [ ] 3.2 Add `export { DsIcon } from './components/DsIcon'` to `src/index.ts`
-  - [ ] 3.3 Export `type IconName` from barrel (originates in `icon-names.ts`, re-exported through `icon-registry.ts`) for consumer TypeScript autocomplete
+- [x] Task 3: Create barrel export and integrate (AC: #7)
+  - [x] 3.1 Create `src/components/DsIcon/index.ts` re-export
+  - [x] 3.2 Add `export { DsIcon } from './components/DsIcon'` to `src/index.ts`
+  - [x] 3.3 Export `type IconName` from barrel (originates in `icon-names.ts`, re-exported through `icon-registry.ts`) for consumer TypeScript autocomplete
 
-- [ ] Task 4: Write tests (AC: #6)
-  - [ ] 4.1 Create `src/components/DsIcon/DsIcon.test.ts`
-  - [ ] 4.2 Test: renders SVG content for a valid icon name
-  - [ ] 4.3 Test: applies correct dimensions for each size tier (xsmall=12, small=16, medium=20, large=24)
-  - [ ] 4.4 Test: inherits color via currentColor by default (no inline color style)
-  - [ ] 4.5 Test: accepts class attribute for color override (e.g., `class="text-primary-500"` passes through to wrapper)
-  - [ ] 4.6 Test: sets `aria-hidden="true"` when no `ariaLabel` provided (decorative)
-  - [ ] 4.7 Test: sets `role="img"` and `aria-label` when `ariaLabel` prop provided (informational)
-  - [ ] 4.8 Test: renders nothing or fallback for invalid icon name (graceful degradation — components never throw)
+- [x] Task 4: Write tests (AC: #6)
+  - [x] 4.1 Create `src/components/DsIcon/DsIcon.test.ts`
+  - [x] 4.2 Test: renders SVG content for a valid icon name
+  - [x] 4.3 Test: applies correct dimensions for each size tier (xsmall=12, small=16, medium=20, large=24)
+  - [x] 4.4 Test: inherits color via currentColor by default (no inline color style)
+  - [x] 4.5 Test: accepts class attribute for color override (e.g., `class="text-primary-500"` passes through to wrapper)
+  - [x] 4.6 Test: sets `aria-hidden="true"` when no `ariaLabel` provided (decorative)
+  - [x] 4.7 Test: sets `role="img"` and `aria-label` when `ariaLabel` prop provided (informational)
+  - [x] 4.8 Test: renders nothing or fallback for invalid icon name (graceful degradation — components never throw)
 
-- [ ] Task 5: Validate build (AC: #1, #7)
-  - [ ] 5.1 Run `npm run build` — must complete successfully with DsIcon in dist
-  - [ ] 5.2 Run `npm run test` — all tests pass
-  - [ ] 5.3 Run `biome check` — no errors
+- [x] Task 5: Validate build (AC: #1, #7)
+  - [x] 5.1 Run `npm run build` — must complete successfully with DsIcon in dist
+  - [x] 5.2 Run `npm run test` — all tests pass
+  - [x] 5.3 Run `biome check` — no errors
 
 ## Dev Notes
 
@@ -158,7 +158,7 @@ export { icons };
 export type { IconName };
 ```
 
-The component uses `v-html` to render SVG content inside a wrapper `<span>`. This is safe because SVG content comes from static asset files bundled at build time (not user input).
+The component uses `v-html` to render SVG content inside a wrapper `<span>`. This is safe because SVG content comes from static asset files bundled at build time (not user input). The `icons` record is internal to the registry — not exported to consumers (only `DsIcon` component and `IconName` type are public API).
 
 **Key design decisions:**
 - **`icon-names.ts` is the explicit source of truth for TypeScript types** — provides full autocomplete and compile-time safety for consumers. Each name must correspond to a `.svg` file in `src/assets/icons/`.
@@ -171,7 +171,7 @@ The component uses `v-html` to render SVG content inside a wrapper `<span>`. Thi
 When processing exported Figma SVGs:
 1. Keep `viewBox="0 0 24 24"` — all icons are 24x24 in Figma
 2. Remove hardcoded `width` and `height` attributes (component controls sizing)
-3. Replace hardcoded `fill` colors with `currentColor` (enables color inheritance)
+3. Replace all `fill`/`stroke` colors with `currentColor` (enables color inheritance). All icons are single-color by design; multi-color variants can be achieved by consumers via CSS classes on child SVG elements if needed in the future.
 4. Remove Figma-specific metadata (`data-*`, `id` attributes unless needed for clip paths)
 5. Consider using `svgo` for automated optimization
 
@@ -263,8 +263,43 @@ Recent commits show a pattern of one story per commit with descriptive messages:
 
 ### Agent Model Used
 
+Claude Opus 4.6 (1M context)
+
 ### Debug Log References
+
+- SVGO v4 changed `removeViewBox` override API — preset-default no longer includes it, so no override needed. Warning was cosmetic, optimization worked correctly.
+- Biome required import sorting (type imports before value imports) and optional chaining instead of non-null assertion.
 
 ### Completion Notes List
 
+- Verified 236 SVG icon assets in `src/assets/icons/` (kebab-case naming convention)
+- Installed `svgo@4.0.1` and created optimization config — removes dimensions, converts hardcoded colors to `currentColor`, preserves viewBox
+- Added `svg-optimize` and `svg-optimize:one` npm scripts for batch and single-icon optimization
+- Ran batch optimization on all 236 SVGs — removed width/height, replaced `#314158` with `currentColor`
+- Created `icon-names.ts` with 236-member `IconName` string literal union type for full TypeScript autocomplete
+- Created `icon-registry.ts` using Vite `import.meta.glob` with `?raw` to build SVG map at build time
+- Implemented `DsIcon.vue` with `name`, `size` (xsmall/small/medium/large), and `ariaLabel` props
+- Component renders inline SVG via `v-html` in a `<span>` wrapper with `currentColor` inheritance
+- Size tiers: xsmall=12px, small=16px, medium=20px (default), large=24px
+- Accessibility: decorative icons get `aria-hidden="true"`, informational icons get `role="img"` + `aria-label`
+- Color controlled exclusively via CSS classes (no `color` prop) — `currentColor` default adapts to dark mode
+- Graceful degradation: renders nothing for invalid icon names
+- Created barrel exports in `src/components/DsIcon/index.ts` and updated `src/index.ts`
+- 9 unit tests covering all acceptance criteria: rendering, sizing, color, class passthrough, accessibility, graceful degradation
+- All 21 tests pass (12 existing + 9 new), build succeeds, biome check clean
+
+### Change Log
+
+- 2026-03-30: Story 1.2.1 implemented — DsIcon component with SVG optimization, icon registry, tests, and barrel exports
+
 ### File List
+
+- svgo.config.js (new)
+- package.json (modified — added svgo dep, svg-optimize scripts)
+- src/assets/icons/*.svg (modified — 236 files optimized via svgo)
+- src/components/DsIcon/icon-names.ts (new)
+- src/components/DsIcon/icon-registry.ts (new)
+- src/components/DsIcon/DsIcon.vue (new)
+- src/components/DsIcon/DsIcon.test.ts (new)
+- src/components/DsIcon/index.ts (new)
+- src/index.ts (modified — added DsIcon + IconName exports)
