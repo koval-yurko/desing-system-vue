@@ -160,6 +160,40 @@ export const WithDropdownIcon: Story = {
   }),
 };
 
+export const DisabledWithError: Story = {
+  args: {
+    label: 'Email',
+    disabled: true,
+    error: 'Invalid email address',
+    modelValue: 'not-an-email',
+  },
+  render: (args) => ({
+    components: { DsInputText },
+    setup() {
+      const value = ref(args.modelValue || '');
+      return { args, value };
+    },
+    template: '<DsInputText v-bind="args" v-model="value" />',
+  }),
+};
+
+export const ErrorWithHint: Story = {
+  args: {
+    label: 'Password',
+    hint: 'Must be at least 8 characters',
+    error: 'Password is too short',
+    modelValue: 'abc',
+  },
+  render: (args) => ({
+    components: { DsInputText },
+    setup() {
+      const value = ref(args.modelValue || '');
+      return { args, value };
+    },
+    template: '<DsInputText v-bind="args" v-model="value" />',
+  }),
+};
+
 export const AllSizes: Story = {
   render: () => ({
     components: { DsInputText },
