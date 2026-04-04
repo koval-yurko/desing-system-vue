@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import DsIcon from '../DsIcon/DsIcon.vue';
 import DsIconButton from './DsIconButton.vue';
 
-const meta: Meta<typeof DsIconButton> = {
+const meta = {
   title: 'Components/DsIconButton',
   component: DsIconButton,
   tags: ['autodocs'],
@@ -26,10 +26,10 @@ const meta: Meta<typeof DsIconButton> = {
     loading: false,
     ariaLabel: 'Edit',
   },
-};
+} satisfies Meta<typeof DsIconButton>;
 
 export default meta;
-type Story = StoryObj<typeof DsIconButton>;
+type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   render: (args) => ({
@@ -110,9 +110,22 @@ export const AllSizes: Story = {
     components: { DsIconButton, DsIcon },
     template: `
       <div style="display: flex; align-items: center; gap: 12px;">
-        <DsIconButton size="xsmall" aria-label="Edit"><DsIcon name="edit" size="xsmall" /></DsIconButton>
-        <DsIconButton size="small" aria-label="Edit"><DsIcon name="edit" size="small" /></DsIconButton>
-        <DsIconButton size="medium" aria-label="Edit"><DsIcon name="edit" /></DsIconButton>
+        <DsIconButton size="xsmall" ariaLabel="Edit"><DsIcon name="edit" size="xsmall" /></DsIconButton>
+        <DsIconButton size="small" ariaLabel="Edit"><DsIcon name="edit" size="small" /></DsIconButton>
+        <DsIconButton size="medium" ariaLabel="Edit"><DsIcon name="edit" /></DsIconButton>
+      </div>
+    `,
+  }),
+};
+
+export const AllTypes: Story = {
+  render: () => ({
+    components: { DsIconButton, DsIcon },
+    template: `
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <DsIconButton type="primary" ariaLabel="Edit"><DsIcon name="edit" /></DsIconButton>
+        <DsIconButton type="outlined" ariaLabel="Edit"><DsIcon name="edit" /></DsIconButton>
+        <DsIconButton type="text" ariaLabel="Edit"><DsIcon name="edit" /></DsIconButton>
       </div>
     `,
   }),
