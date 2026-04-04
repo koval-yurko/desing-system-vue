@@ -29,7 +29,9 @@
     "lint": "biome check ./src",
     "preview": "vite preview",
     "svg-optimize": "svgo -f src/assets/icons --config svgo.config.js",
-    "svg-optimize:one": "svgo src/assets/icons/$npm_config_icon.svg --config svgo.config.js"
+    "svg-optimize:one": "svgo src/assets/icons/$npm_config_icon.svg --config svgo.config.js",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "peerDependencies": {
     "@primeuix/themes": "^2.0.0",
@@ -39,6 +41,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.4.9",
     "@primeuix/themes": "^2.0.3",
+    "@storybook/vue3-vite": "^10.3.4",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "^24.12.0",
     "@vitejs/plugin-vue": "^6.0.5",
@@ -46,6 +49,7 @@
     "@vue/tsconfig": "^0.9.0",
     "jsdom": "^29.0.1",
     "primevue": "^4.5.4",
+    "storybook": "^10.3.4",
     "svgo": "^4.0.1",
     "tailwindcss": "^4.2.2",
     "typescript": "~5.9.3",
