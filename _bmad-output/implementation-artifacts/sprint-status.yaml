@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-27
-last_updated: 2026-04-01T00:00:00
+last_updated: 2026-04-02T00:00:00
 project: desing-system-vue
 project_key: NOKEY
 tracking_system: file-system
@@ -52,9 +52,9 @@ development_status:
   epic-1-retrospective: optional
 
   # Epic 2: Complete MVP Component Set
-  epic-2: backlog
-  2-1-dsiconbutton-component: backlog
-  2-2-dsinputtext-component: backlog
+  epic-2: in-progress
+  2-1-dsiconbutton-component: done
+  2-2-dsinputtext-component: ready-for-dev
   2-3-dslink-component: backlog
   epic-2-retrospective: optional
 
