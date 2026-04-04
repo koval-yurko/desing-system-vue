@@ -32,7 +32,7 @@ FR7: Consuming applications can switch between light and dark themes via PrimeVu
 FR8: Developers can import and render DsIcon with configurable name, size, and color
 FR9: Developers can import and render DsButton with variants (Primary, Outlined, Tertiary, Text, Text/link, Negative), sizes (XS, S, M, L), and states (Default, Hover, Focus, Active, Disabled, Loading)
 FR10: Developers can import and render DsIconButton containing a DsIcon internally, with all DsButton sizes
-FR11: Developers can import and render DsInputText with sizes (S, M) and states (Default, Hover, Focus, Filled, Error, Disabled)
+FR11: Developers can import and render DsInputText as a composite InputField (label + input + hint/error) with sizes (S, M) and 9 visual states (Default, Hover, Focus, Input-text, Filled, Filled-Hover, Disabled, Alert, Alert-Input), supporting leading icon slot, trailing elements (dropdown arrow, clear button, error icon), and accessible error messaging
 FR12: Developers can import and render DsLink with types (Regular, Smart, Quiet), sizes (S, M), and visibility levels (high, low)
 FR13: All components can accept and pass through standard PrimeVue props, slots, and events for their underlying PrimeVue base component
 FR14: All components can render matching the Figma design in both light and dark themes without additional styling
@@ -104,7 +104,7 @@ UX-DR6: Implement shadow/effects token system — XS, SM, Shadow 3, Key light sh
 UX-DR7: DsButton must implement 6 variant types (Primary, Outlined, Tertiary, Text, Text/link, Negative) with usage rules — max one Primary per section, Negative always paired with cancel
 UX-DR8: DsButton must implement loading state that replaces button content while preserving button width
 UX-DR9: DsButton disabled state must retain type styling at reduced opacity (0.5) — never change type when disabling
-UX-DR10: DsInputText must implement 8 visual states — Default (gray border), Hover (darkened border), Focus (primary color border), Filled (subtle background change), Filled-Hover, Disabled (reduced opacity), Error (red border + error message below), Skip
+UX-DR10: DsInputText must implement 9 visual states — Default (gray-400 border, shadow-xs), Hover (gray-600 border, gray-100 bg), Focus (purple-450 border), Input-text (purple-450 border, caret, close btn), Filled (gray-400 border, gray-800 text), Filled-Hover (gray-600 border, gray-100 bg, gray-800 text), Disabled (gray-400 border, gray-100 bg, opacity 0.5), Alert (red-700 border, error icon), Alert-Input (red-700 border, 3px red-100 focus ring, caret, close btn)
 UX-DR11: Form validation must trigger on blur (not keystroke), show error below field, clear on typing, re-validate on next blur
 UX-DR12: All interactive components must follow universal state behavior — Default, Hover, Focus, Active/Pressed, Disabled, Loading — with state priority: Disabled > Loading > Active > Focus > Hover > Default
 UX-DR13: All state transitions must use 150ms ease timing (no transitions on disabled state changes)
@@ -428,6 +428,10 @@ As a developer implementing a Figma form design,
 I want to use DsInputText with all sizes and visual states,
 So that text inputs in my application match the Figma Design System with correct validation behavior.
 
+**Figma References:**
+- Input component: https://www.figma.com/design/3qP5xnwc6gXhZR3AnFAMFe/Design-Systems?node-id=2198-12433&m=dev
+- InputField composite: https://www.figma.com/design/3qP5xnwc6gXhZR3AnFAMFe/Design-Systems?node-id=2072-10430&m=dev
+
 **Acceptance Criteria:**
 
 **Given** DsInputText wraps PrimeVue InputText using `inheritAttrs: false` + `v-bind="$attrs"`
@@ -437,24 +441,47 @@ So that text inputs in my application match the Figma Design System with correct
 **Given** DsInputText supports 2 sizes (S, M)
 **When** the `size` prop is set
 **Then** Small renders at 32px height with 14px font
-**And** Medium renders at 36px height with 16px font
+**And** Medium renders at 40px height with 14px font
 
-**Given** DsInputText implements 8 visual states
+**Given** DsInputText implements 9 visual states
 **When** the input transitions through states
-**Then** Default shows gray border
-**And** Hover shows darkened border
-**And** Focus shows primary color (purple) border
-**And** Filled shows subtle background change
-**And** Filled-Hover shows filled style plus hover indicator
-**And** Disabled shows reduced opacity (0.5) with `pointer-events: none`
-**And** Error shows red border with error message text displayed below the field
-**And** Skip shows the skipped visual state
+**Then** Default shows gray-400 border (#cad5e2) with shadow-xs
+**And** Hover shows gray-600 border (#62748e) with gray-100 background
+**And** Focus shows purple-450 border (#5f33e6)
+**And** Input-text shows purple-450 border with caret and close button
+**And** Filled shows gray-400 border with gray-800 text
+**And** Filled-Hover shows gray-600 border with gray-100 background and gray-800 text
+**And** Disabled shows gray-100 background, gray-400 border, opacity 0.5, `pointer-events: none`
+**And** Alert shows red-700 border (#f22a42) with error triangle icon
+**And** Alert-Input shows red-700 border with 3px red-100 focus ring, caret, and close button
+
+**Given** DsInputText renders as a composite InputField with label, input, and hint/error sections
+**When** the `label` prop is provided
+**Then** a label renders above the input (6px gap) in Inter medium 14px gray-900
+**And** mandatory fields show an asterisk (*) after the label text
+**And** optional fields show "(Optional)" in 12px gray-600
+**And** an info icon (14px) can be shown via the `info` prop
+
+**Given** DsInputText supports hint and error text below the input
+**When** the `hint` prop is provided
+**Then** hint text renders below the input in 14px regular gray-600
+**And** in Alert/Alert-Input/Skip states, the hint shows as error text in 12px medium red-700 with an error triangle icon
+
+**Given** DsInputText supports a leading icon slot
+**When** content is passed to the `leading` slot (e.g., `<DsIcon name="envelope" />`)
+**Then** a 20px icon renders at the start of the input field before the text/placeholder
+
+**Given** DsInputText supports trailing elements
+**When** the input has trailing content
+**Then** a dropdown arrow icon renders when `showDropdownIcon` is true
+**And** a clear button renders when `clearable` is true and input has a value
+**And** in Alert state an error triangle icon renders on the right side
 
 **Given** DsInputText supports error state with accessible messaging
 **When** an `error` prop is provided with an error message string
-**Then** the error message renders below the input field
+**Then** the error message renders below the input with the error triangle icon
 **And** the error message is associated with the input via `aria-describedby` (UX-DR20)
-**And** the input border turns red using the Negative/Red token
+**And** the input border turns red using the Negative/Red-700 token
 
 **Given** DsInputText follows form validation patterns
 **When** integrated in a form context
@@ -467,11 +494,11 @@ So that text inputs in my application match the Figma Design System with correct
 
 **Given** DsInputText renders correctly in both themes
 **When** the application switches themes
-**Then** all 8 states display correctly in dark mode using inverted tokens
+**Then** all 9 states display correctly in dark mode using inverted tokens
 
 **Given** DsInputText has TypeScript types and a co-located test file
 **When** the component is used and tests are run
-**Then** all props have type definitions and tests verify both sizes, all states, error message rendering, accessibility attributes, and PrimeVue passthrough
+**Then** all props have type definitions and tests verify both sizes, all 9 states, label rendering, hint/error rendering, leading icon slot, trailing elements, accessibility attributes, and PrimeVue passthrough
 
 ### Story 2.3: DsLink Component
 
