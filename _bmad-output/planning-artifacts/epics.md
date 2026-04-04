@@ -506,6 +506,8 @@ As a developer implementing navigation in a Figma design,
 I want to use DsLink with all types, sizes, and visibility levels,
 So that links in my application match the Figma Design System and are accessible.
 
+**Figma reference:** [Design Systems — Link (node 2014:9803)](https://www.figma.com/design/3qP5xnwc6gXhZR3AnFAMFe/Design-Systems?node-id=2014-9803&m=dev)
+
 **Acceptance Criteria:**
 
 **Given** DsLink is a custom Tailwind component (no direct PrimeVue equivalent)
@@ -514,30 +516,47 @@ So that links in my application match the Figma Design System and are accessible
 
 **Given** DsLink supports 3 link types
 **When** the `type` prop is set
-**Then** Regular renders as underlined blue text (for standard hyperlinks)
-**And** Smart renders as blue text with blue background on hover (for internal app navigation)
-**And** Quiet renders as blue text with no underline, underline appears on hover (for subtle in-content links)
+**Then** Regular renders as always-underlined text using `heading` font family (for standard hyperlinks)
+**And** Smart renders as text with no underline, padded container (padding 10px horizontal, 4px vertical) always present with no border-radius in active state; on hover gains blue-200 (#e7f4fe) background + 4px border-radius (for internal app navigation)
+**And** Quiet renders as text with no underline using `heading` font family, underline appears on hover switching to `body` font family (for subtle in-content links)
 
 **Given** DsLink supports 2 sizes (S, M)
 **When** the `size` prop is set
-**Then** Small renders with 14px font and 20px line height
-**And** Medium renders with 16px font and 24px line height
+**Then** Small renders with 14px font (`font-size-h10`) and 20px line height
+**And** Medium renders with 16px font (`font-size-h9`) and 24px line height
+**And** icon gap between icons and text is 2px
+**And** letter spacing is -0.2px for all sizes EXCEPT Regular link small which uses 0
 
-**Given** DsLink supports 2 visibility levels
+**Given** DsLink supports visibility levels per type
 **When** the `visibility` prop is set
-**Then** High (default) uses blue text color — stands out as interactive
-**And** Low uses gray text color — blends with content, hover reveals interactivity
+**Then** Regular and Quiet support both High and Low visibility (5 valid combinations total)
+**And** Smart link supports ONLY High visibility (no low visibility variant exists in Figma)
+**And** High (default) uses `blue-600` (#0e5cf4) text color — stands out as interactive
+**And** Low uses `gray-800` (#314158) text color — blends with content, hover reveals interactivity
+
+**Given** DsLink has distinct hover colors per type and visibility
+**When** the user hovers over a non-disabled link
+**Then** Regular (high) hover text changes to `blue-800` (#0042c4)
+**And** Regular (low) hover text changes to `gray-900` (#1d293d)
+**And** Smart (high) hover text stays `blue-600`, container gains `blue-200` (#e7f4fe) background with 4px border-radius
+**And** Quiet (high) hover text changes to `blue-800` (#0042c4), underline appears
+**And** Quiet (low) hover text changes to `gray-950` (#020618), underline appears
+
+**Given** DsLink has a disabled state
+**When** the `disabled` prop is true
+**Then** all types render text in `gray-500` (#90a1b9) regardless of visibility level
+**And** underline style is preserved per type (Regular stays underlined, Smart/Quiet stay non-underlined)
+**And** the link removes `href`, sets `aria-disabled="true"`, `tabindex="-1"`, and prevents navigation via click handler with `stopPropagation`
 
 **Given** DsLink uses semantic HTML and is accessible
 **When** the component renders
 **Then** it uses a native `<a>` element (not `<div>` or `<span>`)
 **And** keyboard navigation works via Tab and Enter
 **And** focus ring is visible using `focus-visible:` in both themes
-**And** disabled state (if provided) sets `aria-disabled="true"` and prevents navigation
 
 **Given** DsLink supports left and right icon slots
 **When** DsIcon components are placed in icon slots
-**Then** icons render at the correct size matching the link's size tier
+**Then** icons render at the correct size matching the link's size tier (S=16px, M=20px)
 
 **Given** DsLink follows PrimeVue API conventions
 **When** the component is used
@@ -546,11 +565,11 @@ So that links in my application match the Figma Design System and are accessible
 
 **Given** DsLink renders correctly in both themes and all state transitions use 150ms ease
 **When** the application switches themes
-**Then** all 3 types and 2 visibility levels display correctly in dark mode
+**Then** all 5 type+visibility combinations display correctly in dark mode
 
 **Given** DsLink has TypeScript types and a co-located test file
 **When** the component is used and tests are run
-**Then** all props have type definitions and tests verify all types, sizes, visibility levels, accessibility, icon slots, and dark mode rendering
+**Then** all props have type definitions and tests verify all types, sizes, visibility levels (including Smart high-only constraint), hover color changes, disabled state, accessibility, icon slots, and dark mode rendering
 
 ---
 
