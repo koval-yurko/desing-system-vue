@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-27
-last_updated: 2026-04-05 # story 4.2 done
+last_updated: 2026-04-05 # story 5.1 done
 
 project: desing-system-vue
 project_key: NOKEY
@@ -74,7 +74,7 @@ development_status:
   epic-4-retrospective: optional
 
   # Epic 5: CI/CD & Library Publishing
-  epic-5: backlog
-  5-1-cicd-pipeline-setup: backlog
+  epic-5: in-progress
+  5-1-cicd-pipeline-setup: done
   5-2-component-addition-pattern-documentation: backlog
   epic-5-retrospective: optional
