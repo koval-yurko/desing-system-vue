@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-27
-last_updated: 2026-04-05 # story 4.1 done
+last_updated: 2026-04-05 # story 4.2 done
 
 project: desing-system-vue
 project_key: NOKEY
@@ -60,17 +60,17 @@ development_status:
   epic-2-retrospective: optional
 
   # Epic 3: Developer Documentation (Storybook)
-  epic-3: in-progress
+  epic-3: done
   3-1-storybook-setup-configuration: done
   3-2-foundation-stories-design-tokens: done
-  3-3-component-stories-with-interactive-controls: review
+  3-3-component-stories-with-interactive-controls: done
   3-4-composed-layout-example-pages: done
   epic-3-retrospective: optional
 
   # Epic 4: AI Agent Knowledge Base
-  epic-4: in-progress
+  epic-4: done
   4-1-ai-knowledge-base-structure-component-index: done
-  4-2-per-component-ai-knowledge-base-entries: backlog
+  4-2-per-component-ai-knowledge-base-entries: done
   epic-4-retrospective: optional
 
   # Epic 5: CI/CD & Library Publishing
