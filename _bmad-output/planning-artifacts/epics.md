@@ -694,7 +694,7 @@ So that I can quickly determine which library component matches a Figma design e
 
 **Acceptance Criteria:**
 
-**Given** `docs/ai-kb/index.md` exists
+**Given** `docs/ai-guidelines/index.md` exists
 **When** an AI agent reads the index
 **Then** it finds a complete inventory of all available components (FR24)
 **And** each component entry includes: component name, one-line description, import path

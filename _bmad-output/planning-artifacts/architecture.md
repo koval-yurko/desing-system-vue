@@ -347,7 +347,7 @@ desing-system-vue/
 │   ├── preview.ts                    # Global decorators, theme setup
 │   └── manager.ts                    # Storybook UI customization
 ├── docs/
-│   └── ai-kb/
+│   └── ai-guidelines/
 │       ├── index.md                  # Component inventory for AI agents
 │       ├── ds-button.md
 │       ├── ds-icon-button.md
