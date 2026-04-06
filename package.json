@@ -68,5 +68,8 @@
   },
   "lint-staged": {
     "*.{js,ts,vue,css,json}": "biome check --write"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.2.8"
   }
 }

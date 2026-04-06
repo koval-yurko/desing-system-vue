@@ -18,6 +18,7 @@ interface ButtonSizeValues {
   paddingX: string;
   paddingY: string;
   iconOnlyWidth: string;
+  borderRadius: string;
 }
 
 interface ButtonSizeTokens extends ButtonSizeValues {
@@ -71,53 +72,60 @@ const mappedPrimeVueSize = computed(() => {
 });
 
 // Design token overrides per size for exact Figma dimensions
-// Heights achieved via paddingY: (targetHeight - fontSize * lineHeight) / 2
-// XS: (24 - 16) / 2 = 4px = 0.25rem
-// S:  (32 - 20) / 2 = 6px = 0.375rem
-// M:  (36 - 20) / 2 = 8px = 0.5rem
-// L:  (40 - 20) / 2 = 10px = 0.625rem
+// Heights achieved via paddingY: (targetHeight - lineHeight - 2px border) / 2
+// XS: (24 - 16 - 2) / 2 = 3px
+// S:  (32 - 20 - 2) / 2 = 5px
+// M:  (36 - 20 - 2) / 2 = 7px
+// L:  (40 - 20 - 2) / 2 = 9px
 const sizeTokens = computed((): ButtonSizeTokens => {
   const map: Record<string, ButtonSizeTokens> = {
     xsmall: {
       fontSize: '0.75rem',
-      paddingX: '0.5rem',
-      paddingY: '0.25rem',
+      paddingX: '0.25rem',
+      paddingY: '3px',
       iconOnlyWidth: '1.5rem',
+      borderRadius: '4px',
       sm: {
         fontSize: '0.75rem',
-        paddingX: '0.5rem',
-        paddingY: '0.25rem',
+        paddingX: '0.25rem',
+        paddingY: '3px',
         iconOnlyWidth: '1.5rem',
+        borderRadius: '4px',
       },
     },
     small: {
       fontSize: '0.875rem',
-      paddingX: '0.75rem',
-      paddingY: '0.375rem',
+      paddingX: '2rem',
+      paddingY: '5px',
       iconOnlyWidth: '2rem',
+      borderRadius: '8px',
       sm: {
         fontSize: '0.875rem',
-        paddingX: '0.75rem',
-        paddingY: '0.375rem',
+        paddingX: '2rem',
+        paddingY: '5px',
         iconOnlyWidth: '2rem',
+        borderRadius: '8px',
       },
     },
     medium: {
       fontSize: '0.875rem',
-      paddingX: '1rem',
-      paddingY: '0.5rem',
+      paddingX: '2rem',
+      paddingY: '7px',
       iconOnlyWidth: '2.25rem',
+      borderRadius: '8px',
     },
     large: {
       fontSize: '0.875rem',
       paddingX: '2rem',
-      paddingY: '0.625rem',
+      paddingY: '9px',
       iconOnlyWidth: '2.5rem',
+      borderRadius: '8px',
       lg: {
         fontSize: '0.875rem',
         paddingX: '2rem',
-        paddingY: '0.625rem',
+        paddingY: '9px',
         iconOnlyWidth: '2.5rem',
+        borderRadius: '8px',
       },
     },
   };
@@ -131,6 +139,17 @@ const iconSize = computed(() => {
     small: '1rem',
     medium: '1.25rem',
     large: '1.25rem',
+  };
+  return map[props.size];
+});
+
+// Font weight per size tier (Figma: XS=400, S=500, M/L=600)
+const fontWeight = computed(() => {
+  const map: Record<string, string> = {
+    xsmall: '400',
+    small: '500',
+    medium: '600',
+    large: '600',
   };
   return map[props.size];
 });
@@ -154,12 +173,17 @@ const buttonClasses = computed(() => ({
     :dt="sizeTokens"
     :disabled="disabled"
     :class="buttonClasses"
-    :style="{ '--ds-button-icon-size': iconSize }"
+    :style="{
+      '--ds-button-icon-size': iconSize,
+      fontWeight,
+      letterSpacing: props.size === 'xsmall' ? '0' : '-0.2px',
+      lineHeight: props.size === 'xsmall' ? '16px' : '20px',
+    }"
     :aria-disabled="disabled ? 'true' : undefined"
     :aria-busy="loading ? 'true' : undefined"
     :aria-live="loading ? 'polite' : undefined"
   >
-    <template #icon>
+    <template v-if="$slots.icon" #icon>
       <slot name="icon" />
     </template>
     <slot />
@@ -237,5 +261,9 @@ const buttonClasses = computed(() => ({
   font-size: var(--ds-button-icon-size);
   width: var(--ds-button-icon-size);
   height: var(--ds-button-icon-size);
+}
+
+.ds-button--medium {
+  font-size: var(--p-button-font-size) !important;
 }
 </style>

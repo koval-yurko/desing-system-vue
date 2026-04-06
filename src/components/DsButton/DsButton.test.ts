@@ -62,8 +62,9 @@ describe('DsButton', () => {
       const btn = wrapper.findComponent(Button);
       const dt = btn.props('dt') as Record<string, unknown>;
       expect(dt.fontSize).toBe('0.75rem');
-      expect(dt.paddingX).toBe('0.5rem');
-      expect(dt.paddingY).toBe('0.25rem');
+      expect(dt.paddingX).toBe('0.25rem');
+      expect(dt.paddingY).toBe('3px');
+      expect(dt.borderRadius).toBe('4px');
     });
 
     it('passes dt size tokens for small', () => {
@@ -74,8 +75,9 @@ describe('DsButton', () => {
       const btn = wrapper.findComponent(Button);
       const dt = btn.props('dt') as Record<string, unknown>;
       expect(dt.fontSize).toBe('0.875rem');
-      expect(dt.paddingX).toBe('0.75rem');
-      expect(dt.paddingY).toBe('0.375rem');
+      expect(dt.paddingX).toBe('2rem');
+      expect(dt.paddingY).toBe('5px');
+      expect(dt.borderRadius).toBe('8px');
     });
 
     it('passes dt size tokens for medium', () => {
@@ -86,8 +88,9 @@ describe('DsButton', () => {
       const btn = wrapper.findComponent(Button);
       const dt = btn.props('dt') as Record<string, unknown>;
       expect(dt.fontSize).toBe('0.875rem');
-      expect(dt.paddingX).toBe('1rem');
-      expect(dt.paddingY).toBe('0.5rem');
+      expect(dt.paddingX).toBe('2rem');
+      expect(dt.paddingY).toBe('7px');
+      expect(dt.borderRadius).toBe('8px');
     });
 
     it('passes dt size tokens for large', () => {
@@ -99,7 +102,30 @@ describe('DsButton', () => {
       const dt = btn.props('dt') as Record<string, unknown>;
       expect(dt.fontSize).toBe('0.875rem');
       expect(dt.paddingX).toBe('2rem');
-      expect(dt.paddingY).toBe('0.625rem');
+      expect(dt.paddingY).toBe('9px');
+      expect(dt.borderRadius).toBe('8px');
+    });
+  });
+
+  describe('typography per size', () => {
+    it.each([
+      ['xsmall', '400', 'normal', '16px'],
+      ['small', '500', '-0.2px', '20px'],
+      ['medium', '600', '-0.2px', '20px'],
+      ['large', '600', '-0.2px', '20px'],
+    ] as const)('applies correct font weight, letter spacing, line height for %s', (dsSize, expectedWeight, expectedSpacing, expectedLineHeight) => {
+      const wrapper = mount(DsButton, {
+        props: { size: dsSize },
+        global: globalConfig,
+      });
+      const style = wrapper.attributes('style') || '';
+      expect(style).toContain(`font-weight: ${expectedWeight}`);
+      if (expectedSpacing === 'normal') {
+        expect(style).toContain('letter-spacing: 0');
+      } else {
+        expect(style).toContain(`letter-spacing: ${expectedSpacing}`);
+      }
+      expect(style).toContain(`line-height: ${expectedLineHeight}`);
     });
   });
 
