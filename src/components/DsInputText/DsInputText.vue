@@ -56,6 +56,7 @@ const inputClasses = computed(() => ({
   [`ds-input-text__input--${props.size}`]: true,
   'ds-input-text__input--error': showError.value,
   'ds-input-text__input--disabled': props.disabled,
+  'ds-input-text__input--filled': hasValue.value && !props.disabled,
   'ds-input-text__input--transitions': !props.disabled,
 }));
 
@@ -255,27 +256,40 @@ function handleClear() {
   box-shadow: none;
 }
 
-/* Error state */
+/* Error state — border always red */
 .ds-input-text__input--error {
   border-color: var(--p-red-700);
+}
+
+/* Error + filled (Alert): no shadow */
+.ds-input-text__input--error.ds-input-text__input--filled {
   box-shadow: none;
 }
 
+/* Error + focused (Alert-Input): red ring */
 .ds-input-text__input--error:focus-within {
   box-shadow: 0px 0px 0px 3px var(--p-red-100);
 }
 
-/* Disabled state */
+/* Disabled state — no opacity; use muted colors per Figma */
 .ds-input-text__input--disabled {
   background-color: var(--p-gray-100);
   border-color: var(--p-gray-400);
   box-shadow: none;
-  opacity: 0.5;
   pointer-events: none;
+}
+
+.ds-input-text__input--disabled .ds-input-text__native {
+  color: var(--p-gray-500);
 }
 
 .ds-input-text__input--disabled .ds-input-text__native::placeholder {
   color: var(--p-gray-500);
+}
+
+/* Filled state (has value, idle) — no shadow per Figma */
+.ds-input-text__input--filled:not(.ds-input-text__input--error):not(.ds-input-text__input--disabled) {
+  box-shadow: none;
 }
 
 /* Transitions */
@@ -290,6 +304,10 @@ function handleClear() {
   justify-content: center;
   flex-shrink: 0;
   color: var(--p-gray-600);
+}
+
+.ds-input-text__input--disabled .ds-input-text__leading {
+  color: var(--p-gray-500);
 }
 
 /* Trailing elements */

@@ -338,6 +338,37 @@ describe('DsInputText', () => {
     });
   });
 
+  describe('filled state', () => {
+    it('applies filled class when modelValue has a value', () => {
+      const wrapper = mount(DsInputText, {
+        props: { modelValue: 'hello' },
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-input-text__input--filled').exists()).toBe(true);
+    });
+
+    it('does not apply filled class when modelValue is empty', () => {
+      const wrapper = mount(DsInputText, {
+        props: { modelValue: '' },
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-input-text__input--filled').exists()).toBe(false);
+    });
+
+    it('does not apply filled class when no modelValue is provided', () => {
+      const wrapper = mount(DsInputText, { global: globalConfig });
+      expect(wrapper.find('.ds-input-text__input--filled').exists()).toBe(false);
+    });
+
+    it('does not apply filled class when disabled even with value', () => {
+      const wrapper = mount(DsInputText, {
+        props: { disabled: true, modelValue: 'hello' },
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-input-text__input--filled').exists()).toBe(false);
+    });
+  });
+
   describe('v-model', () => {
     it('supports two-way binding via v-model', async () => {
       const wrapper = mount(DsInputText, {
