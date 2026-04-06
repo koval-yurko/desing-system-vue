@@ -130,6 +130,11 @@ const linkClasses = computed(() => ({
 
 /* ─── HOVER STATES ─── */
 
+/* All hover states gain border-radius per Figma */
+.ds-link:not(.ds-link--disabled):hover {
+  border-radius: 4px;
+}
+
 /* Regular (high) hover */
 .ds-link--regular.ds-link--high:not(.ds-link--disabled):hover {
   color: var(--taxt\/supporting\/blue\/blue-800, #0042c4);
@@ -140,10 +145,9 @@ const linkClasses = computed(() => ({
   color: var(--taxt\/main\/gray-900, #1d293d);
 }
 
-/* Smart (high) hover — gains background + border-radius */
+/* Smart (high) hover — gains background */
 .ds-link--smart.ds-link--high:not(.ds-link--disabled):hover {
   background-color: var(--surfase\/supporting\/blue\/blue-200, #e7f4fe);
-  border-radius: 4px;
 }
 
 /* Quiet (high) hover — gains underline, darker blue, body font */
