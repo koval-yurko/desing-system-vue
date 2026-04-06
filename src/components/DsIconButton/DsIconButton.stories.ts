@@ -17,6 +17,8 @@ const meta = {
     },
     disabled: { control: 'boolean' },
     loading: { control: 'boolean' },
+    indicator: { control: 'boolean' },
+    counterBadge: { control: 'number' },
     ariaLabel: { control: 'text' },
   },
   args: {
@@ -24,6 +26,7 @@ const meta = {
     size: 'medium',
     disabled: false,
     loading: false,
+    indicator: false,
     ariaLabel: 'Edit',
   },
 } satisfies Meta<typeof DsIconButton>;
@@ -76,7 +79,20 @@ export const Text: Story = {
 };
 
 export const Disabled: Story = {
-  args: { disabled: true },
+  render: () => ({
+    components: { DsIconButton, DsIcon },
+    template: `
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <DsIconButton type="primary" disabled ariaLabel="Edit"><DsIcon name="edit" /></DsIconButton>
+        <DsIconButton type="outlined" disabled ariaLabel="Edit"><DsIcon name="edit" /></DsIconButton>
+        <DsIconButton type="text" disabled ariaLabel="Edit"><DsIcon name="edit" /></DsIconButton>
+      </div>
+    `,
+  }),
+};
+
+export const Loading: Story = {
+  args: { loading: true },
   render: (args) => ({
     components: { DsIconButton, DsIcon },
     setup() {
@@ -90,8 +106,23 @@ export const Disabled: Story = {
   }),
 };
 
-export const Loading: Story = {
-  args: { loading: true },
+export const WithIndicator: Story = {
+  args: { type: 'text', size: 'xsmall', indicator: true },
+  render: (args) => ({
+    components: { DsIconButton, DsIcon },
+    setup() {
+      return { args };
+    },
+    template: `
+      <DsIconButton v-bind="args">
+        <DsIcon name="edit" size="xsmall" />
+      </DsIconButton>
+    `,
+  }),
+};
+
+export const WithCounterBadge: Story = {
+  args: { type: 'text', size: 'medium', counterBadge: 9 },
   render: (args) => ({
     components: { DsIconButton, DsIcon },
     setup() {

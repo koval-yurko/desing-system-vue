@@ -10,14 +10,24 @@ const globalConfig = {
 
 const defaultProps = { ariaLabel: 'Action' };
 
+/** Helper: find the PrimeVue Button inside the wrapper */
+function findBtn(wrapper: ReturnType<typeof mount>) {
+  return wrapper.findComponent(Button);
+}
+
 describe('DsIconButton', () => {
   it('renders with default props (primary, medium)', () => {
     const wrapper = mount(DsIconButton, { props: defaultProps, global: globalConfig });
-    const btn = wrapper.findComponent(Button);
+    const btn = findBtn(wrapper);
     expect(btn.exists()).toBe(true);
-    expect(wrapper.classes()).toContain('ds-icon-button');
-    expect(wrapper.classes()).toContain('ds-icon-button--primary');
-    expect(wrapper.classes()).toContain('ds-icon-button--medium');
+    expect(btn.classes()).toContain('ds-icon-button');
+    expect(btn.classes()).toContain('ds-icon-button--primary');
+    expect(btn.classes()).toContain('ds-icon-button--medium');
+  });
+
+  it('renders a wrapper div with ds-icon-button-wrapper class', () => {
+    const wrapper = mount(DsIconButton, { props: defaultProps, global: globalConfig });
+    expect(wrapper.find('.ds-icon-button-wrapper').exists()).toBe(true);
   });
 
   describe('type variants', () => {
@@ -30,10 +40,10 @@ describe('DsIconButton', () => {
         props: { ...defaultProps, type: dsType },
         global: globalConfig,
       });
-      const btn = wrapper.findComponent(Button);
+      const btn = findBtn(wrapper);
       expect(btn.props('severity')).toBe(expectedSeverity);
       expect(btn.props('variant')).toBe(expectedVariant);
-      expect(wrapper.classes()).toContain(`ds-icon-button--${dsType}`);
+      expect(btn.classes()).toContain(`ds-icon-button--${dsType}`);
     });
   });
 
@@ -47,9 +57,9 @@ describe('DsIconButton', () => {
         props: { ...defaultProps, size: dsSize },
         global: globalConfig,
       });
-      const btn = wrapper.findComponent(Button);
+      const btn = findBtn(wrapper);
       expect(btn.props('size')).toBe(expectedPvSize);
-      expect(wrapper.classes()).toContain(`ds-icon-button--${dsSize}`);
+      expect(btn.classes()).toContain(`ds-icon-button--${dsSize}`);
     });
 
     it('passes dt size tokens for xsmall', () => {
@@ -57,7 +67,7 @@ describe('DsIconButton', () => {
         props: { ...defaultProps, size: 'xsmall' },
         global: globalConfig,
       });
-      const btn = wrapper.findComponent(Button);
+      const btn = findBtn(wrapper);
       const dt = btn.props('dt') as Record<string, unknown>;
       expect(dt.fontSize).toBe('0');
       expect(dt.paddingX).toBe('0');
@@ -71,7 +81,7 @@ describe('DsIconButton', () => {
         props: { ...defaultProps, size: 'small' },
         global: globalConfig,
       });
-      const btn = wrapper.findComponent(Button);
+      const btn = findBtn(wrapper);
       const dt = btn.props('dt') as Record<string, unknown>;
       expect(dt.fontSize).toBe('0');
       expect(dt.paddingX).toBe('0');
@@ -85,7 +95,7 @@ describe('DsIconButton', () => {
         props: { ...defaultProps, size: 'medium' },
         global: globalConfig,
       });
-      const btn = wrapper.findComponent(Button);
+      const btn = findBtn(wrapper);
       const dt = btn.props('dt') as Record<string, unknown>;
       expect(dt.fontSize).toBe('0');
       expect(dt.paddingX).toBe('0');
@@ -96,14 +106,15 @@ describe('DsIconButton', () => {
   });
 
   describe('disabled state', () => {
-    it('applies disabled class, aria-disabled, and removes transitions', () => {
+    it('applies disabled class and aria-disabled on the button', () => {
       const wrapper = mount(DsIconButton, {
         props: { ...defaultProps, disabled: true },
         global: globalConfig,
       });
-      expect(wrapper.classes()).toContain('ds-icon-button--disabled');
-      expect(wrapper.classes()).not.toContain('ds-icon-button--transitions');
-      expect(wrapper.attributes('aria-disabled')).toBe('true');
+      const btn = findBtn(wrapper);
+      expect(btn.classes()).toContain('ds-icon-button--disabled');
+      expect(btn.classes()).not.toContain('ds-icon-button--transitions');
+      expect(btn.attributes('aria-disabled')).toBe('true');
     });
 
     it('passes disabled to the rendered button element', () => {
@@ -117,8 +128,39 @@ describe('DsIconButton', () => {
 
     it('has transitions when not disabled', () => {
       const wrapper = mount(DsIconButton, { props: defaultProps, global: globalConfig });
-      expect(wrapper.classes()).toContain('ds-icon-button--transitions');
-      expect(wrapper.classes()).not.toContain('ds-icon-button--disabled');
+      const btn = findBtn(wrapper);
+      expect(btn.classes()).toContain('ds-icon-button--transitions');
+      expect(btn.classes()).not.toContain('ds-icon-button--disabled');
+    });
+
+    it('applies per-type disabled class for primary', () => {
+      const wrapper = mount(DsIconButton, {
+        props: { ...defaultProps, type: 'primary', disabled: true },
+        global: globalConfig,
+      });
+      const btn = findBtn(wrapper);
+      expect(btn.classes()).toContain('ds-icon-button--primary');
+      expect(btn.classes()).toContain('ds-icon-button--disabled');
+    });
+
+    it('applies per-type disabled class for outlined', () => {
+      const wrapper = mount(DsIconButton, {
+        props: { ...defaultProps, type: 'outlined', disabled: true },
+        global: globalConfig,
+      });
+      const btn = findBtn(wrapper);
+      expect(btn.classes()).toContain('ds-icon-button--outlined');
+      expect(btn.classes()).toContain('ds-icon-button--disabled');
+    });
+
+    it('applies per-type disabled class for text', () => {
+      const wrapper = mount(DsIconButton, {
+        props: { ...defaultProps, type: 'text', disabled: true },
+        global: globalConfig,
+      });
+      const btn = findBtn(wrapper);
+      expect(btn.classes()).toContain('ds-icon-button--text');
+      expect(btn.classes()).toContain('ds-icon-button--disabled');
     });
   });
 
@@ -132,10 +174,10 @@ describe('DsIconButton', () => {
         props: { ...defaultProps, size: dsSize },
         global: globalConfig,
       });
-      const btn = wrapper.findComponent(Button);
+      const btn = findBtn(wrapper);
       const dt = btn.props('dt') as Record<string, unknown>;
       expect(dt.iconOnlyWidth).toBe(expectedDimension);
-      const style = wrapper.attributes('style') || '';
+      const style = btn.attributes('style') || '';
       expect(style).toContain(`--ds-icon-button-dimension: ${expectedDimension}`);
     });
   });
@@ -161,7 +203,8 @@ describe('DsIconButton', () => {
         props: { ...defaultProps, loading: true },
         global: globalConfig,
       });
-      expect(wrapper.classes()).toContain('ds-icon-button--loading');
+      const btn = findBtn(wrapper);
+      expect(btn.classes()).toContain('ds-icon-button--loading');
     });
 
     it('disables the button when loading to prevent keyboard activation', () => {
@@ -178,12 +221,14 @@ describe('DsIconButton', () => {
         props: { ...defaultProps, loading: true },
         global: globalConfig,
       });
-      expect(wrapper.attributes('aria-live')).toBe('polite');
+      const btn = findBtn(wrapper);
+      expect(btn.attributes('aria-live')).toBe('polite');
     });
 
     it('does not have aria-live when not loading', () => {
       const wrapper = mount(DsIconButton, { props: defaultProps, global: globalConfig });
-      expect(wrapper.attributes('aria-live')).toBeUndefined();
+      const btn = findBtn(wrapper);
+      expect(btn.attributes('aria-live')).toBeUndefined();
     });
 
     it('adds aria-busy="true" when loading', () => {
@@ -191,12 +236,14 @@ describe('DsIconButton', () => {
         props: { ...defaultProps, loading: true },
         global: globalConfig,
       });
-      expect(wrapper.attributes('aria-busy')).toBe('true');
+      const btn = findBtn(wrapper);
+      expect(btn.attributes('aria-busy')).toBe('true');
     });
 
     it('does not have aria-busy when not loading', () => {
       const wrapper = mount(DsIconButton, { props: defaultProps, global: globalConfig });
-      expect(wrapper.attributes('aria-busy')).toBeUndefined();
+      const btn = findBtn(wrapper);
+      expect(btn.attributes('aria-busy')).toBeUndefined();
     });
 
     it('hides icon slot when loading', () => {
@@ -231,7 +278,8 @@ describe('DsIconButton', () => {
         props: { ...defaultProps, loading: true },
         global: globalConfig,
       });
-      expect(wrapper.attributes('aria-disabled')).toBe('true');
+      const btn = findBtn(wrapper);
+      expect(btn.attributes('aria-disabled')).toBe('true');
     });
 
     it('removes transitions when loading', () => {
@@ -239,7 +287,8 @@ describe('DsIconButton', () => {
         props: { ...defaultProps, loading: true },
         global: globalConfig,
       });
-      expect(wrapper.classes()).not.toContain('ds-icon-button--transitions');
+      const btn = findBtn(wrapper);
+      expect(btn.classes()).not.toContain('ds-icon-button--transitions');
     });
   });
 
@@ -311,6 +360,71 @@ describe('DsIconButton', () => {
         global: globalConfig,
       });
       expect(wrapper.find('#my-icon-button').exists()).toBe(true);
+    });
+  });
+
+  describe('indicator', () => {
+    it('renders indicator dot when indicator=true', () => {
+      const wrapper = mount(DsIconButton, {
+        props: { ...defaultProps, indicator: true },
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-icon-button-indicator').exists()).toBe(true);
+    });
+
+    it('hides indicator by default', () => {
+      const wrapper = mount(DsIconButton, {
+        props: defaultProps,
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-icon-button-indicator').exists()).toBe(false);
+    });
+
+    it('indicator is aria-hidden', () => {
+      const wrapper = mount(DsIconButton, {
+        props: { ...defaultProps, indicator: true },
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-icon-button-indicator').attributes('aria-hidden')).toBe('true');
+    });
+
+    it('indicator is hidden when counterBadge is also set', () => {
+      const wrapper = mount(DsIconButton, {
+        props: { ...defaultProps, indicator: true, counterBadge: 3 },
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-icon-button-indicator').exists()).toBe(false);
+      expect(wrapper.find('.ds-icon-button-counter-badge').exists()).toBe(true);
+    });
+  });
+
+  describe('counterBadge', () => {
+    it('renders counter badge with value', () => {
+      const wrapper = mount(DsIconButton, {
+        props: { ...defaultProps, counterBadge: 9 },
+        global: globalConfig,
+      });
+      const badge = wrapper.find('.ds-icon-button-counter-badge');
+      expect(badge.exists()).toBe(true);
+      expect(badge.text()).toBe('9');
+    });
+
+    it('does not render counter badge by default', () => {
+      const wrapper = mount(DsIconButton, {
+        props: defaultProps,
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-icon-button-counter-badge').exists()).toBe(false);
+    });
+
+    it('counter badge has accessible label', () => {
+      const wrapper = mount(DsIconButton, {
+        props: { ...defaultProps, counterBadge: 5 },
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-icon-button-counter-badge').attributes('aria-label')).toBe(
+        '5 notifications',
+      );
     });
   });
 });
