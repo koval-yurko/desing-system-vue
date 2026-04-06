@@ -1,3 +1,8 @@
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import './styles/base.css';
+
 // Barrel export — component re-exports will be added here
 export { DsButton, type DsButtonProps } from './components/DsButton';
 export { DsIcon, type IconName } from './components/DsIcon';
