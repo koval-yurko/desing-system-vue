@@ -11,6 +11,10 @@ export interface DsIconButtonProps {
   disabled?: boolean;
   /** Loading state. Default: false */
   loading?: boolean;
+  /** Show filter indicator dot at top-right corner. Default: false */
+  indicator?: boolean;
+  /** Counter badge value. When set, shows a count badge at top-right. */
+  counterBadge?: number;
   /** Accessible label (required for icon-only buttons unless ariaLabelledby is provided) */
   ariaLabel?: string;
   /** ID of an element that labels this button (alternative to ariaLabel) */
@@ -24,6 +28,7 @@ const props = withDefaults(defineProps<DsIconButtonProps>(), {
   size: 'medium',
   disabled: false,
   loading: false,
+  indicator: false,
 });
 
 // Map DsIconButton type to PrimeVue variant
@@ -98,42 +103,142 @@ const buttonClasses = computed(() => ({
 </script>
 
 <template>
-  <Button
-    v-bind="$attrs"
-    :variant="mappedVariant"
-    :size="mappedPrimeVueSize"
-    :dt="sizeTokens"
-    :disabled="disabled || loading"
-    :class="buttonClasses"
-    :style="{
-      '--ds-icon-button-icon-size': iconSize,
-      '--ds-icon-button-dimension': buttonDimension,
-    }"
-    :aria-label="ariaLabel"
-    :aria-labelledby="ariaLabelledby"
-    :aria-disabled="(disabled || loading) ? 'true' : undefined"
-    :aria-busy="loading ? 'true' : undefined"
-    :aria-live="loading ? 'polite' : undefined"
-  >
-    <span v-if="!loading && $slots.default" class="ds-icon-button-icon">
-      <slot />
-    </span>
-    <span v-else-if="loading" class="ds-icon-button-loading-overlay" role="status" aria-label="Loading">
-      <span class="ds-icon-button-loading-dots">
-        <span /><span /><span />
+  <div class="ds-icon-button-wrapper">
+    <Button
+      v-bind="$attrs"
+      :variant="mappedVariant"
+      :size="mappedPrimeVueSize"
+      :dt="sizeTokens"
+      :disabled="disabled || loading"
+      :class="buttonClasses"
+      :style="{
+        '--ds-icon-button-icon-size': iconSize,
+        '--ds-icon-button-dimension': buttonDimension,
+      }"
+      :aria-label="ariaLabel"
+      :aria-labelledby="ariaLabelledby"
+      :aria-disabled="(disabled || loading) ? 'true' : undefined"
+      :aria-busy="loading ? 'true' : undefined"
+      :aria-live="loading ? 'polite' : undefined"
+    >
+      <span v-if="!loading && $slots.default" class="ds-icon-button-icon">
+        <slot />
       </span>
+      <span v-else-if="loading" class="ds-icon-button-loading-overlay" role="status" aria-label="Loading">
+        <span class="ds-icon-button-loading-dots">
+          <span /><span /><span />
+        </span>
+      </span>
+    </Button>
+    <span
+      v-if="indicator && !counterBadge"
+      class="ds-icon-button-indicator"
+      aria-hidden="true"
+    />
+    <span
+      v-if="counterBadge != null"
+      class="ds-icon-button-counter-badge"
+      :aria-label="`${counterBadge} notifications`"
+    >
+      {{ counterBadge }}
     </span>
-  </Button>
+  </div>
 </template>
 
 <style scoped>
+/* Wrapper for positioning indicator / counter badge */
+.ds-icon-button-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
 .ds-icon-button--transitions {
   transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
 }
 
+/* ------------------------------------------------------------------ */
+/* Disabled – per-type styling (Figma uses distinct colors, not opacity)*/
+/* ------------------------------------------------------------------ */
 .ds-icon-button--disabled {
-  opacity: 0.5;
   pointer-events: none;
+}
+
+/* Primary disabled: solid gray-300 bg, gray-500 icon */
+.ds-icon-button--primary.ds-icon-button--disabled {
+  background-color: var(--p-gray-300, #e2e8f0) !important;
+  border-color: var(--p-gray-300, #e2e8f0) !important;
+  color: var(--p-gray-500, #90a1b9) !important;
+}
+
+/* Outlined disabled: gray-300 border, gray-400 icon */
+.ds-icon-button--outlined.ds-icon-button--disabled {
+  background-color: var(--p-surface-0, #ffffff) !important;
+  border-color: var(--p-gray-300, #e2e8f0) !important;
+  color: var(--p-gray-400, #cad5e2) !important;
+  opacity: 1;
+}
+
+/* Text disabled: muted icon */
+.ds-icon-button--text.ds-icon-button--disabled {
+  color: var(--p-gray-400, #cad5e2) !important;
+  background-color: transparent !important;
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* Hover states (Figma-exact colors)                                   */
+/* ------------------------------------------------------------------ */
+
+/* Primary hover: purple-800 */
+.ds-icon-button--primary:not(.ds-icon-button--disabled):hover {
+  background-color: var(--p-primary-800, #5f33e6) !important;
+  border-color: var(--p-primary-800, #5f33e6) !important;
+}
+
+/* Outlined hover: gray-200 inner bg */
+.ds-icon-button--outlined:not(.ds-icon-button--disabled):hover {
+  background-color: var(--p-gray-200, #f1f5f9) !important;
+  border-color: var(--p-gray-400, #cad5e2) !important;
+}
+
+/* Text hover: gray-200 bg */
+.ds-icon-button--text:not(.ds-icon-button--disabled):hover {
+  background-color: var(--p-gray-200, #f1f5f9) !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Active / pressed states                                             */
+/* ------------------------------------------------------------------ */
+
+/* Primary active: purple-800 */
+.ds-icon-button--primary:not(.ds-icon-button--disabled):active {
+  background-color: var(--p-primary-800, #5f33e6) !important;
+  border-color: var(--p-primary-800, #5f33e6) !important;
+}
+
+/* Outlined active: gray-200 fill */
+.ds-icon-button--outlined:not(.ds-icon-button--disabled):active {
+  background-color: var(--p-gray-200, #f1f5f9) !important;
+}
+
+/* Text active: gray-300 fill */
+.ds-icon-button--text:not(.ds-icon-button--disabled):active {
+  background-color: var(--p-gray-300, #e2e8f0) !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Outlined border color per size (Figma: XS/M = gray-400, S = gray-300) */
+/* ------------------------------------------------------------------ */
+.ds-icon-button--outlined.ds-icon-button--xsmall {
+  border-color: var(--p-gray-400, #cad5e2);
+}
+
+.ds-icon-button--outlined.ds-icon-button--small {
+  border-color: var(--p-gray-300, #e2e8f0);
+}
+
+.ds-icon-button--outlined.ds-icon-button--medium {
+  border-color: var(--p-gray-400, #cad5e2);
 }
 
 .ds-icon-button--loading {
@@ -164,6 +269,42 @@ const buttonClasses = computed(() => ({
   width: var(--ds-icon-button-icon-size);
   height: var(--ds-icon-button-icon-size);
   font-size: var(--ds-icon-button-icon-size);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Indicator dot (Figma: 5px circle at top-right)                      */
+/* ------------------------------------------------------------------ */
+.ds-icon-button-indicator {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--p-primary-600, #7849ff);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Counter badge (Figma: 20px circle at top-right offset)              */
+/* ------------------------------------------------------------------ */
+.ds-icon-button-counter-badge {
+  position: absolute;
+  top: -3px;
+  right: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 100px;
+  background-color: var(--p-primary-600, #7849ff);
+  color: #ffffff;
+  font-family: var(--p-font-family, 'Inter', sans-serif);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
   pointer-events: none;
 }
 
