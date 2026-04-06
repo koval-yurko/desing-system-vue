@@ -2,6 +2,10 @@
 
 A Vue 3 design system built on PrimeVue 4 and Tailwind CSS 4, published as `@failwin/desing-system-vue`.
 
+## Storybook
+
+[View Storybook](https://koval-yurko.github.io/desing-system-vue/)
+
 ## Adding Components
 
 See [docs/component-addition-guide.md](docs/component-addition-guide.md) for the step-by-step pattern to add new PrimeVue wrapper or custom Tailwind components to this library.
