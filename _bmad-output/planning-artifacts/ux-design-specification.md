@@ -454,10 +454,10 @@ Components without PrimeVue equivalents — built with Tailwind CSS, following P
 |-----------|---------|-----------|
 | DsIcon | Standalone icon rendering | name, size (no color prop — use Tailwind classes e.g. `class="text-primary-500"`) |
 | DsLink | Navigational links | type (Regular, Smart, Quiet), size (S, M), visibility (high, low), disabled |
-| DsCodeInput | Code/monospace input field | — |
+| DsCodeInput | PIN/OTP-style verification code input (individual character cells with auto-advance, backspace, paste support) | length, modelValue, error, disabled |
 | DsMentionBadge | @mention display badge | removable |
 | DsDotIndicator | Status dot with text | color variant |
-| DsFilterField | Filterable input with tags | — |
+| DsFilterField | Filterable input with tags *(deferred to Phase 3 — awaiting Figma spec)* | — |
 | DsFileUpload | File upload area | — |
 | DsExpandableFileUploader | Expandable file upload | expanded state |
 
@@ -487,14 +487,13 @@ Components without PrimeVue equivalents — built with Tailwind CSS, following P
 - DsInputText (core form component)
 - DsLink (navigation component)
 
-**Phase 2 — Form Components:**
-- DsTextarea, DsSelect, DsSearchField
-- DsCodeInput, DsFilterField
-- DsChip
+**Phase 2 — Form + Display Components:**
+- Form: DsTextarea, DsSelect, DsSearchField, DsCodeInput
+- Display: DsChip, DsBadge, DsAvatar
 
-**Phase 3 — Display & Feedback Components:**
-- DsBadge, DsMentionBadge, DsDotIndicator
-- DsAvatar
+**Phase 3 — Deferred Form + Display & Feedback Components:**
+- DsFilterField (deferred from Phase 2 — awaiting Figma spec)
+- DsMentionBadge, DsDotIndicator
 - DsCard
 - DsSlider
 
@@ -602,7 +601,7 @@ Disabled > Loading > Active > Focus > Hover > Default
 - DsIconButton contains a DsIcon as a child (slot), not via props — allows flexible icon composition
 - DsButton can contain DsIcon as left/right slot content
 - DsLink supports left and right icon slots
-- DsSearchField has a built-in search icon (not customizable)
+- DsSearchField has a built-in search icon (not customizable at XS/S/M sizes; optional at XXS via `searchIcon` prop per Figma spec)
 
 **Icon sizing rule:** Icon size always matches the component's size tier (S component = 16px icon, M component = 20px icon, L component = 20px icon)
 
@@ -642,6 +641,8 @@ Disabled > Loading > Active > Focus > Hover > Default
 - `success`: Green palette
 - `warning`: Orange palette
 - `info`: Blue palette
+
+**DsBadge API exception:** DsBadge does **not** use the 4-value `severity` prop — it exposes an enumerated `type` prop with 11 Figma-derived variants (`Pending`, `Interesting`, `Neutral`, `Rejected`, `Accepted`, `Cancel`, `Border`, `Clean`, `Draft`, `Loaded/shimmer`, `Type10`). Each `type` maps to its own background/text token palette defined in Figma, which goes beyond the standard severity set (e.g., `Pending` uses yellow-100 bg + amber-700 text; `Interesting` uses purple-100 bg + purple-600 text). See `docs/ai-guidelines/ds-badge.md` for the full mapping. Severity remains the convention for input error states, dot indicators, and feedback messages.
 
 ### Link Patterns
 

@@ -45,9 +45,11 @@ workflowType: 'prd'
 
 ## Executive Summary
 
-desing-system-vue Phase 2 expands the component library from 5 MVP components to 13, driven by real-world DS-GAP flags from AI agents and developers implementing Figma designs. The MVP (v0.1.2) validated the full pipeline — Figma tokens → PrimeVue Styled Mode preset → wrapped component → Storybook → AI knowledge base — and the approach requires no architectural changes for Phase 2.
+desing-system-vue Phase 2 expands the component library from 5 MVP components to 12, driven by real-world DS-GAP flags from AI agents and developers implementing Figma designs. The MVP (v0.1.2) validated the full pipeline — Figma tokens → PrimeVue Styled Mode preset → wrapped component → Storybook → AI knowledge base — and the approach requires no architectural changes for Phase 2.
 
-Phase 2 adds 8 components: 5 form components (DsTextarea, DsSelect, DsSearchField, DsCodeInput, DsFilterField) and 3 display components (DsChip, DsBadge, DsAvatar). Each follows the established component addition pattern: PrimeVue wrapper or custom Tailwind implementation, TypeScript props, Storybook stories, Vitest tests, and AI knowledge base entry.
+Phase 2 adds 7 components: 4 form components (DsTextarea, DsSelect, DsSearchField, DsCodeInput) and 3 display components (DsChip, DsBadge, DsAvatar). Each follows the established component addition pattern: PrimeVue wrapper or custom Tailwind implementation, TypeScript props, Storybook stories, Vitest tests, and AI knowledge base entry.
+
+> **Scope note (2026-04-12):** DsFilterField was originally scoped for Phase 2 but is deferred to Phase 3 — no Figma spec exists yet. The original 8-component / 13-total count has been revised to 7 / 12.
 
 Target users remain mid-level frontend developers and AI coding agents (Claude, Cursor, Copilot). Solo maintainer: Yurii.
 
@@ -62,36 +64,36 @@ The MVP proved that AI-first documentation works: agents reliably consume the kn
 - **Project Type:** Developer Tool — npm package / Vue 3 component library
 - **Domain:** General — no specialized regulatory requirements
 - **Complexity:** Low — established patterns from MVP, no architectural changes needed
-- **Project Context:** Brownfield — extending existing v0.1.2 library with 8 new components
+- **Project Context:** Brownfield — extending existing v0.1.2 library with 7 new components
 
 ## Success Criteria
 
 ### User Success
 
 - **Developer self-service (maintained):** A developer can find, understand, and correctly use any Phase 2 component without asking for help — Storybook alone is sufficient
-- **AI agent coverage expansion:** AI agents produce code using library components for all 13 covered patterns (up from 5), with DS-GAP flags only for components outside the library
+- **AI agent coverage expansion:** AI agents produce code using library components for all 12 covered patterns (up from 5), with DS-GAP flags only for components outside the library
 - **First-render accuracy (maintained):** Phase 2 components render matching Figma in both light and dark mode on first attempt
 
 ### Business Success
 
-- **Gap reduction:** The 8 most-flagged DS-GAP patterns are eliminated from AI agent output
+- **Gap reduction:** The 7 most-flagged DS-GAP patterns are eliminated from AI agent output
 - **Repeatable velocity:** Each new component follows the established addition pattern — no one-off approaches or architectural detours
-- **Single maintainer sustainability (maintained):** Yurii can add all 8 components following the documented pattern
+- **Single maintainer sustainability (maintained):** Yurii can add all 7 components following the documented pattern
 
 ### Technical Success
 
 - **Zero breaking changes:** Phase 2 additions don't modify any existing MVP component behavior or API
-- **Build and test green:** All 13 components pass Vitest tests, Biome lint, and Vite build
+- **Build and test green:** All 12 components pass Vitest tests, Biome lint, and Vite build
 - **npm package installs and imports cleanly** with the expanded component set
 
 ### Measurable Outcomes
 
 | Metric | Target |
 |--------|--------|
-| Component count | 13 (5 existing + 8 new) |
+| Component count | 12 (5 existing + 7 new) |
 | Storybook story coverage | 1+ story per component variant |
-| AI knowledge base entries | 1 per component (13 total) |
-| DS-GAP reduction | 8 previously-flagged patterns now covered |
+| AI knowledge base entries | 1 per component (12 total) |
+| DS-GAP reduction | 7 previously-flagged patterns now covered |
 | Breaking changes to existing components | 0 |
 
 ## User Journeys
@@ -112,13 +114,13 @@ The MVP proved that AI-first documentation works: agents reliably consume the kn
 
 **Persona:** Claude (AI coding agent), tasked with implementing a settings form from a Figma design.
 
-**Opening Scene:** A developer shares a Figma URL. The screenshot shows a form with a search field, a code input for API keys, a filter field, a textarea for notes, and a select dropdown.
+**Opening Scene:** A developer shares a Figma URL. The screenshot shows a form with a search field, a verification code input (PIN/OTP style), a textarea for notes, and a select dropdown.
 
-**Rising Action:** Claude consults the AI knowledge base. All 5 form components are documented — DsSearchField, DsCodeInput, DsFilterField, DsTextarea, DsSelect — each with props, variants, and usage examples.
+**Rising Action:** Claude consults the AI knowledge base. All 4 form components are documented — DsSearchField, DsCodeInput, DsTextarea, DsSelect — each with props, variants, and usage examples.
 
-**Climax:** Claude generates code importing all 5 components from `desing-system-vue` with correct props. Zero raw Tailwind CSS for any covered element. The knowledge base entries are consistent with the Phase 1 format, so Claude's matching logic works identically.
+**Climax:** Claude generates code importing all 4 components from `desing-system-vue` with correct props. Zero raw Tailwind CSS for any covered element. The knowledge base entries are consistent with the Phase 1 format, so Claude's matching logic works identically.
 
-**Resolution:** The developer receives production-ready code. No manual cleanup, no component replacement. The 13-component library now covers the majority of common form and display patterns.
+**Resolution:** The developer receives production-ready code. No manual cleanup, no component replacement. The 12-component library now covers the majority of common form and display patterns.
 
 ### Journey 3: AI Agent Encounters a Missing Component
 
@@ -136,20 +138,20 @@ The MVP proved that AI-first documentation works: agents reliably consume the kn
 
 **Persona:** Yurii, solo maintainer of the design system.
 
-**Opening Scene:** Phase 2 is scoped — 8 components driven by real DS-GAP flags. Yurii has the component addition guide, the established PrimeVue Styled Mode preset, and the repeatable pattern proven by 5 MVP components.
+**Opening Scene:** Phase 2 is scoped — 7 components driven by real DS-GAP flags. Yurii has the component addition guide, the established PrimeVue Styled Mode preset, and the repeatable pattern proven by 5 MVP components.
 
 **Rising Action:** Yurii works through each component systematically: check Figma specs, determine if PrimeVue wrapper or custom Tailwind, map tokens to preset, implement `.vue` file, write TypeScript types, create Storybook stories, write Vitest tests, add AI knowledge base entry, export from barrel files. The pattern is identical for each component — no surprises.
 
-**Climax:** All 8 components pass the full checklist: build succeeds, tests pass, Biome lint clean, Storybook renders correctly in light and dark mode, AI knowledge base entries follow the established format. The library publishes as the next minor version.
+**Climax:** All 7 components pass the full checklist: build succeeds, tests pass, Biome lint clean, Storybook renders correctly in light and dark mode, AI knowledge base entries follow the established format. The library publishes as the next minor version.
 
-**Resolution:** The component inventory grows from 5 to 13 without any architectural changes. The repeatable pattern held — each addition was predictable and fast. The AI guidelines index is updated, and agents immediately start using the new components.
+**Resolution:** The component inventory grows from 5 to 12 without any architectural changes. The repeatable pattern held — each addition was predictable and fast. The AI guidelines index is updated, and agents immediately start using the new components.
 
 ### Journey Requirements Summary
 
 | Journey | Capabilities Revealed |
 |---------|----------------------|
-| Developer implements feature | Storybook with expanded component set; consistent API patterns across all 13 components; copy-paste usage patterns |
-| AI agent implements design | AI knowledge base with 13 entries; consistent entry format enabling reliable component matching; reduced gap surface |
+| Developer implements feature | Storybook with expanded component set; consistent API patterns across all 12 components; copy-paste usage patterns |
+| AI agent implements design | AI knowledge base with 12 entries; consistent entry format enabling reliable component matching; reduced gap surface |
 | AI agent hits gap | Shrinking gap surface; same fallback mechanism; gap flags feed Phase 3 prioritization |
 | Maintainer adds components | Repeatable addition pattern; no architectural changes; systematic checklist execution |
 
@@ -170,22 +172,21 @@ The MVP proved that AI-first documentation works: agents reliably consume the kn
 | DsTextarea | PrimeVue Wrapper | Textarea | Standard text area with label/hint/error pattern from DsInputText |
 | DsSelect | PrimeVue Wrapper | Select | Dropdown with options, follows DsInputText label pattern |
 | DsSearchField | Custom Tailwind | None | Composed from DsInputText + search icon + clear behavior |
-| DsCodeInput | Custom Tailwind | None | Monospace input for code/tokens/API keys |
-| DsFilterField | Custom Tailwind | None | Search + filter chips composition |
+| DsCodeInput | Custom Tailwind | None | PIN/OTP-style verification code input (individual character cells, auto-advance, paste support) |
 | DsChip | PrimeVue Wrapper | Chip | Selectable, removable variants |
-| DsBadge | PrimeVue Wrapper | Badge | Status indicator with severity colors |
+| DsBadge | PrimeVue Wrapper | Badge | Status indicator with 11 Figma-derived `type` variants (Pending, Interesting, Neutral, Rejected, Accepted, Cancel, Border, Clean, Draft, Loaded/shimmer, Type10) |
 | DsAvatar | PrimeVue Wrapper | Avatar | Image, initials, icon fallback variants |
 
 ### API Surface Expansion
 
-- Component exports grow from 5 to 13
-- All new components follow existing prop conventions (`severity`, `size`, `disabled`, `variant`)
-- Custom components (DsSearchField, DsCodeInput, DsFilterField) follow PrimeVue API conventions per the component addition guide
+- Component exports grow from 5 to 12
+- All new components follow consistent prop naming (`size`, `disabled`) plus component-specific variant props matching each component's Figma spec (e.g., `type` for DsBadge, `variant` for DsAvatar)
+- Custom components (DsSearchField, DsCodeInput) follow PrimeVue API conventions per the component addition guide
 - Full TypeScript prop types with documented variants for all new components
 
 ### Implementation Considerations
 
-- **Composition patterns:** DsSearchField and DsFilterField may compose existing components (DsInputText, DsIcon, DsChip) — this is the first time the library has composed its own components beyond DsIconButton using DsIcon
+- **Composition patterns:** DsSearchField composes existing components (DsInputText, DsIcon) — this is the first time the library has composed its own components beyond DsIconButton using DsIcon
 - **Form field consistency:** DsTextarea and DsSelect should follow the same label/hint/error pattern established by DsInputText
 - **Each component goes through the full checklist:** `.vue` implementation, TypeScript types, Storybook stories, Vitest tests, AI knowledge base entry, barrel exports
 
@@ -203,15 +204,16 @@ The MVP proved that AI-first documentation works: agents reliably consume the kn
 - All 4 existing journeys — developer implements feature, AI agent implements design, AI agent handles gap, maintainer adds component
 
 **Must-Have Capabilities:**
-- 5 form components: DsTextarea, DsSelect, DsSearchField, DsCodeInput, DsFilterField
+- 4 form components: DsTextarea, DsSelect, DsSearchField, DsCodeInput
 - 3 display components: DsChip, DsBadge, DsAvatar
 - Per component: TypeScript types, Storybook stories, Vitest tests, AI knowledge base entry
-- Updated AI guidelines index covering all 13 components
+- Updated AI guidelines index covering all 12 components
 - npm package version bump and publish
 
 ### Post-Phase 2 Features
 
 **Phase 3 — Remaining Display & Interaction Components:**
+- DsFilterField (deferred from Phase 2 — awaiting Figma spec)
 - DsMentionBadge, DsDotIndicator, DsCard, DsSlider (deferred until gap-flagged)
 - DsContextMenu, DsFileUpload, DsExpandableFileUploader
 
@@ -224,11 +226,11 @@ The MVP proved that AI-first documentation works: agents reliably consume the kn
 ### Risk Mitigation Strategy
 
 **Technical Risks:**
-- Custom Tailwind components (DsSearchField, DsCodeInput, DsFilterField) have no PrimeVue base — higher implementation effort than wrappers. Mitigation: follow the custom Tailwind pattern from the component addition guide; compose existing library components where possible.
-- Component composition (DsFilterField using DsChip + DsInputText) is new territory. Mitigation: implement simpler compositions first (DsSearchField), validate the pattern, then apply to DsFilterField.
+- Custom Tailwind components (DsSearchField, DsCodeInput) have no PrimeVue base — higher implementation effort than wrappers. Mitigation: follow the custom Tailwind pattern from the component addition guide; compose existing library components where possible.
+- Component composition (DsSearchField using DsInputText + DsIcon) is new territory for this library. Mitigation: implement the composition pattern once and document it so future composed components (e.g., DsFilterField in Phase 3) can follow a proven approach.
 
 **Market Risks:**
-- Low. All 8 components are driven by real DS-GAP flags — validated demand.
+- Low. All 7 components are driven by real DS-GAP flags — validated demand.
 
 **Resource Risks:**
 - Solo maintainer. Mitigation: repeatable pattern reduces cognitive load; each component is independent, so work can be paused/resumed without losing context.
@@ -240,13 +242,13 @@ The MVP proved that AI-first documentation works: agents reliably consume the kn
 - FR1: Developers can import and render DsTextarea with sizes (S, M), states (Default, Hover, Focus, Filled, Error, Disabled), and label/hint/error pattern consistent with DsInputText
 - FR2: Developers can import and render DsSelect with a dropdown option list, sizes (S, M), states (Default, Hover, Focus, Filled, Error, Disabled), and label/hint/error pattern consistent with DsInputText
 - FR3: Developers can import and render DsSearchField with search icon, clearable input, and sizes matching the design system scale
-- FR4: Developers can import and render DsCodeInput for monospace code/token/API key input with sizes and states
-- FR5: Developers can import and render DsFilterField combining search input with filter chip display and removal
+- FR4: Developers can import and render DsCodeInput as a PIN/OTP-style verification code input — individual character cells with states (Default, Hover, Focused, Input, Error, Disabled), configurable length, auto-advance/backspace behavior, paste support, and error message support
+- ~~FR5: REMOVED — DsFilterField deferred to Phase 3 (awaiting Figma spec)~~
 
 ### New Component Library — Display Components
 
 - FR6: Developers can import and render DsChip with variants (Default, Selected, Disabled) and removable behavior
-- FR7: Developers can import and render DsBadge with severity color variants matching the design token palette
+- FR7: Developers can import and render DsBadge with 11 Figma-derived `type` variants (Pending, Interesting, Neutral, Rejected, Accepted, Cancel, Border, Clean, Draft, Loaded/shimmer, Type10), optional left/right icons, and hover states — each variant maps to a specific background/text token palette per Figma spec
 - FR8: Developers can import and render DsAvatar with image, initials fallback, and icon fallback variants, in multiple sizes
 
 ### Component Consistency
@@ -254,30 +256,30 @@ The MVP proved that AI-first documentation works: agents reliably consume the kn
 - FR9: All Phase 2 components can accept and pass through standard PrimeVue props, slots, and events for their underlying PrimeVue base component (where applicable)
 - FR10: All Phase 2 components can render matching the Figma design in both light and dark themes without additional styling
 - FR11: All Phase 2 components can provide TypeScript type definitions for props, emits, and slots
-- FR12: All Phase 2 components follow existing prop conventions (`severity`, `size`, `disabled`, `variant`)
+- FR12: All Phase 2 components follow consistent prop naming conventions (`size`, `disabled`) plus component-specific variant props that match each component's Figma spec (e.g., `type` for DsBadge/DsChip, `variant` for DsAvatar, `severity` where semantically appropriate)
 
 ### Component Composition
 
 - FR13: DsSearchField can compose DsInputText and DsIcon internally
-- FR14: DsFilterField can compose DsInputText, DsIcon, and DsChip internally
-- FR15: Composed components can be used without the consumer needing to import the internal components separately
+- ~~FR14: REMOVED — DsFilterField deferred to Phase 3~~
+- FR15: Composed components (DsSearchField) can be used without the consumer needing to import the internal components (DsInputText, DsIcon) separately
 
 ### Package & Distribution
 
-- FR16: Consuming projects can import all 13 components individually (tree-shakeable)
+- FR16: Consuming projects can import all 12 components individually (tree-shakeable)
 - FR17: The expanded package can install and build without breaking changes to existing MVP components
 
 ### Developer Documentation (Storybook)
 
-- FR18: Developers can browse all 13 components in Storybook organized by Figma structure
+- FR18: Developers can browse all 12 components in Storybook organized by Figma structure
 - FR19: Developers can view live interactive stories for every Phase 2 component variant and state
 - FR20: Developers can manipulate Phase 2 component props via Storybook controls
 
 ### AI Knowledge Base
 
-- FR21: AI agents can access structured documentation listing all 13 available components
-- FR22: AI agents can look up per-component entries for all 8 new components containing: component name, when to use, available props/variants, usage examples, and Figma reference
-- FR23: AI agents can determine which library component matches a given Figma design element from the expanded 13-component inventory
+- FR21: AI agents can access structured documentation listing all 12 available components
+- FR22: AI agents can look up per-component entries for all 7 new components containing: component name, when to use, available props/variants, usage examples, and Figma reference
+- FR23: AI agents can determine which library component matches a given Figma design element from the expanded 12-component inventory
 
 ### Library Maintenance
 
@@ -291,12 +293,12 @@ The MVP proved that AI-first documentation works: agents reliably consume the kn
 
 - NFR1: Individual component bundle size must be minimized via tree-shaking — consuming projects only load components they import
 - NFR2: Phase 2 components must not introduce rendering performance overhead beyond PrimeVue's baseline
-- NFR3: Composed components (DsSearchField, DsFilterField) must not add perceptible latency compared to non-composed components
+- NFR3: Composed components (DsSearchField) must not add perceptible latency compared to non-composed components
 
 ### Accessibility
 
 - NFR4: All PrimeVue-wrapped Phase 2 components must preserve PrimeVue's built-in keyboard navigation and ARIA attributes
-- NFR5: Custom Tailwind components (DsSearchField, DsCodeInput, DsFilterField) must implement keyboard navigation and ARIA support per the component addition guide
+- NFR5: Custom Tailwind components (DsSearchField, DsCodeInput) must implement keyboard navigation and ARIA support per the component addition guide
 - NFR6: All Phase 2 interactive components must have visible focus indicators in both light and dark themes
 - NFR7: DsAvatar must provide accessible alt text or aria-label for image and icon variants
 - NFR8: DsChip with removable behavior must be keyboard-accessible (Enter/Space to remove, focus management after removal)
