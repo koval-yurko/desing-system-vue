@@ -1,5 +1,5 @@
 # generated: 2026-03-27
-# last_updated: 2026-03-29
+# last_updated: 2026-04-12
 # project: desing-system-vue
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-27
-last_updated: 2026-04-06
+last_updated: 2026-04-12
 
 project: desing-system-vue
 project_key: NOKEY
@@ -43,6 +43,8 @@ tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
 
 development_status:
+  # ===== Phase 1 (MVP) =====
+
   # Epic 1: Project Foundation, Design Tokens & Approach Validation (DsButton)
   epic-1: done
   1-1-project-scaffold-build-configuration: done
@@ -81,3 +83,32 @@ development_status:
 
   # Unplanned Stories (outside PRD scope)
   U-1-icons-storybook-page: done
+
+  # ===== Phase 2 =====
+
+  # Epic 6: PrimeVue Form Field Wrappers (DsTextarea, DsSelect)
+  epic-6: backlog
+  6-1-dstextarea-component: backlog
+  6-2-dsselect-component-core-variants: backlog
+  6-3-dsselect-advanced-dropdown-variants: backlog
+  epic-6-retrospective: optional
+
+  # Epic 7: Display Components (DsChip, DsBadge, DsAvatar)
+  epic-7: backlog
+  7-1-dschip-component: backlog
+  7-2-dsbadge-component: backlog
+  7-3-dsavatar-component: backlog
+  epic-7-retrospective: optional
+
+  # Epic 8: Custom Search & Code Input (DsSearchField, DsCodeInput)
+  epic-8: backlog
+  8-1-dssearchfield-component: backlog
+  8-2-dscodeinput-component: backlog
+  epic-8-retrospective: optional
+
+  # Epic 9: Library Integration & Release
+  epic-9: backlog
+  9-1-build-verification-package-integration: backlog
+  9-2-ai-knowledge-base-integration: backlog
+  9-3-storybook-organization-release-validation: backlog
+  epic-9-retrospective: optional
