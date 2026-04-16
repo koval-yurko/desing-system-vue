@@ -9,4 +9,5 @@ export { DsIcon, type IconName } from './components/DsIcon';
 export { DsIconButton, type DsIconButtonProps } from './components/DsIconButton';
 export { DsInputText, type DsInputTextProps } from './components/DsInputText';
 export { DsLink, type DsLinkProps } from './components/DsLink';
+export { DsTextarea, type DsTextareaProps } from './components/DsTextarea';
 export { dsPreset, dsTheme } from './theme';
