@@ -1,5 +1,5 @@
 # generated: 2026-03-27
-# last_updated: 2026-04-18
+# last_updated: 2026-04-17
 # project: desing-system-vue
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-27
-last_updated: 2026-04-18
+last_updated: 2026-04-17
 
 project: desing-system-vue
 project_key: NOKEY
@@ -87,10 +87,10 @@ development_status:
   # ===== Phase 2 =====
 
   # Epic 6: PrimeVue Form Field Wrappers (DsTextarea, DsSelect)
-  epic-6: in-progress
+  epic-6: done
   6-1-dstextarea-component: done
   6-2-dsselect-component-core-variants: done
-  6-3-dsselect-advanced-dropdown-variants: backlog
+  6-3-dsselect-advanced-dropdown-variants: done
   epic-6-retrospective: optional
 
   # Epic 7: Display Components (DsChip, DsBadge, DsAvatar)

@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
+import MultiSelect from 'primevue/multiselect';
 import Select from 'primevue/select';
 import { beforeAll, describe, expect, it } from 'vitest';
 import DsSelect from './DsSelect.vue';
@@ -499,6 +500,130 @@ describe('DsSelect', () => {
       });
       const select = wrapper.findComponent(Select);
       expect(select.props('filter')).toBe(true);
+    });
+  });
+
+  describe('multi-selection support', () => {
+    it('renders MultiSelect when multiple attr is provided', () => {
+      const wrapper = mount(DsSelect, {
+        props: { options: defaultOptions },
+        attrs: { multiple: true },
+        global: globalConfig,
+      });
+      expect(wrapper.findComponent(MultiSelect).exists()).toBe(true);
+      expect(wrapper.findComponent(Select).exists()).toBe(false);
+    });
+
+    it('renders Select (not MultiSelect) when multiple is not provided', () => {
+      const wrapper = mount(DsSelect, {
+        props: { options: defaultOptions },
+        global: globalConfig,
+      });
+      expect(wrapper.findComponent(Select).exists()).toBe(true);
+      expect(wrapper.findComponent(MultiSelect).exists()).toBe(false);
+    });
+
+    it('applies filled class when modelValue is a non-empty array', () => {
+      const wrapper = mount(DsSelect, {
+        props: { modelValue: ['Apple', 'Banana'], options: defaultOptions },
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-select__trigger--filled').exists()).toBe(true);
+    });
+
+    it('does not apply filled class when modelValue is an empty array', () => {
+      const wrapper = mount(DsSelect, {
+        props: { modelValue: [], options: defaultOptions },
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-select__trigger--filled').exists()).toBe(false);
+    });
+
+    it('shows clear button when modelValue is a non-empty array', () => {
+      const wrapper = mount(DsSelect, {
+        props: { modelValue: ['Apple'], options: defaultOptions },
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-select__clear').exists()).toBe(true);
+    });
+
+    it('does not show clear button when modelValue is an empty array', () => {
+      const wrapper = mount(DsSelect, {
+        props: { modelValue: [], options: defaultOptions },
+        global: globalConfig,
+      });
+      expect(wrapper.find('.ds-select__clear').exists()).toBe(false);
+    });
+
+    it('clears multi-select value to empty array when clear is clicked', async () => {
+      const wrapper = mount(DsSelect, {
+        props: { modelValue: ['Apple', 'Banana'], options: defaultOptions },
+        attrs: { multiple: true },
+        global: globalConfig,
+      });
+      await wrapper.find('.ds-select__clear').trigger('click');
+      expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([[]]);
+      expect(wrapper.emitted('clear')).toBeTruthy();
+    });
+
+    it('clears single-select value to undefined when clear is clicked (unchanged behavior)', async () => {
+      const wrapper = mount(DsSelect, {
+        props: { modelValue: 'Apple', options: defaultOptions },
+        global: globalConfig,
+      });
+      await wrapper.find('.ds-select__clear').trigger('click');
+      expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([undefined]);
+    });
+
+    it('passes header slot to MultiSelect when provided', () => {
+      const wrapper = mount(DsSelect, {
+        props: { options: defaultOptions },
+        attrs: { multiple: true },
+        slots: {
+          header: '<div class="test-select-all-header">Select all</div>',
+        },
+        global: globalConfig,
+      });
+      const multiSelect = wrapper.findComponent(MultiSelect);
+      expect(multiSelect.exists()).toBe(true);
+      // Verify MultiSelect receives the header slot
+      expect(multiSelect.vm.$slots.header).toBeTruthy();
+    });
+
+    it('renders option slot content in MultiSelect mode', () => {
+      const wrapper = mount(DsSelect, {
+        props: { options: defaultOptions },
+        attrs: { multiple: true },
+        slots: {
+          option:
+            '<template #option="{ option }"><span class="test-custom-option">custom</span></template>',
+        },
+        global: globalConfig,
+      });
+      expect(wrapper.findComponent(MultiSelect).exists()).toBe(true);
+    });
+
+    it('renders option slot content in single-select mode', () => {
+      const wrapper = mount(DsSelect, {
+        props: { options: defaultOptions },
+        slots: {
+          option:
+            '<template #option="{ option }"><span class="test-custom-option">custom</span></template>',
+        },
+        global: globalConfig,
+      });
+      expect(wrapper.findComponent(Select).exists()).toBe(true);
+    });
+
+    it('does not pass multiple attr through to the underlying component', () => {
+      const wrapper = mount(DsSelect, {
+        props: { options: defaultOptions },
+        attrs: { multiple: true },
+        global: globalConfig,
+      });
+      const multiSelect = wrapper.findComponent(MultiSelect);
+      // multiple should be consumed by DsSelect, not passed to MultiSelect as an attr
+      expect(multiSelect.attributes('multiple')).toBeUndefined();
     });
   });
 });

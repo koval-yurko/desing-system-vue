@@ -22,9 +22,9 @@ import { DsSelect } from '@failwin/desing-system-vue';
 | info | `boolean` | `false` | Show help icon next to label |
 | hint | `string` | — | Hint/helper text below the select |
 | error | `string` | — | Error message (triggers error visual state and aria-invalid) |
-| modelValue | `unknown` | — | v-model binding for selected value |
+| modelValue | `unknown \| unknown[]` | — | v-model binding for selected value. Pass an array when using `:multiple="true"`. Clear resets to `[]` for multi-select, `undefined` for single-select. |
 
-PrimeVue Select props are passed through via `$attrs`:
+PrimeVue Select props are passed through via `$attrs`. When `:multiple="true"` is set, DsSelect renders PrimeVue MultiSelect internally:
 
 | Prop | Type | Description |
 |---|---|---|
@@ -141,6 +141,174 @@ PrimeVue Select events are passed through:
 ```vue
 <!-- Disabled select -->
 <DsSelect v-model="value" label="Country" :options="countries" disabled />
+```
+
+## Advanced Dropdown Variants
+
+DsSelect supports advanced dropdown layouts via PrimeVue's slot system and CSS classes provided by the library. All variants use the same `<DsSelect>` component — no new props needed.
+
+### Multi-Selection
+
+Pass `:multiple="true"` to render a multi-select dropdown backed by PrimeVue MultiSelect. The `modelValue` becomes an array. The clear button resets to `[]`.
+
+```vue
+<DsSelect v-model="selected" label="Tags" :options="tags" option-label="name" option-value="id" :multiple="true" placeholder="Select tags">
+  <template #header>
+    <div class="ds-select-header-select-all" @click="toggleAll">
+      <input type="checkbox" class="ds-select-header-select-all__checkbox" :checked="allSelected" />
+      <span class="ds-select-header-select-all__label">Select all tags</span>
+      <span class="ds-select-header-select-all__counter">{{ selected.length }} out of {{ tags.length }}</span>
+    </div>
+  </template>
+</DsSelect>
+```
+
+### Entity Icons (with checkboxes)
+
+Multi-select with icons. Use the `option` slot with `.ds-select-option-entity` CSS class. Override `pt` to add `ds-select-panel--entity` for tighter 4px gap between checkbox, icon, and label.
+
+```vue
+<DsSelect v-model="value" :options="items" option-label="name" :multiple="true" placeholder="Select..."
+  :pt="{ overlay: { class: 'ds-select-panel ds-select-panel--multi ds-select-panel--entity' } }">
+  <template #option="{ option }">
+    <div class="ds-select-option-entity">
+      <DsIcon :name="option.icon" size="small" class="ds-select-option-entity__icon" />
+      <span>{{ option.name }}</span>
+    </div>
+  </template>
+</DsSelect>
+```
+
+### Badge / Dot Indicator
+
+Single-select with colored dots. No checkboxes. Use `.ds-select-option-badge` in the `option` slot and `panel-class="ds-select-panel--badge"`.
+
+```vue
+<DsSelect v-model="status" :options="statuses" option-label="name" placeholder="Select status" panel-class="ds-select-panel--badge">
+  <template #option="{ option }">
+    <div class="ds-select-option-badge">
+      <span class="ds-select-option-badge__dot" :style="{ backgroundColor: option.color }"></span>
+      <span class="ds-select-option-badge__label">{{ option.name }}</span>
+    </div>
+  </template>
+</DsSelect>
+```
+
+### Two-Line Multi-Selection
+
+Multi-select with name + subtitle. Use `.ds-select-option-two-line-multi` in the `option` slot. Set panel-class to include `ds-select-panel--two-line-multi` for dividers.
+
+```vue
+<DsSelect v-model="people" :options="users" option-label="name" :multiple="true" placeholder="Select..."
+  :pt="{ overlay: { class: 'ds-select-panel ds-select-panel--multi ds-select-panel--two-line-multi' } }">
+  <template #option="{ option }">
+    <div class="ds-select-option-two-line-multi">
+      <span class="ds-select-option-two-line-multi__title">{{ option.name }}</span>
+      <span class="ds-select-option-two-line-multi__subtitle">{{ option.email }}</span>
+    </div>
+  </template>
+</DsSelect>
+```
+
+### Vendor Layout
+
+Single-select with avatar + two-line text. No checkboxes. Use `.ds-select-option-vendor` and `panel-class="ds-select-panel--vendor"`.
+
+```vue
+<DsSelect v-model="vendor" :options="vendors" option-label="name" placeholder="Select vendor" panel-class="ds-select-panel--vendor">
+  <template #option="{ option }">
+    <div class="ds-select-option-vendor">
+      <span class="ds-select-option-vendor__avatar" :style="{ backgroundColor: option.color }">{{ option.initials }}</span>
+      <div class="ds-select-option-vendor__text">
+        <span class="ds-select-option-vendor__name">{{ option.name }}</span>
+        <span class="ds-select-option-vendor__email">{{ option.email }}</span>
+      </div>
+    </div>
+  </template>
+</DsSelect>
+```
+
+### Mention Layout
+
+Single-select with grouped sections, icons, and "more results" row. Use `.ds-select-option-mention` and `panel-class="ds-select-panel--mention"` (wider 409px panel).
+
+Items include section headers (`group: '_header'`), regular items, and a "more results" row (`group: '_more'`):
+
+```vue
+<DsSelect v-model="mention" :options="items" option-label="name" placeholder="Search..." panel-class="ds-select-panel--mention" filter>
+  <template #option="{ option }">
+    <template v-if="option.group === '_header'">
+      <div class="ds-select-option-mention__section-header">{{ option.name }}</div>
+    </template>
+    <template v-else-if="option.group === '_more'">
+      <div class="ds-select-option-mention__more">
+        <span class="ds-select-option-mention__more-icon">
+          <DsIcon name="overflow" size="small" />
+        </span>
+        <span>{{ option.name }}</span>
+      </div>
+    </template>
+    <template v-else>
+      <div class="ds-select-option-mention">
+        <DsIcon :name="option.icon" size="small" class="ds-select-option-mention__icon" />
+        <div class="ds-select-option-mention__text">
+          <span class="ds-select-option-mention__name">{{ option.name }}</span>
+          <span class="ds-select-option-mention__subtitle">{{ option.subtitle }}</span>
+        </div>
+      </div>
+    </template>
+  </template>
+</DsSelect>
+```
+
+### Big Icon Layout
+
+Single-select with 24px icon container + label. Use `.ds-select-option-big-icon` and `panel-class="ds-select-panel--big-icon"`.
+
+```vue
+<DsSelect v-model="category" :options="categories" option-label="name" placeholder="Select category" panel-class="ds-select-panel--big-icon">
+  <template #option="{ option }">
+    <div class="ds-select-option-big-icon">
+      <span class="ds-select-option-big-icon__container">
+        <DsIcon :name="option.icon" size="small" />
+      </span>
+      <span class="ds-select-option-big-icon__label">{{ option.name }}</span>
+    </div>
+  </template>
+</DsSelect>
+```
+
+### Sample Data Structures
+
+```ts
+// Multi-selection
+const departments = [
+  { name: 'Marketing', value: 'marketing' },
+  { name: 'Sales', value: 'sales' },
+];
+
+// Entity icons
+const integrations = [
+  { name: 'Slack', icon: 'chat-ai' },
+  { name: 'Calendar', icon: 'calendar' },
+];
+
+// Badge / Dot indicator
+const statuses = [
+  { name: 'Active', color: '#17B26A' },
+  { name: 'Pending', color: '#F79009' },
+];
+
+// Vendor
+const vendors = [
+  { name: 'Alice Johnson', email: 'alice@acme.co', initials: 'AJ', color: '#6172F3' },
+];
+
+// Big icon
+const categories = [
+  { name: 'Business', icon: 'business' },
+  { name: 'Security', icon: 'security' },
+];
 ```
 
 ## Accessibility

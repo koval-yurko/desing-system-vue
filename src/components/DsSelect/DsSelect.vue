@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import MultiSelect from 'primevue/multiselect';
 import Select from 'primevue/select';
-import { type ComponentPublicInstance, computed, ref, useId } from 'vue';
+import { type ComponentPublicInstance, computed, ref, useAttrs, useId } from 'vue';
 import DsIcon from '../DsIcon/DsIcon.vue';
 
 export interface DsSelectProps {
@@ -38,13 +39,28 @@ const emit = defineEmits<{
   clear: [];
 }>();
 
+const attrs = useAttrs();
+const isMultiple = computed(() => {
+  if (!('multiple' in attrs)) return false;
+  const val = attrs.multiple;
+  return val !== false && val !== 'false' && val !== '' && val !== '0' && val !== 0;
+});
+const filteredAttrs = computed(() => {
+  const { multiple: _multiple, ...rest } = attrs;
+  return rest;
+});
+
 const triggerId = useId();
 const errorId = useId();
 const selectRef = ref<ComponentPublicInstance | null>(null);
 
 const isOpen = ref(false);
 
-const hasValue = computed(() => model.value != null && model.value !== '');
+const hasValue = computed(
+  () =>
+    model.value != null &&
+    (Array.isArray(model.value) ? model.value.length > 0 : model.value !== ''),
+);
 const isError = computed(() => !!props.error);
 const showError = computed(() => isError.value && !props.disabled);
 
@@ -77,7 +93,7 @@ const sizeTokens = computed(() => {
 });
 
 function handleClear() {
-  model.value = undefined;
+  model.value = Array.isArray(model.value) ? [] : undefined;
   emit('clear');
   if (isOpen.value) {
     (selectRef.value as ComponentPublicInstance & { hide: () => void })?.hide();
@@ -123,10 +139,45 @@ function handleHide() {
         <slot name="leading" />
       </span>
 
-      <!-- PrimeVue Select -->
-      <Select
+      <!-- PrimeVue MultiSelect (when multiple) -->
+      <MultiSelect
+        v-if="isMultiple"
         ref="selectRef"
-        v-bind="$attrs"
+        v-bind="filteredAttrs"
+        :id="triggerId"
+        v-model="model"
+        :disabled="disabled"
+        :show-clear="false"
+        :show-toggle-all="false"
+        display="comma"
+        :dt="sizeTokens"
+        class="ds-select__native"
+        :aria-describedby="showError ? errorId : undefined"
+        :aria-invalid="showError ? 'true' : undefined"
+        :aria-disabled="disabled ? 'true' : undefined"
+        :pt="{ overlay: { class: 'ds-select-panel ds-select-panel--multi' } }"
+        @show="handleShow"
+        @hide="handleHide"
+      >
+        <template v-if="$slots.option" #option="slotProps">
+          <slot name="option" v-bind="slotProps" />
+        </template>
+        <template v-if="$slots.value" #value="slotProps">
+          <slot name="value" v-bind="slotProps" />
+        </template>
+        <template v-if="$slots.header" #header="slotProps">
+          <slot name="header" v-bind="slotProps" />
+        </template>
+        <template v-if="$slots.footer" #footer="slotProps">
+          <slot name="footer" v-bind="slotProps" />
+        </template>
+      </MultiSelect>
+
+      <!-- PrimeVue Select (single selection) -->
+      <Select
+        v-else
+        ref="selectRef"
+        v-bind="filteredAttrs"
         :id="triggerId"
         v-model="model"
         :disabled="disabled"
@@ -139,7 +190,20 @@ function handleHide() {
         :pt="{ overlay: { class: 'ds-select-panel' } }"
         @show="handleShow"
         @hide="handleHide"
-      />
+      >
+        <template v-if="$slots.option" #option="slotProps">
+          <slot name="option" v-bind="slotProps" />
+        </template>
+        <template v-if="$slots.value" #value="slotProps">
+          <slot name="value" v-bind="slotProps" />
+        </template>
+        <template v-if="$slots.header" #header="slotProps">
+          <slot name="header" v-bind="slotProps" />
+        </template>
+        <template v-if="$slots.footer" #footer="slotProps">
+          <slot name="footer" v-bind="slotProps" />
+        </template>
+      </Select>
 
       <!-- Clear button -->
       <span
@@ -269,7 +333,8 @@ function handleHide() {
 }
 
 /* Hide PrimeVue's native dropdown icon — DsSelect renders its own chevron */
-:deep(.p-select-dropdown) {
+:deep(.p-select-dropdown),
+:deep(.p-multiselect-dropdown) {
   display: none !important;
 }
 
@@ -284,7 +349,19 @@ function handleHide() {
   height: 100% !important;
 }
 
-:deep(.p-select-label) {
+/* Strip PrimeVue MultiSelect internal styles */
+:deep(.p-multiselect) {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  outline: none !important;
+  min-height: unset !important;
+  height: 100% !important;
+}
+
+:deep(.p-select-label),
+:deep(.p-multiselect-label) {
   padding: 0 !important;
   font-family: var(--font-family, 'Inter', sans-serif);
   font-weight: 400;
@@ -294,7 +371,8 @@ function handleHide() {
   color: var(--p-gray-800);
 }
 
-:deep(.p-select-label.p-placeholder) {
+:deep(.p-select-label.p-placeholder),
+:deep(.p-multiselect-label.p-placeholder) {
   color: var(--p-gray-600);
 }
 
@@ -305,7 +383,8 @@ function handleHide() {
   box-shadow: none;
 }
 
-.ds-select__trigger--transitions:not(.ds-select__trigger--error):not(.ds-select__trigger--disabled):not(.ds-select__trigger--open):hover :deep(.p-select-label.p-placeholder) {
+.ds-select__trigger--transitions:not(.ds-select__trigger--error):not(.ds-select__trigger--disabled):not(.ds-select__trigger--open):hover :deep(.p-select-label.p-placeholder),
+.ds-select__trigger--transitions:not(.ds-select__trigger--error):not(.ds-select__trigger--disabled):not(.ds-select__trigger--open):hover :deep(.p-multiselect-label.p-placeholder) {
   color: var(--p-gray-500);
 }
 
@@ -354,11 +433,13 @@ function handleHide() {
   pointer-events: none;
 }
 
-.ds-select__trigger--disabled :deep(.p-select-label) {
+.ds-select__trigger--disabled :deep(.p-select-label),
+.ds-select__trigger--disabled :deep(.p-multiselect-label) {
   color: var(--p-gray-500);
 }
 
-.ds-select__trigger--disabled :deep(.p-select-label.p-placeholder) {
+.ds-select__trigger--disabled :deep(.p-select-label.p-placeholder),
+.ds-select__trigger--disabled :deep(.p-multiselect-label.p-placeholder) {
   color: var(--p-gray-500);
 }
 
@@ -542,24 +623,402 @@ function handleHide() {
 }
 
 /* Strip PrimeVue overlay default styles */
-.ds-select-panel.p-select-overlay {
+.ds-select-panel.p-select-overlay,
+.ds-select-panel.p-multiselect-overlay {
   border: 1px solid var(--p-gray-300) !important;
   border-radius: 8px !important;
   box-shadow: 0px 1px 4px 0px #CAD5E280, 0px 1px 6px 0px #CAD5E240 !important;
 }
 
 /* Option list wrapper */
-.ds-select-panel .p-select-list-container {
+.ds-select-panel .p-select-list-container,
+.ds-select-panel .p-multiselect-list-container {
   max-height: 240px;
   overflow-y: auto;
 }
 
-.ds-select-panel .p-select-list-container::-webkit-scrollbar {
+.ds-select-panel .p-select-list-container::-webkit-scrollbar,
+.ds-select-panel .p-multiselect-list-container::-webkit-scrollbar {
   width: 4px;
 }
 
-.ds-select-panel .p-select-list-container::-webkit-scrollbar-thumb {
+.ds-select-panel .p-select-list-container::-webkit-scrollbar-thumb,
+.ds-select-panel .p-multiselect-list-container::-webkit-scrollbar-thumb {
   background-color: var(--p-gray-400);
   border-radius: 100px;
+}
+
+/* ==========================================
+   Multi-selection panel (.ds-select-panel--multi)
+   ========================================== */
+
+/* MultiSelect option items — same base as Select options */
+.ds-select-panel .p-multiselect-option {
+  padding: 4px 6px 4px 8px;
+  border-radius: 4px;
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  letter-spacing: -0.2px;
+  color: var(--p-gray-800);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 2px 0;
+}
+
+.ds-select-panel .p-multiselect-option:hover,
+.ds-select-panel .p-multiselect-option.p-focus {
+  background-color: #F6F7FA; /* BW-02 */
+}
+
+/* Checkbox styling inside multi-select options — Figma spec */
+.ds-select-panel .p-checkbox {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.ds-select-panel .p-checkbox .p-checkbox-box {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--p-gray-600);
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0px 1px 2px 0px var(--p-gray-300);
+}
+
+.ds-select-panel .p-checkbox-checked .p-checkbox-box {
+  background: var(--p-purple-800);
+  border-color: var(--p-purple-800);
+}
+
+/* Hide MultiSelect native toggle-all header checkbox (we use custom header slot) */
+.ds-select-panel .p-multiselect-header {
+  display: none;
+}
+
+/* Empty state for MultiSelect */
+.ds-select-panel .p-multiselect-empty-message {
+  padding: 24px 4px;
+  text-align: center;
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--p-gray-600);
+}
+
+/* ==========================================
+   Advanced option layout CSS classes
+   Used by consumers in PrimeVue slot templates
+   ========================================== */
+
+/* --- Entity icons variant (AC #3) --- */
+.ds-select-option-entity {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ds-select-option-entity__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* Entity icons panel — tighter gap between checkbox, icon, and label (Figma: 4px) */
+.ds-select-panel--entity .p-multiselect-option {
+  gap: 4px;
+}
+
+/* --- Badge / Dot indicator variant (AC #4) --- */
+.ds-select-option-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ds-select-option-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ds-select-option-badge__label {
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--p-gray-900);
+}
+
+/* Badge panel — no checkboxes, standard padding */
+.ds-select-panel--badge .p-select-option,
+.ds-select-panel--badge .p-multiselect-option {
+  padding: 8px 8px 8px 12px;
+}
+
+/* --- Two-line multi-selection variant (AC #5) --- */
+.ds-select-option-two-line-multi {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ds-select-option-two-line-multi__title {
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--p-gray-800);
+}
+
+.ds-select-option-two-line-multi__subtitle {
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--p-gray-600);
+}
+
+/* Two-line multi-select panel — dividers and adjusted padding */
+.ds-select-panel--two-line-multi .p-multiselect-option {
+  padding: 6px 6px 6px 12px;
+}
+
+.ds-select-panel--two-line-multi .p-multiselect-option + .p-multiselect-option {
+  border-top: 1px solid var(--p-gray-200);
+  border-radius: 0;
+}
+
+/* --- Vendor variant (AC #6) --- */
+.ds-select-option-vendor {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ds-select-option-vendor__avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 600;
+  font-size: 0.5rem;
+  line-height: 1;
+  color: #fff;
+}
+
+.ds-select-option-vendor__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ds-select-option-vendor__name {
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--p-gray-800);
+}
+
+.ds-select-option-vendor__email {
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--p-gray-600);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Vendor panel — dividers and adjusted padding, no checkboxes */
+.ds-select-panel--vendor .p-select-option,
+.ds-select-panel--vendor .p-multiselect-option {
+  padding: 6px 6px 6px 12px;
+}
+
+.ds-select-panel--vendor .p-select-option + .p-select-option,
+.ds-select-panel--vendor .p-multiselect-option + .p-multiselect-option {
+  border-top: 1px solid var(--p-gray-200);
+  border-radius: 0;
+}
+
+/* --- Mention variant (AC #7) --- */
+.ds-select-option-mention {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ds-select-option-mention__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.ds-select-option-mention__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ds-select-option-mention__name {
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--p-gray-800);
+}
+
+.ds-select-option-mention__subtitle {
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--p-gray-600);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ds-select-option-mention__section-header {
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--p-gray-800);
+  padding: 8px 16px 2px;
+}
+
+.ds-select-option-mention__more {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--p-gray-800);
+}
+
+.ds-select-option-mention__more-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Mention panel — wider, dividers within groups, group borders */
+.ds-select-panel--mention {
+  width: 409px;
+}
+
+.ds-select-panel--mention .p-select-option,
+.ds-select-panel--mention .p-multiselect-option {
+  padding: 6px 6px 6px 12px;
+}
+
+.ds-select-panel--mention .p-select-option + .p-select-option,
+.ds-select-panel--mention .p-multiselect-option + .p-multiselect-option {
+  border-top: 1px solid var(--p-gray-200);
+  border-radius: 0;
+}
+
+/* --- Big icon variant (AC #8) --- */
+.ds-select-option-big-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ds-select-option-big-icon__container {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--p-gray-100);
+  border: 1px solid var(--p-gray-300);
+  border-radius: 4px;
+}
+
+.ds-select-option-big-icon__label {
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--p-gray-800);
+}
+
+/* Big icon panel — adjusted padding */
+.ds-select-panel--big-icon .p-select-option,
+.ds-select-panel--big-icon .p-multiselect-option {
+  padding: 6px 8px 6px 12px;
+}
+
+/* ==========================================
+   Select all header row (used via header slot)
+   ========================================== */
+.ds-select-header-select-all {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px;
+  border-bottom: 1px solid var(--p-gray-200);
+}
+
+.ds-select-header-select-all__checkbox {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--p-gray-600);
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0px 1px 2px 0px var(--p-gray-300);
+  cursor: pointer;
+  position: relative;
+}
+
+.ds-select-header-select-all__checkbox:checked {
+  background: var(--p-purple-800);
+  border-color: var(--p-purple-800);
+}
+
+.ds-select-header-select-all__label {
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--p-gray-800);
+  flex: 1;
+}
+
+.ds-select-header-select-all__counter {
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--p-gray-600);
 }
 </style>
