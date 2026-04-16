@@ -1,5 +1,5 @@
 # generated: 2026-03-27
-# last_updated: 2026-04-12
+# last_updated: 2026-04-18
 # project: desing-system-vue
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-27
-last_updated: 2026-04-12
+last_updated: 2026-04-18
 
 project: desing-system-vue
 project_key: NOKEY
@@ -87,9 +87,9 @@ development_status:
   # ===== Phase 2 =====
 
   # Epic 6: PrimeVue Form Field Wrappers (DsTextarea, DsSelect)
-  epic-6: backlog
-  6-1-dstextarea-component: backlog
-  6-2-dsselect-component-core-variants: backlog
+  epic-6: in-progress
+  6-1-dstextarea-component: done
+  6-2-dsselect-component-core-variants: done
   6-3-dsselect-advanced-dropdown-variants: backlog
   epic-6-retrospective: optional
 

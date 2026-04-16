@@ -17,7 +17,7 @@ app.use(PrimeVue, { theme: { preset: dsPreset } });
 All components are imported from the package root:
 
 ```ts
-import { DsButton, DsIcon, DsIconButton, DsInputText, DsLink } from '@failwin/desing-system-vue';
+import { DsButton, DsIcon, DsIconButton, DsInputText, DsLink, DsSelect, DsTextarea } from '@failwin/desing-system-vue';
 ```
 
 ## Component Inventory
@@ -29,6 +29,8 @@ import { DsButton, DsIcon, DsIconButton, DsInputText, DsLink } from '@failwin/de
 | `DsIconButton` | Icon-only button with type variants (primary, outlined, text) and 3 sizes | `import { DsIconButton } from '@failwin/desing-system-vue'` | IconButton, Button/Icon |
 | `DsInputText` | Text input with label, hint, error, clearable, and dropdown-icon support, 2 sizes | `import { DsInputText } from '@failwin/desing-system-vue'` | Input, TextField, TextInput |
 | `DsLink` | Hyperlink with type variants (regular, smart, quiet), visibility options, and 2 sizes | `import { DsLink } from '@failwin/desing-system-vue'` | Link, Hyperlink, TextLink |
+| `DsSelect` | Single-selection dropdown with label, hint, error, leading icon, clear button, and core dropdown menu styles, 2 sizes | `import { DsSelect } from '@failwin/desing-system-vue'` | Dropdown, Select, Dropdown input |
+| `DsTextarea` | Multi-line text input with label, hint, error, character counter, and clear button, 2 sizes | `import { DsTextarea } from '@failwin/desing-system-vue'` | Text-Area, Textarea |
 
 ## Theme Preset
 
@@ -115,4 +117,18 @@ Common Figma layer naming patterns and their corresponding library components:
 - `Link/Smart` → `<DsLink type="smart" href="/path">Label</DsLink>`
 - `Link/Quiet` → `<DsLink type="quiet" href="/path">Label</DsLink>`
 - Visibility: `high` (default), `low`. Note: `visibility` is ignored when `type="smart"` (always resolves to `high`).
+- Size variants: `small`, `medium` (default)
+
+**DsSelect**
+- `Dropdown`, `Select`, `Dropdown input` → `<DsSelect v-model="value" label="Label" :options="items" />`
+- With hint: `<DsSelect v-model="value" label="Label" :options="items" hint="Help text" />`
+- With error: `<DsSelect v-model="value" label="Label" :options="items" error="Error message" />`
+- With leading icon: `<DsSelect v-model="value" :options="items"><template #leading><DsIcon name="search" /></template></DsSelect>`
+- Size variants: `small`, `medium` (default)
+
+**DsTextarea**
+- `Text-Area`, `Textarea` → `<DsTextarea v-model="value" label="Label" />`
+- With hint: `<DsTextarea v-model="value" label="Label" hint="Help text" />`
+- With error: `<DsTextarea v-model="value" label="Label" error="Error message" />`
+- With counter: `<DsTextarea v-model="value" label="Label" :max-length="200" />`
 - Size variants: `small`, `medium` (default)
