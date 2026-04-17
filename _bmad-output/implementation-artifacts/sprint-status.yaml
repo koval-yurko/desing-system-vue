@@ -1,5 +1,5 @@
 # generated: 2026-03-27
-# last_updated: 2026-04-17
+# last_updated: 2026-04-17 (story 7.3 done; epic-7 done)
 # project: desing-system-vue
 # project_key: NOKEY
 # tracking_system: file-system
@@ -94,16 +94,16 @@ development_status:
   epic-6-retrospective: optional
 
   # Epic 7: Display Components (DsChip, DsBadge, DsAvatar)
-  epic-7: backlog
-  7-1-dschip-component: backlog
-  7-2-dsbadge-component: backlog
-  7-3-dsavatar-component: backlog
+  epic-7: done
+  7-1-dschip-component: done
+  7-2-dsbadge-component: done
+  7-3-dsavatar-component: done
   epic-7-retrospective: optional
 
   # Epic 8: Custom Search & Code Input (DsSearchField, DsCodeInput)
-  epic-8: backlog
-  8-1-dssearchfield-component: backlog
-  8-2-dscodeinput-component: backlog
+  epic-8: done
+  8-1-dssearchfield-component: done
+  8-2-dscodeinput-component: done
   epic-8-retrospective: optional
 
   # Epic 9: Library Integration & Release

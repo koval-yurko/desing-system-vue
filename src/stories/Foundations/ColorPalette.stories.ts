@@ -30,7 +30,7 @@ const palettes = {
     '50': '#f7f6fd',
     '100': '#f3e8ff',
     '200': '#e0cfff',
-    '300': '#c9a8ff',
+    '300': '#c27aff',
     '400': '#ab7aff',
     '500': '#8e51ff',
     '600': '#7849ff',
@@ -62,7 +62,7 @@ const palettes = {
     '600': '#0e5cf4',
     '700': '#0b4ad0',
     '800': '#0a3ba6',
-    '900': '#082f80',
+    '900': '#082c54',
     '950': '#041a4a',
   },
   Amber: {
@@ -182,7 +182,7 @@ const themeColors = {
     contrastColor: { light: '#ffffff', dark: '#1d293d', lightRef: '', darkRef: 'gray.900' },
     hoverColor: {
       light: '#6b3ef2',
-      dark: '#c9a8ff',
+      dark: '#c27aff',
       lightRef: 'purple.700',
       darkRef: 'purple.300',
     },

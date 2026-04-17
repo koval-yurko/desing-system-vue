@@ -17,18 +17,23 @@ app.use(PrimeVue, { theme: { preset: dsPreset } });
 All components are imported from the package root:
 
 ```ts
-import { DsButton, DsIcon, DsIconButton, DsInputText, DsLink, DsSelect, DsTextarea } from '@failwin/desing-system-vue';
+import { DsAvatar, DsBadge, DsButton, DsChip, DsCodeInput, DsIcon, DsIconButton, DsInputText, DsLink, DsSearchField, DsSelect, DsTextarea } from '@failwin/desing-system-vue';
 ```
 
 ## Component Inventory
 
 | Component | Description | Import | Figma Element |
 |---|---|---|---|
+| `DsAvatar` | User avatar with image, initials, and icon fallback variants, 4 sizes, 9 colors for colored initials | `import { DsAvatar } from '@failwin/desing-system-vue'` | Avatar, ProfilePic, User |
+| `DsBadge` | Status badge with 11 type variants (pending, interesting, neutral, rejected, accepted, cancel, border, clean, draft, loaded/shimmer, type10), optional 12px icons | `import { DsBadge } from '@failwin/desing-system-vue'` | Badge, Status, Tag, Pill |
 | `DsButton` | Button with severity variants (primary, outlined, tertiary, text, text-link, negative) and 4 sizes | `import { DsButton } from '@failwin/desing-system-vue'` | Button, Button/Primary, Button/Outlined, Button/Text |
+| `DsChip` | Tag/filter chip with default/selected/not-clickable types, 2 sizes, removable behavior | `import { DsChip } from '@failwin/desing-system-vue'` | Chip, Tag, FilterChip |
+| `DsCodeInput` | PIN/OTP-style verification code input with per-cell states, configurable length, error message, and paste support | `import { DsCodeInput } from '@failwin/desing-system-vue'` | Code input, Verification code, OTP, PIN |
 | `DsIcon` | SVG icon from the design system icon set, 4 sizes | `import { DsIcon } from '@failwin/desing-system-vue'` | Icon, ic/*, glyph |
 | `DsIconButton` | Icon-only button with type variants (primary, outlined, text) and 3 sizes | `import { DsIconButton } from '@failwin/desing-system-vue'` | IconButton, Button/Icon |
 | `DsInputText` | Text input with label, hint, error, clearable, and dropdown-icon support, 2 sizes | `import { DsInputText } from '@failwin/desing-system-vue'` | Input, TextField, TextInput |
 | `DsLink` | Hyperlink with type variants (regular, smart, quiet), visibility options, and 2 sizes | `import { DsLink } from '@failwin/desing-system-vue'` | Link, Hyperlink, TextLink |
+| `DsSearchField` | Search input with built-in search icon, clear button, optional filter/help button, 4 sizes (XXS/XS/S/M) | `import { DsSearchField } from '@failwin/desing-system-vue'` | SearchField, Search, Search bar, Filter search |
 | `DsSelect` | Single-selection dropdown with label, hint, error, leading icon, clear button, and core dropdown menu styles, 2 sizes | `import { DsSelect } from '@failwin/desing-system-vue'` | Dropdown, Select, Dropdown input |
 | `DsTextarea` | Multi-line text input with label, hint, error, character counter, and clear button, 2 sizes | `import { DsTextarea } from '@failwin/desing-system-vue'` | Text-Area, Textarea |
 
@@ -85,6 +90,31 @@ Example:
 
 Common Figma layer naming patterns and their corresponding library components:
 
+**DsAvatar**
+- `Avatar/Initials Colored` → `<DsAvatar initials="EM" color="blue" />`
+- `Avatar/Initials Monochrome` → `<DsAvatar initials="EM" />`
+- `Avatar/Icon` → `<DsAvatar />` (no initials, no image — person silhouette fallback)
+- `Avatar/Image` → `<DsAvatar image="https://…" alt="User name" />`
+- Image with fallback chain: `<DsAvatar :image="photo" :initials="initials" color="purple" :alt="name" />`
+- Size variants: `large` (40px), `medium` (34px, default), `small` (28px), `xsmall` (20px)
+- Colors (for colored initials): `blue`, `light-purple`, `yellow`, `pink`, `purple`, `deep-blue`, `turquoise`, `orange`, `red`
+
+**DsBadge**
+- `Badge/Pending` → `<DsBadge type="pending">Text</DsBadge>`
+- `Badge/Interesting` → `<DsBadge type="interesting">Text</DsBadge>`
+- `Badge/Neutral` → `<DsBadge type="neutral">Text</DsBadge>`
+- `Badge/Rejected` → `<DsBadge type="rejected">Text</DsBadge>`
+- `Badge/Aceptied` (Figma spelling) → `<DsBadge type="accepted">Text</DsBadge>`
+- `Badge/Cancel` → `<DsBadge type="cancel">Text</DsBadge>`
+- `Badge/Border` → `<DsBadge type="border">Text</DsBadge>`
+- `Badge/Clean` → `<DsBadge type="clean">Text</DsBadge>` (hover state activates via CSS `:hover`)
+- `Badge/Draft` → `<DsBadge type="draft">Text</DsBadge>`
+- `Badge/Loaded` (shimmer/skeleton) → `<DsBadge type="loaded" />`
+- `Badge/Type10` (static hover-target) → `<DsBadge type="type10">Text</DsBadge>`
+- Badge with left icon: `<DsBadge type="pending" :showLIcon="true" label="Text"><template #leading><DsIcon name="success" :style="{ width: '12px', height: '12px' }" /></template></DsBadge>`
+- Badge with right icon: `<DsBadge type="pending" :showRIcon="true" label="Text"><template #trailing><DsIcon name="arrow-right" :style="{ width: '12px', height: '12px' }" /></template></DsBadge>`
+- Note: DsBadge uses `type`, NOT `severity`. It is display-only — wrap in `<button>` for interactivity.
+
 **DsButton**
 - `Button/Primary` → `<DsButton severity="primary">Label</DsButton>`
 - `Button/Outlined` → `<DsButton severity="outlined">Label</DsButton>`
@@ -93,6 +123,26 @@ Common Figma layer naming patterns and their corresponding library components:
 - `Button/Text Link` → `<DsButton severity="text-link">Label</DsButton>`
 - `Button/Negative` → `<DsButton severity="negative">Label</DsButton>`
 - Size variants: `xsmall`, `small`, `medium` (default), `large`
+
+**DsChip**
+- `Chip/Default` → `<DsChip>Label</DsChip>`
+- `Chip/Selected` → `<DsChip type="selected">Label</DsChip>`
+- `Chip/Not clickable` or `Chip/Disabled` → `<DsChip disabled>Label</DsChip>` (or `type="not-clickable"`)
+- Removable: `<DsChip removable @remove="handleRemove">Label</DsChip>`
+- With leading icon: `<DsChip><template #leading><DsIcon name="column-view" /></template>Label</DsChip>`
+- With trailing chevron (dropdown indicator): `<DsChip>Label<template #trailing><DsIcon name="nav-arrow-down" /></template></DsChip>`
+- Size variants: `small`, `medium` (default)
+
+**DsCodeInput**
+- `Code input` → `<DsCodeInput v-model="code" />`
+- `Code input / Default` → `<DsCodeInput v-model="code" />` (all cells empty)
+- `Code input / Focused` → `<DsCodeInput v-model="code" autofocus />` (consumer-controlled focus)
+- `Code input / Input` → `<DsCodeInput :model-value="'5234'" />`
+- `Code input / Error` → `<DsCodeInput v-model="code" error="Invalid code" />`
+- `Code input / Hover` → `<DsCodeInput v-model="code" />` (hover is CSS-driven — no prop)
+- Custom length: `<DsCodeInput v-model="code" :length="6" />` (default length = 4)
+- Digits only: `<DsCodeInput v-model="code" integer-only />`
+- Masked (bullets): `<DsCodeInput v-model="pin" mask integer-only />`
 
 **DsIcon**
 - `Icon/*`, `ic/*`, glyph layers → `<DsIcon name="icon-name" />`
@@ -118,6 +168,14 @@ Common Figma layer naming patterns and their corresponding library components:
 - `Link/Quiet` → `<DsLink type="quiet" href="/path">Label</DsLink>`
 - Visibility: `high` (default), `low`. Note: `visibility` is ignored when `type="smart"` (always resolves to `high`).
 - Size variants: `small`, `medium` (default)
+
+**DsSearchField**
+- `SearchField/Default` → `<DsSearchField v-model="q" />`
+- `SearchField/Focused` or `SearchField/Input-text` → `<DsSearchField v-model="q" />` (states handled automatically — no prop)
+- With help icon (filter button): `<DsSearchField v-model="q" help-icon @help="openFilters" />`
+- Keyboard shortcut: Enter → `@search`, Escape → `@clear`
+- Size variants: `xxsmall` (28px, no default search icon), `xsmall` (32px), `small` (36px), `medium` (40px, default)
+- Do NOT use when the field has a visible label above it — use DsInputText + `#leading` slot with `<DsIcon name="search" />` instead
 
 **DsSelect**
 - `Dropdown`, `Select`, `Dropdown input` → `<DsSelect v-model="value" label="Label" :options="items" />`

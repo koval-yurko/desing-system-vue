@@ -25,7 +25,7 @@ This document provides the complete epic and story breakdown for desing-system-v
 - FR1: Developers can import and render DsTextarea with sizes (S, M), states (Default, Hover, Focus, Filled, Error, Disabled), and label/hint/error pattern consistent with DsInputText
 - FR2: Developers can import and render DsSelect with a dropdown option list, sizes (S, M), states (Default, Hover, Focus, Filled, Error, Disabled), and label/hint/error pattern consistent with DsInputText
 - FR3: Developers can import and render DsSearchField with search icon, clearable input, and sizes matching the design system scale
-- FR4: Developers can import and render DsCodeInput for monospace code/token/API key input with sizes and states
+- FR4: Developers can import and render DsCodeInput as a PIN/OTP-style verification code input — individual character cells with states (Default, Hover, Focused, Input, Error, Disabled), configurable length, auto-advance / backspace / paste support, and error message support
 - ~~FR5: REMOVED — DsFilterField removed from scope~~
 - FR6: Developers can import and render DsChip with variants (Default, Selected, Disabled) and removable behavior
 - FR7: Developers can import and render DsBadge with severity color variants matching the design token palette
@@ -55,7 +55,7 @@ This document provides the complete epic and story breakdown for desing-system-v
 - NFR2: Phase 2 components must not introduce rendering performance overhead beyond PrimeVue's baseline
 - NFR3: Composed components (DsSearchField) must not add perceptible latency compared to non-composed components
 - NFR4: All PrimeVue-wrapped Phase 2 components must preserve PrimeVue's built-in keyboard navigation and ARIA attributes
-- NFR5: Custom Tailwind components (DsSearchField, DsCodeInput) must implement keyboard navigation and ARIA support per the component addition guide
+- NFR5: Custom / composed components without a direct PrimeVue base (DsSearchField) must implement keyboard navigation and ARIA support per the component addition guide. DsCodeInput (PrimeVue `InputOtp` wrapper — reclassified during Story 8.2) must preserve PrimeVue's built-in keyboard behavior and add per-cell `aria-describedby` / `aria-invalid` on error, because `aria-describedby` does not inherit from a `role="group"` ancestor.
 - NFR6: All Phase 2 interactive components must have visible focus indicators in both light and dark themes
 - NFR7: DsAvatar must provide accessible alt text or aria-label for image and icon variants
 - NFR8: DsChip with removable behavior must be keyboard-accessible (Enter/Space to remove, focus management after removal)
@@ -82,7 +82,7 @@ This document provides the complete epic and story breakdown for desing-system-v
 
 - UX-DR1: DsTextarea and DsSelect must follow the same form field state pattern as DsInputText (Default, Hover, Focus, Filled, Error, Disabled) with consistent label/hint/error layout
 - UX-DR2: DsSearchField must include built-in search icon (not customizable) and clear button behavior
-- UX-DR3: DsCodeInput must use monospace typography distinct from Inter body text
+- UX-DR3: DsCodeInput cells must match the Figma "Code input" category exactly — each cell 43×58 with 1.5px border, 4px radius, 16px gap; digit typography Inter regular 30px / line-height 32px / letter-spacing -0.2px (per Figma `typography/size/2xl`). Any earlier "monospace code/token input" framing is superseded by the Figma PIN/OTP design and the Story 8.2 implementation.
 - ~~UX-DR4: REMOVED — DsFilterField removed from scope~~
 - UX-DR5: DsChip must support Selected state visual (not just Default/Disabled) and keyboard-accessible removal (Enter/Space) with focus management after removal
 - UX-DR6: DsBadge must use severity color mapping: error/Red, success/Green, warning/Orange, info/Blue matching the Figma token palette
@@ -137,7 +137,7 @@ Developers and AI agents can render tag chips, status badges, and user avatars m
 **NFRs addressed:** NFR1, NFR2, NFR4, NFR6, NFR7, NFR8, NFR9, NFR10, NFR11, NFR12, NFR13, NFR14
 
 ### Epic 8: Custom Search & Code Input (DsSearchField, DsCodeInput)
-Developers and AI agents can use specialized input components — a search field with built-in icon and clear behavior, and a PIN/OTP-style code input for verification codes. Introduces the library's first internal composition pattern (DsSearchField composes DsInputText + DsIcon).
+Developers and AI agents can use specialized input components — a search field with built-in icon and clear behavior, and a PIN/OTP-style verification code input. Introduces the library's first internal composition pattern (DsSearchField composes DsInputText + DsIcon). Note: DsCodeInput, originally scoped as a custom Tailwind component, was reclassified during Story 8.2 as a thin PrimeVue `InputOtp` wrapper after PrimeVue 4.5.4 was found to ship the component natively.
 **FRs covered:** FR3, FR4, FR13, FR9, FR10, FR11, FR12
 **UX-DRs covered:** UX-DR2, UX-DR3, UX-DR8, UX-DR9, UX-DR10
 **NFRs addressed:** NFR1, NFR3, NFR5, NFR6, NFR9, NFR10, NFR11, NFR12, NFR13, NFR14
@@ -519,44 +519,52 @@ So that I can implement search inputs matching the Figma design, composed intern
 
 As a **developer or AI agent**,
 I want a DsCodeInput component rendering individual character cells (PIN/OTP style) with states (Default, Hover, Focused, Input, Error, Disabled), configurable length, and error message support,
-So that I can implement code/token/API key input fields matching the Figma design.
+So that I can implement verification-code input fields matching the Figma design.
+
+**Classification note:** DsCodeInput was originally classified "Custom Tailwind" in the PRD component table. Story 8.2 reclassified it as a **thin PrimeVue `InputOtp` wrapper** because PrimeVue 4.5.4 ships `InputOtp` natively with cell DOM, auto-advance, backspace, and paste handling built in — wrapping it is simpler and more robust than rebuilding the cell logic in Tailwind.
 
 **Acceptance Criteria:**
 
 **Given** a consuming project with the design system installed
 **When** the developer imports DsCodeInput from the library
-**Then** the component renders a row of individual input cells (default 4) matching Figma specs in both light and dark themes
-**And** each cell is 43px wide × 58px tall, border-radius 4px, font 30px Inter, with 16px gap between cells
+**Then** the component renders a row of individual PrimeVue `InputOtp` cells (default 4) matching Figma specs in both light and dark themes
+**And** each cell is 43px wide × 58px tall, border-radius 4px, border 1.5px, font Inter 30px / line-height 32px / letter-spacing -0.2px, with 16px gap between cells
 
-**Given** DsCodeInput has a `length` prop
-**When** set to a number (default 4)
+**Given** DsCodeInput has a `length` attribute (forwarded via `$attrs` to `InputOtp`, not a DS-explicit prop)
+**When** set to a positive integer (PrimeVue default 4)
 **Then** it renders that many individual character cells in a horizontal row
 
 **Given** a user interacts with DsCodeInput cells
 **When** each cell is interacted with
-**Then** states render per cell: Default (gray-100 bg, gray-300 border) → Hover (gray-200 bg, gray-800 border) → Focused (white bg, purple-400 border, purple glow shadow `0 0 5px rgba(120,73,255,0.6)`) → Input (white bg, purple-400 border, purple-600 text showing entered digit)
-**And** focus auto-advances to the next cell after a character is entered
-**And** backspace moves focus to the previous cell and clears it
+**Then** states render per cell (all colors via `--p-*` tokens, not hardcoded hex): Default (`--p-gray-100` bg, `--p-gray-300` border) → Hover (`--p-gray-200` bg, `--p-gray-800` border) → Focused (`--p-surface-0` bg, `--p-purple-600` border, glow `0 0 5px rgba(120,73,255,0.6)`, suppressed on pointer focus via `:focus:not(:focus-visible)`) → Input (`--p-surface-0` bg, `--p-purple-600` border, `--p-purple-600` text color)
+**And** focus auto-advances to the next cell after a character is entered (PrimeVue behavior, not reimplemented)
+**And** Backspace moves focus to the previous cell and clears it (PrimeVue behavior)
+**And** Cmd/Ctrl+V paste populates all cells (PrimeVue behavior)
 
 **Given** DsCodeInput is in Error state
-**When** the error prop is set
-**Then** all cells show red-50 bg with red-700 border
-**And** entered text remains in gray-800
-**And** error message text appears below in red (token/text/negative/red)
+**When** the `error` prop is a non-empty string (whitespace-only treated as absent)
+**Then** all cells show `--p-red-50` bg with `--p-red-700` border
+**And** entered text remains in `--p-gray-800`
+**And** caret color is `--p-red-700`
+**And** error message text appears below in 14px Inter 500 `--p-red-700` preceded by a 14px red error icon
+**And** error is SUPPRESSED when `disabled` is also true
 
-**Given** DsCodeInput is a custom Tailwind component
+**Given** DsCodeInput wraps PrimeVue `InputOtp`
 **When** implemented
-**Then** keyboard navigation is fully implemented: Tab to enter/exit, arrow keys between cells, Backspace to go back, paste support for full code
-**And** ARIA attributes are set: `role="group"`, each cell has `aria-label`, error state uses `aria-describedby` (NFR5)
-**And** TypeScript types are provided for all props (length, modelValue, error, disabled)
+**Then** PrimeVue's built-in keyboard navigation is preserved: Tab to enter/exit, arrow keys between cells, Backspace to go back, paste support for the full code (NFR4)
+**And** ARIA attributes are set on the outer container: `role="group"`, `aria-labelledby` pointing at the label span (when `label` prop is provided), `aria-describedby` pointing at the error message (when error is shown), `aria-invalid="true"` (when error is shown)
+**And** the same `aria-describedby` and `aria-invalid` are routed onto each cell `<input>` via `pt.pcInputText.root`, because `aria-describedby` does not inherit from a `role="group"` ancestor to descendant inputs (NFR5)
+**And** whitespace-only `label`, `hint`, and `error` strings are treated as absent (no ARIA emitted, no DOM rendered)
+**And** TypeScript types are provided for the DS-explicit props (`label`, `hint`, `error`, `disabled`, `modelValue`); `length`, `mask`, `integerOnly`, `readonly`, `tabindex`, `pt`, and other PrimeVue `InputOtp` props flow through via `$attrs`
+**And** consumer-supplied `pt` is deep-merged with the wrapper's internal injections (placeholder for `:placeholder-shown` state CSS, plus per-cell ARIA on error) so `$attrs` forwarding remains useful
 
 **Given** the component is implemented
 **When** the implementation checklist is complete
 **Then** co-located files exist: `DsCodeInput.vue`, `DsCodeInput.stories.ts`, `DsCodeInput.test.ts`, `index.ts`
-**And** Storybook stories cover all states, error state with message, different lengths, and paste behavior
-**And** Vitest tests verify cell rendering, auto-advance, backspace, paste, error state, and keyboard navigation
+**And** Storybook stories cover all 5 cell states, error state with message, different lengths, `integerOnly`, `mask`, paste behavior, and an AllStates composite
+**And** Vitest tests verify cell rendering, prop forwarding via `$attrs`, `pt` deep-merge, per-cell ARIA on error, whitespace handling, and disabled/error suppression
 **And** AI knowledge base entry exists at `docs/ai-guidelines/ds-code-input.md`
-**And** component is exported from `src/index.ts`
+**And** component is exported from `src/index.ts` (alphabetical — between `DsChip` and `DsIcon`)
 
 **Figma reference:** `Design-Systems / node 2:45695`
 

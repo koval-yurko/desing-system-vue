@@ -183,4 +183,22 @@ describe('dsPreset', () => {
     expect(dsTheme.preset).toBe(dsPreset);
     expect(dsTheme.options?.darkModeSelector).toBe('.p-dark');
   });
+
+  it('contains updated amber.700 matching Figma taxt/supporting/amber/yellow-700', () => {
+    const amber = dsPreset.primitive?.amber as Record<string, string>;
+    expect(amber).toBeDefined();
+    expect(amber[700]).toBe('#a33b16'); // Figma yellow-700 (updated from #b85712)
+    // Verify other amber shades are unchanged
+    expect(amber[100]).toBe('#ffefdb');
+    expect(amber[600]).toBe('#da6b16');
+  });
+
+  it('contains green primitive palette with Figma-specified shades', () => {
+    const green = dsPreset.primitive?.green as Record<string, string>;
+    expect(green).toBeDefined();
+    expect(green[100]).toBe('#e0f6ed'); // Figma surfase/positive/green-100
+    expect(green[700]).toBe('#00995c'); // Figma taxt/positive/green-700
+    expect(green[50]).toBe('#f2fbf6');
+    expect(green[950]).toBe('#003a22');
+  });
 });

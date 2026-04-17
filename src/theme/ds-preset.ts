@@ -36,7 +36,7 @@ export const dsPreset = definePreset(Aura, {
       50: '#f7f6fd',
       100: '#f3e8ff',
       200: '#e0cfff',
-      300: '#c9a8ff',
+      300: '#c27aff', // Figma DsAvatar "Light Purple" sample (#C27AFF) — was interpolated #c9a8ff
       400: '#ab7aff',
       500: '#8e51ff',
       600: '#7849ff',
@@ -74,7 +74,7 @@ export const dsPreset = definePreset(Aura, {
       600: '#0e5cf4',
       700: '#0b4ad0',
       800: '#0a3ba6',
-      900: '#082f80',
+      900: '#082c54', // Figma DsAvatar "Deep Blue" sample (#082C54) — was interpolated #082f80
       950: '#041a4a',
     },
 
@@ -86,10 +86,27 @@ export const dsPreset = definePreset(Aura, {
       400: '#f8bc3b',
       500: '#e89b1e',
       600: '#da6b16',
-      700: '#b85712',
+      700: '#a33b16', // Figma taxt/supporting/amber/yellow-700 (updated from #b85712)
       800: '#94430e',
       900: '#70320a',
       950: '#3d1b05',
+    },
+
+    // Positive / Success Green
+    // Figma shades: 100 (surfase/positive/green-100), 700 (taxt/positive/green-700)
+    // Interpolated: 50, 200, 300, 400, 500, 600, 800, 900, 950
+    green: {
+      50: '#f2fbf6', // interpolated
+      100: '#e0f6ed', // Figma surfase/positive/green-100
+      200: '#b8ecd1', // interpolated
+      300: '#8de0b3', // interpolated
+      400: '#4fcb89', // interpolated
+      500: '#1eae69', // interpolated
+      600: '#11a062', // interpolated
+      700: '#00995c', // Figma taxt/positive/green-700
+      800: '#007d4b', // interpolated
+      900: '#00613a', // interpolated
+      950: '#003a22', // interpolated
     },
 
     orange: {
@@ -118,6 +135,24 @@ export const dsPreset = definePreset(Aura, {
       800: '#530042',
       900: '#3d0031',
       950: '#21001a',
+    },
+
+    // Supporting palette — Turquoise
+    // Figma shade: 500 = `#07b096` (sampled from DsAvatar asset node 2022:14973).
+    // All other shades interpolated around that primary. DsAvatar consumes the
+    // `-500` shade as the colored-initials background.
+    turquoise: {
+      50: '#effcf9',
+      100: '#ccf5ec',
+      200: '#99ead8',
+      300: '#4dd5bd',
+      400: '#1fc2a8',
+      500: '#07b096',
+      600: '#058d79',
+      700: '#046a5b',
+      800: '#03473d',
+      900: '#02302a',
+      950: '#011a17',
     },
 
     // Border radius (Figma tokens: non/md/lg/xl)
