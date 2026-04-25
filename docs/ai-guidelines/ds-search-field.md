@@ -44,19 +44,19 @@ Consumers never import `DsInputText` or `DsIcon` themselves — the search icon,
 
 Typography is identical across sizes: Inter regular 14 px / line-height 20 px / letter-spacing −0.2 px. Border-radius is `8px` at all sizes.
 
-## States
+## Variants
 
-The field automatically resolves one of five states from props + focus + content:
+DsSearchField visual variants are interaction-driven rather than author-selected — the field automatically resolves one of five visual modes from props, focus, and content:
 
-| State | Background | Border | Text / search-icon |
+| Variant | Background | Border | Text / search-icon |
 |---|---|---|---|
 | Default | `--p-gray-100` | `--p-gray-400` | `--p-gray-600` |
-| Hover (default-state only) | `--p-gray-200` | `--p-gray-800` | `--p-gray-800` |
+| Hover (default-variant only) | `--p-gray-200` | `--p-gray-800` | `--p-gray-800` |
 | Focused (empty) | `--p-gray-100` | `--p-gray-800` | `--p-gray-800` (placeholder dims to `--p-gray-500`) |
 | Input-text (has value) | `--p-gray-100` | `--p-gray-800` | `--p-gray-800` |
 | Disabled | `--p-gray-100` | `--p-gray-300` | `--p-gray-500` |
 
-State precedence (highest wins): **Disabled > Input-text > Focused > Default**. Hover is only applied to the Default state via `:hover`. Transitions use `150ms ease` behind `@media (prefers-reduced-motion: no-preference)`.
+Variant precedence (highest wins): **Disabled > Input-text > Focused > Default**. Hover is only applied to the Default variant via `:hover`. Transitions use `150ms ease` behind `@media (prefers-reduced-motion: no-preference)`.
 
 ## Slots
 
@@ -84,15 +84,6 @@ State precedence (highest wins): **Disabled > Input-text > Focused > Default**. 
 | **Enter / Space** (on clear button) | Clear the input and emit `@clear`. |
 | **Enter / Space** (on help button) | Emit `@help`. |
 | **Tab** | Native tab order is `input → clear (if visible) → help (if visible)`. |
-
-## Accessibility
-
-- The input is `<input type="search">`, which gives an implicit `role="searchbox"` and hides browser-native clear X (we render our own).
-- Default accessible name is `aria-label="Search"` (overridable via `ariaLabel`).
-- The leading search icon is decorative (`aria-hidden="true"`) — the input's `aria-label` carries the semantic meaning.
-- When `disabled=true`, the input has `aria-disabled="true"` in addition to the native `disabled` attribute.
-- Clear and help buttons both receive a visible `focus-visible` ring (`2px solid var(--p-purple-800)`).
-- Help button also sets `title` equal to its `aria-label`, matching the Figma "Search options" tooltip.
 
 ## Usage Examples
 
@@ -149,6 +140,15 @@ function runSearch(value: string) {
 <!-- Disabled -->
 <DsSearchField v-model="query" disabled />
 ```
+
+## Accessibility
+
+- The input is `<input type="search">`, which gives an implicit `role="searchbox"` and hides browser-native clear X (we render our own).
+- Default accessible name is `aria-label="Search"` (overridable via `ariaLabel`).
+- The leading search icon is decorative (`aria-hidden="true"`) — the input's `aria-label` carries the semantic meaning.
+- When `disabled=true`, the input has `aria-disabled="true"` in addition to the native `disabled` attribute.
+- Clear and help buttons both receive a visible `focus-visible` ring (`2px solid var(--p-purple-800)`).
+- Help button also sets `title` equal to its `aria-label`, matching the Figma "Search options" tooltip.
 
 ## Figma Reference
 
