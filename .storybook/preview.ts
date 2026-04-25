@@ -13,6 +13,13 @@ setup((app) => {
 });
 
 const preview: Preview = {
+  parameters: {
+    options: {
+      storySort: {
+        order: ['Introduction', 'Foundations', 'Components', 'Pages'],
+      },
+    },
+  },
   globalTypes: {
     theme: {
       description: 'Theme for components',
