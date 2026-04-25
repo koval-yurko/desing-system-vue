@@ -1,6 +1,6 @@
 {
   "name": "@failwin/desing-system-vue",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Vue 3 design system component library built on PrimeVue with Figma design tokens",
   "repository": {
     "type": "git",
