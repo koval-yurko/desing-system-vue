@@ -12,12 +12,15 @@ export interface DsCodeInputProps {
   error?: string;
   /** Disabled state. Applies muted cell styling and suppresses the error message. Default: false */
   disabled?: boolean;
+  /** Number of code cells. Default: 4 */
+  length?: number;
 }
 
 defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<DsCodeInputProps>(), {
   disabled: false,
+  length: 4,
 });
 
 const model = defineModel<string>();
@@ -90,6 +93,7 @@ const otpPassThrough = computed(() => {
     <InputOtp
       v-bind="$attrs"
       v-model="model"
+      :length="length"
       :disabled="disabled"
       :pt="otpPassThrough"
       class="ds-code-input__otp"

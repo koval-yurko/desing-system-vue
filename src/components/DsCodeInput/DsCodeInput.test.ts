@@ -94,8 +94,7 @@ describe('DsCodeInput', () => {
 
     it('round-trips a full-length value (e.g., paste) for non-default length', async () => {
       const wrapper = mount(DsCodeInput, {
-        props: { modelValue: '' },
-        attrs: { length: 6 },
+        props: { modelValue: '', length: 6 },
         global: globalConfig,
       });
       await wrapper.findComponent(InputOtp).vm.$emit('update:modelValue', '123456');
@@ -104,12 +103,19 @@ describe('DsCodeInput', () => {
   });
 
   describe('PrimeVue prop passthrough', () => {
-    it('passes length through $attrs', () => {
+    it('forwards length to InputOtp', () => {
       const wrapper = mount(DsCodeInput, {
-        attrs: { length: 6 },
+        props: { length: 6 },
         global: globalConfig,
       });
       expect(wrapper.findComponent(InputOtp).props('length')).toBe(6);
+    });
+
+    it('defaults length to 4 when not specified', () => {
+      const wrapper = mount(DsCodeInput, {
+        global: globalConfig,
+      });
+      expect(wrapper.findComponent(InputOtp).props('length')).toBe(4);
     });
 
     it('passes integerOnly through $attrs', () => {
