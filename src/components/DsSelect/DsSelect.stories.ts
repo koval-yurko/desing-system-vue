@@ -97,6 +97,7 @@ const meta = {
     info: { control: 'boolean' },
     hint: { control: 'text' },
     error: { control: 'text' },
+    multiple: { control: 'boolean' },
     modelValue: { control: 'text' },
   },
   args: {
@@ -106,6 +107,7 @@ const meta = {
     mandatory: false,
     optional: false,
     info: false,
+    multiple: false,
   },
 } satisfies Meta<typeof DsSelect>;
 
@@ -246,16 +248,21 @@ export const WithLeadingIcon: Story = {
     components: { DsSelect, DsIcon },
     setup() {
       const value = ref(args.modelValue);
-      return { args, value };
+      const options = objectOptions;
+      return { args, value, options };
     },
     template: `
       <DsSelect v-bind="args" v-model="value" :options="options" option-label="name" option-value="code" placeholder="Select a country">
-        <template #leading>
-          <DsIcon name="search" size="medium" />
+        <template #value="{ value: selected, placeholder }">
+          <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+            <DsIcon name="search" size="medium" />
+            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              {{ selected ? options.find(o => o.code === selected)?.name : placeholder }}
+            </span>
+          </div>
         </template>
       </DsSelect>
     `,
-    data: () => ({ options: objectOptions }),
   }),
 };
 

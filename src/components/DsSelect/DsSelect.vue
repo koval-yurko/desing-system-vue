@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MultiSelect from 'primevue/multiselect';
 import Select from 'primevue/select';
-import { type ComponentPublicInstance, computed, ref, useAttrs, useId } from 'vue';
+import { computed, ref, useId } from 'vue';
 import DsIcon from '../DsIcon/DsIcon.vue';
 
 export interface DsSelectProps {
@@ -21,6 +21,8 @@ export interface DsSelectProps {
   hint?: string;
   /** Error message — triggers Error visual state and aria-invalid */
   error?: string;
+  /** Multi-selection mode. Default: false */
+  multiple?: boolean;
 }
 
 defineOptions({ inheritAttrs: false });
@@ -31,29 +33,14 @@ const props = withDefaults(defineProps<DsSelectProps>(), {
   mandatory: false,
   optional: false,
   info: false,
+  multiple: false,
 });
 
 const model = defineModel<unknown>();
-
-const emit = defineEmits<{
-  clear: [];
-}>();
-
-const attrs = useAttrs();
-const isMultiple = computed(() => {
-  if (!('multiple' in attrs)) return false;
-  const val = attrs.multiple;
-  return val !== false && val !== 'false' && val !== '' && val !== '0' && val !== 0;
-});
-const filteredAttrs = computed(() => {
-  const { multiple: _multiple, ...rest } = attrs;
-  return rest;
-});
+const emit = defineEmits<{ clear: [] }>();
 
 const triggerId = useId();
 const errorId = useId();
-const selectRef = ref<ComponentPublicInstance | null>(null);
-
 const isOpen = ref(false);
 
 const hasValue = computed(
@@ -61,52 +48,21 @@ const hasValue = computed(
     model.value != null &&
     (Array.isArray(model.value) ? model.value.length > 0 : model.value !== ''),
 );
-const isError = computed(() => !!props.error);
-const showError = computed(() => isError.value && !props.disabled);
+const showError = computed(() => !!props.error && !props.disabled);
 
-const triggerClasses = computed(() => ({
+const SelectImpl = computed(() => (props.multiple ? MultiSelect : Select));
+
+const triggerClass = computed(() => ({
   'ds-select__trigger': true,
   [`ds-select__trigger--${props.size}`]: true,
   'ds-select__trigger--error': showError.value,
-  'ds-select__trigger--disabled': props.disabled,
   'ds-select__trigger--filled': hasValue.value && !props.disabled,
   'ds-select__trigger--open': isOpen.value,
-  'ds-select__trigger--transitions': !props.disabled,
 }));
 
-const sizeTokens = computed(() => {
-  const map: Record<string, Record<string, string>> = {
-    small: {
-      paddingX: '0.75rem',
-      paddingY: '0.375rem',
-      fontSize: '0.875rem',
-      borderRadius: '8px',
-    },
-    medium: {
-      paddingX: '0.75rem',
-      paddingY: '0.5rem',
-      fontSize: '0.875rem',
-      borderRadius: '8px',
-    },
-  };
-  return map[props.size];
-});
-
-function handleClear() {
-  model.value = Array.isArray(model.value) ? [] : undefined;
-  emit('clear');
-  if (isOpen.value) {
-    (selectRef.value as ComponentPublicInstance & { hide: () => void })?.hide();
-  }
-}
-
-function handleLabelClick() {
-  const el = selectRef.value?.$el;
-  if (el) {
-    const focusTarget = el.querySelector('[tabindex], [role="combobox"]') || el;
-    focusTarget.focus();
-  }
-}
+const overlayClass = computed(() =>
+  props.multiple ? 'ds-select-panel ds-select-panel--multi' : 'ds-select-panel',
+);
 
 function handleShow() {
   isOpen.value = true;
@@ -115,15 +71,16 @@ function handleShow() {
 function handleHide() {
   isOpen.value = false;
 }
+
+function onClear() {
+  emit('clear');
+}
 </script>
 
 <template>
-  <div
-    class="ds-select"
-    :class="[`ds-select--${size}`]"
-  >
+  <div class="ds-select" :class="[`ds-select--${size}`]">
     <!-- Label section -->
-    <label v-if="label" class="ds-select__label" :for="triggerId" @click="handleLabelClick">
+    <label v-if="label" class="ds-select__label" :for="triggerId">
       <span class="ds-select__label-text">{{ label }}</span>
       <span v-if="mandatory && !optional" class="ds-select__label-mandatory">*</span>
       <span v-if="optional && !mandatory" class="ds-select__label-optional">(Optional)</span>
@@ -132,114 +89,57 @@ function handleHide() {
       </span>
     </label>
 
-    <!-- Trigger wrapper -->
-    <div :class="triggerClasses">
-      <!-- Leading icon slot -->
-      <span v-if="$slots.leading" class="ds-select__leading">
-        <slot name="leading" />
-      </span>
-
-      <!-- PrimeVue MultiSelect (when multiple) -->
-      <MultiSelect
-        v-if="isMultiple"
-        ref="selectRef"
-        v-bind="filteredAttrs"
-        :id="triggerId"
-        v-model="model"
-        :disabled="disabled"
-        :show-clear="false"
-        :show-toggle-all="false"
-        display="comma"
-        :dt="sizeTokens"
-        class="ds-select__native"
-        :aria-describedby="showError ? errorId : undefined"
-        :aria-invalid="showError ? 'true' : undefined"
-        :aria-disabled="disabled ? 'true' : undefined"
-        :pt="{ overlay: { class: 'ds-select-panel ds-select-panel--multi' } }"
-        @show="handleShow"
-        @hide="handleHide"
-      >
-        <template v-if="$slots.option" #option="slotProps">
-          <slot name="option" v-bind="slotProps" />
-        </template>
-        <template v-if="$slots.value" #value="slotProps">
-          <slot name="value" v-bind="slotProps" />
-        </template>
-        <template v-if="$slots.header" #header="slotProps">
-          <slot name="header" v-bind="slotProps" />
-        </template>
-        <template v-if="$slots.footer" #footer="slotProps">
-          <slot name="footer" v-bind="slotProps" />
-        </template>
-      </MultiSelect>
-
-      <!-- PrimeVue Select (single selection) -->
-      <Select
-        v-else
-        ref="selectRef"
-        v-bind="filteredAttrs"
-        :id="triggerId"
-        v-model="model"
-        :disabled="disabled"
-        :show-clear="false"
-        :dt="sizeTokens"
-        class="ds-select__native"
-        :aria-describedby="showError ? errorId : undefined"
-        :aria-invalid="showError ? 'true' : undefined"
-        :aria-disabled="disabled ? 'true' : undefined"
-        :pt="{ overlay: { class: 'ds-select-panel' } }"
-        @show="handleShow"
-        @hide="handleHide"
-      >
-        <template v-if="$slots.option" #option="slotProps">
-          <slot name="option" v-bind="slotProps" />
-        </template>
-        <template v-if="$slots.value" #value="slotProps">
-          <slot name="value" v-bind="slotProps" />
-        </template>
-        <template v-if="$slots.header" #header="slotProps">
-          <slot name="header" v-bind="slotProps" />
-        </template>
-        <template v-if="$slots.footer" #footer="slotProps">
-          <slot name="footer" v-bind="slotProps" />
-        </template>
-      </Select>
-
-      <!-- Clear button -->
-      <span
-        v-if="hasValue && !disabled"
-        class="ds-select__clear"
-        role="button"
-        tabindex="0"
-        aria-label="Clear"
-        @click.stop="handleClear"
-        @keydown.enter.prevent="handleClear"
-        @keydown.space.prevent="handleClear"
-      >
+    <component
+      :is="SelectImpl"
+      v-bind="$attrs"
+      :id="triggerId"
+      v-model="model"
+      :disabled="disabled"
+      :show-clear="hasValue && !disabled"
+      :show-toggle-all="multiple ? false : undefined"
+      :class="triggerClass"
+      :aria-describedby="showError ? errorId : undefined"
+      :aria-invalid="showError ? 'true' : undefined"
+      :pt="{ overlay: { class: overlayClass } }"
+      @show="handleShow"
+      @hide="handleHide"
+      @clear="onClear"
+    >
+      <template v-if="$slots.option" #option="slotProps">
+        <slot name="option" v-bind="slotProps" />
+      </template>
+      <template v-if="$slots.value" #value="slotProps">
+        <slot name="value" v-bind="slotProps" />
+      </template>
+      <template v-if="$slots.header" #header="slotProps">
+        <slot name="header" v-bind="slotProps" />
+      </template>
+      <template v-if="$slots.footer" #footer="slotProps">
+        <slot name="footer" v-bind="slotProps" />
+      </template>
+      <template #dropdownicon>
+        <DsIcon
+          name="arrow-down"
+          :size="size === 'small' || hasValue ? 'medium' : 'large'"
+        />
+      </template>
+      <template #clearicon>
         <DsIcon name="close" :size="size === 'small' ? 'medium' : 'large'" />
-      </span>
-
-      <!-- Chevron -->
-      <span
-        class="ds-select__chevron"
-        :class="{ 'ds-select__chevron--open': isOpen }"
-        aria-hidden="true"
-      >
-        <DsIcon name="arrow-down" :size="size === 'small' || hasValue ? 'medium' : 'large'" />
-      </span>
-    </div>
+      </template>
+      <template #filtericon>
+        <DsIcon name="search" size="small" />
+      </template>
+    </component>
 
     <!-- Hint / Error section -->
     <div v-if="hint || error" class="ds-select__footer">
-      <div v-if="error && !disabled" class="ds-select__error-msg" :id="errorId">
+      <div v-if="error && !disabled" :id="errorId" class="ds-select__error-msg">
         <span class="ds-select__error-msg-icon" aria-hidden="true">
           <DsIcon name="error" size="xsmall" />
         </span>
         <span>{{ error }}</span>
       </div>
-      <div v-else-if="hint" class="ds-select__hint">
-        {{ hint }}
-      </div>
+      <div v-else-if="hint" class="ds-select__hint">{{ hint }}</div>
     </div>
   </div>
 </template>
@@ -293,17 +193,26 @@ function handleHide() {
   color: var(--p-gray-500);
 }
 
-/* Trigger wrapper */
+/* Trigger — applied directly to PrimeVue Select / MultiSelect root */
 .ds-select__trigger {
-  display: flex;
+  display: flex !important;
   align-items: center;
   gap: 4px;
-  border: 1px solid var(--p-gray-400);
-  border-radius: 8px;
-  padding: 0 0.75rem;
-  background-color: var(--p-surface-0, #fff);
-  box-shadow: 0px 1px 2px 0px var(--p-gray-300);
+  width: 100%;
+  border: 1px solid var(--p-gray-400) !important;
+  border-radius: 8px !important;
+  padding: 0 0.75rem !important;
+  background: var(--p-surface-0, #fff) !important;
+  box-shadow: 0px 1px 2px 0px var(--p-gray-300) !important;
+  outline: none !important;
+  min-height: unset !important;
   cursor: pointer;
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  letter-spacing: -0.2px;
+  color: var(--p-gray-800);
 }
 
 .ds-select__trigger--small {
@@ -314,60 +223,12 @@ function handleHide() {
   height: 40px;
 }
 
-/* PrimeVue Select native reset — strip border/shadow/bg so wrapper owns them */
-.ds-select__native {
-  flex: 1;
-  min-width: 0;
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0 !important;
-  outline: none !important;
-  font-family: var(--font-family, 'Inter', sans-serif);
-  font-weight: 400;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  letter-spacing: -0.2px;
-  color: var(--p-gray-800);
-  height: 100%;
-}
-
-/* Hide PrimeVue's native dropdown icon — DsSelect renders its own chevron */
-:deep(.p-select-dropdown),
-:deep(.p-multiselect-dropdown) {
-  display: none !important;
-}
-
-/* Strip PrimeVue Select internal styles */
-:deep(.p-select) {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0 !important;
-  outline: none !important;
-  min-height: unset !important;
-  height: 100% !important;
-}
-
-/* Strip PrimeVue MultiSelect internal styles */
-:deep(.p-multiselect) {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0 !important;
-  outline: none !important;
-  min-height: unset !important;
-  height: 100% !important;
-}
-
+/* Inner label — flex to fill remaining space, ellipsis on overflow */
 :deep(.p-select-label),
 :deep(.p-multiselect-label) {
+  flex: 1 1 auto;
+  min-width: 0;
   padding: 0 !important;
-  font-family: var(--font-family, 'Inter', sans-serif);
-  font-weight: 400;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  letter-spacing: -0.2px;
   color: var(--p-gray-800);
 }
 
@@ -376,128 +237,96 @@ function handleHide() {
   color: var(--p-gray-600);
 }
 
-/* Hover state */
-.ds-select__trigger--transitions:not(.ds-select__trigger--error):not(.ds-select__trigger--disabled):not(.ds-select__trigger--open):hover {
-  border-color: var(--p-gray-600);
-  background-color: var(--p-gray-100);
-  box-shadow: none;
+/* Hover (idle, not error / not disabled / not open) */
+.ds-select__trigger:not(.ds-select__trigger--error):not(.p-disabled):not(.ds-select__trigger--open):hover {
+  border-color: var(--p-gray-600) !important;
+  background: var(--p-gray-100) !important;
+  box-shadow: none !important;
 }
 
-.ds-select__trigger--transitions:not(.ds-select__trigger--error):not(.ds-select__trigger--disabled):not(.ds-select__trigger--open):hover :deep(.p-select-label.p-placeholder),
-.ds-select__trigger--transitions:not(.ds-select__trigger--error):not(.ds-select__trigger--disabled):not(.ds-select__trigger--open):hover :deep(.p-multiselect-label.p-placeholder) {
+.ds-select__trigger:not(.ds-select__trigger--error):not(.p-disabled):not(.ds-select__trigger--open):hover :deep(.p-select-label.p-placeholder),
+.ds-select__trigger:not(.ds-select__trigger--error):not(.p-disabled):not(.ds-select__trigger--open):hover :deep(.p-multiselect-label.p-placeholder) {
   color: var(--p-gray-500);
 }
 
-/* Filled-Hover state */
-.ds-select__trigger--filled.ds-select__trigger--transitions:not(.ds-select__trigger--error):not(.ds-select__trigger--open):hover {
-  border-color: var(--p-gray-600);
-  background-color: var(--p-gray-100);
-  box-shadow: none;
+/* Open / focus — keep base look */
+.ds-select__trigger--open:not(.p-disabled):not(.ds-select__trigger--error) {
+  border-color: var(--p-gray-400) !important;
+  background: var(--p-surface-0, #fff) !important;
+  box-shadow: 0px 1px 2px 0px var(--p-gray-300) !important;
 }
 
-/* Focus state — keyboard focus ring (consistent with DsInputText) */
-.ds-select__trigger:not(.ds-select__trigger--disabled):focus-within:not(.ds-select__trigger--error) {
-  border-color: var(--p-purple-800);
-  background-color: var(--p-surface-0, #fff);
-  box-shadow: none;
-}
-
-/* Focus/Open state */
-.ds-select__trigger--open:not(.ds-select__trigger--disabled):not(.ds-select__trigger--error) {
-  border-color: var(--p-gray-400);
-  background-color: var(--p-surface-0, #fff);
-  box-shadow: 0px 1px 2px 0px var(--p-gray-300);
-}
-
-/* Error state — border always red */
+/* Error */
 .ds-select__trigger--error {
-  border-color: var(--p-red-700);
-  box-shadow: none;
+  border-color: var(--p-red-700) !important;
+  box-shadow: none !important;
 }
 
-/* Error + open: red ring */
-.ds-select__trigger--error.ds-select__trigger--open {
-  box-shadow: 0px 0px 0px 3px var(--p-red-100);
-}
-
-/* Error + focus-within: red ring (for keyboard focus) */
+.ds-select__trigger--error.ds-select__trigger--open,
 .ds-select__trigger--error:focus-within {
-  box-shadow: 0px 0px 0px 3px var(--p-red-100);
+  box-shadow: 0px 0px 0px 3px var(--p-red-100) !important;
 }
 
-/* Disabled state */
-.ds-select__trigger--disabled {
-  background-color: var(--p-gray-100);
-  border-color: var(--p-gray-400);
-  box-shadow: none;
+/* Disabled — PrimeVue adds .p-disabled when :disabled="true" */
+.ds-select__trigger.p-disabled {
+  background: var(--p-gray-100) !important;
+  border-color: var(--p-gray-400) !important;
+  box-shadow: none !important;
   pointer-events: none;
 }
 
-.ds-select__trigger--disabled :deep(.p-select-label),
-.ds-select__trigger--disabled :deep(.p-multiselect-label) {
-  color: var(--p-gray-500);
+.ds-select__trigger.p-disabled :deep(.p-select-label),
+.ds-select__trigger.p-disabled :deep(.p-multiselect-label) {
+  color: var(--p-gray-500) !important;
 }
 
-.ds-select__trigger--disabled :deep(.p-select-label.p-placeholder),
-.ds-select__trigger--disabled :deep(.p-multiselect-label.p-placeholder) {
-  color: var(--p-gray-500);
-}
-
-/* Filled state (has value, idle) — no shadow */
-.ds-select__trigger--filled:not(.ds-select__trigger--error):not(.ds-select__trigger--disabled):not(.ds-select__trigger--open) {
-  box-shadow: none;
+/* Filled (idle, has value) */
+.ds-select__trigger--filled:not(.ds-select__trigger--error):not(.ds-select__trigger--open) {
+  box-shadow: none !important;
 }
 
 /* Transitions */
 @media (prefers-reduced-motion: no-preference) {
-  .ds-select__trigger--transitions {
+  .ds-select__trigger {
     transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
   }
 
-  .ds-select__chevron {
+  :deep(.p-select-dropdown),
+  :deep(.p-multiselect-dropdown) {
     transition: transform 150ms ease;
   }
 }
 
-/* Leading icon */
-.ds-select__leading {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: var(--p-gray-600);
-}
-
-.ds-select__trigger--disabled .ds-select__leading {
-  color: var(--p-gray-500);
-}
-
-/* Clear button */
-.ds-select__clear {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  cursor: pointer;
-  color: var(--p-gray-500);
-  border-radius: 50%;
-}
-
-.ds-select__clear:hover {
-  color: var(--p-gray-700);
-}
-
-/* Chevron */
-.ds-select__chevron {
+/* Chevron — rotate PrimeVue's dropdown wrap when open */
+:deep(.p-select-dropdown),
+:deep(.p-multiselect-dropdown) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   color: var(--p-gray-500);
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  width: auto !important;
 }
 
-.ds-select__chevron--open {
+.ds-select__trigger--open :deep(.p-select-dropdown),
+.ds-select__trigger--open :deep(.p-multiselect-dropdown) {
   transform: rotate(180deg);
+}
+
+/* Clear icon */
+:deep(.p-select-clear-icon),
+:deep(.p-multiselect-clear-icon) {
+  color: var(--p-gray-500);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+:deep(.p-select-clear-icon:hover),
+:deep(.p-multiselect-clear-icon:hover) {
+  color: var(--p-gray-700);
 }
 
 /* Footer — Hint / Error message */
@@ -532,16 +361,15 @@ function handleHide() {
   flex-shrink: 0;
   color: var(--p-red-700);
 }
-
 </style>
 
 <!-- Non-scoped styles for PrimeVue teleported overlay panel -->
 <style>
 .ds-select-panel {
-  background: #fff; /* surface-0 */
+  background: #fff;
   border: 1px solid var(--p-gray-300);
   border-radius: 8px;
-  box-shadow: 0px 1px 4px 0px #CAD5E280, 0px 1px 6px 0px #CAD5E240; /* shadow-sm: gray-300/50%, gray-300/25% */
+  box-shadow: 0px 1px 4px 0px #CAD5E280, 0px 1px 6px 0px #CAD5E240;
   padding: 4px;
   overflow-y: auto;
 }
@@ -575,7 +403,7 @@ function handleHide() {
 
 .ds-select-panel .p-select-option:hover,
 .ds-select-panel .p-select-option.p-focus {
-  background-color: #F6F7FA; /* BW-02 */
+  background-color: #F6F7FA;
 }
 
 /* Two-line option items */
@@ -601,18 +429,15 @@ function handleHide() {
   color: var(--p-gray-600);
 }
 
-/* Two-line item padding override — Figma uses tighter right/vertical padding */
 .ds-select-panel--two-line .p-select-option {
   padding: 6px 6px 6px 12px;
 }
 
-/* Two-line item dividers — applied when options contain two-line layout */
 .ds-select-panel--two-line .p-select-option + .p-select-option {
   border-top: 1px solid var(--p-gray-200);
   border-radius: 0;
 }
 
-/* Empty / no-match state */
 .ds-select-panel .p-select-empty-message {
   padding: 24px 4px;
   text-align: center;
@@ -622,12 +447,95 @@ function handleHide() {
   color: var(--p-gray-600);
 }
 
-/* Strip PrimeVue overlay default styles */
 .ds-select-panel.p-select-overlay,
 .ds-select-panel.p-multiselect-overlay {
   border: 1px solid var(--p-gray-300) !important;
   border-radius: 8px !important;
   box-shadow: 0px 1px 4px 0px #CAD5E280, 0px 1px 6px 0px #CAD5E240 !important;
+}
+
+/* PrimeVue v4 MultiSelect renders #header slot BEFORE the default filter header — flip order so
+   filter → custom slot (e.g. Select all) → options matches Figma */
+.ds-select-panel.p-multiselect-overlay {
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-select-panel .p-multiselect-header {
+  order: 1;
+}
+
+.ds-select-panel.p-multiselect-overlay > div:not(.p-multiselect-header):not(.p-multiselect-list-container) {
+  order: 2;
+}
+
+.ds-select-panel .p-multiselect-list-container {
+  order: 3;
+}
+
+/* Search bar section */
+.ds-select-panel .p-select-header,
+.ds-select-panel .p-multiselect-header {
+  display: block;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid var(--p-gray-300);
+}
+
+/* Filter input */
+.ds-select-panel .p-iconfield {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.ds-select-panel .p-select-filter,
+.ds-select-panel .p-multiselect-filter {
+  width: 100%;
+  height: 32px;
+  padding: 4px 8px 4px 32px;
+  background: var(--p-gray-100, #f8fafc);
+  border: 1px solid var(--p-gray-400);
+  border-radius: 8px;
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  letter-spacing: -0.2px;
+  color: var(--p-gray-800);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.ds-select-panel .p-select-filter:focus,
+.ds-select-panel .p-multiselect-filter:focus {
+  border-color: var(--p-gray-800);
+}
+
+.ds-select-panel .p-select-filter::placeholder,
+.ds-select-panel .p-multiselect-filter::placeholder {
+  color: var(--p-gray-500);
+}
+
+.ds-select-panel .p-iconfield .p-inputicon {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  margin-top: 0;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--p-gray-500);
+  pointer-events: none;
+}
+
+.ds-select-panel .p-iconfield .p-inputicon .p-icon,
+.ds-select-panel .p-iconfield .p-inputicon svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* Option list wrapper */
@@ -648,13 +556,9 @@ function handleHide() {
   border-radius: 100px;
 }
 
-/* ==========================================
-   Multi-selection panel (.ds-select-panel--multi)
-   ========================================== */
-
-/* MultiSelect option items — same base as Select options */
+/* Multi-selection panel */
 .ds-select-panel .p-multiselect-option {
-  padding: 4px 6px 4px 8px;
+  padding: 10px 10px 10px 12px;
   border-radius: 4px;
   font-family: var(--font-family, 'Inter', sans-serif);
   font-weight: 400;
@@ -671,10 +575,9 @@ function handleHide() {
 
 .ds-select-panel .p-multiselect-option:hover,
 .ds-select-panel .p-multiselect-option.p-focus {
-  background-color: #F6F7FA; /* BW-02 */
+  background-color: #F6F7FA;
 }
 
-/* Checkbox styling inside multi-select options — Figma spec */
 .ds-select-panel .p-checkbox {
   width: 16px;
   height: 16px;
@@ -695,12 +598,10 @@ function handleHide() {
   border-color: var(--p-purple-800);
 }
 
-/* Hide MultiSelect native toggle-all header checkbox (we use custom header slot) */
-.ds-select-panel .p-multiselect-header {
+.ds-select-panel .p-multiselect-header > .p-checkbox {
   display: none;
 }
 
-/* Empty state for MultiSelect */
 .ds-select-panel .p-multiselect-empty-message {
   padding: 24px 4px;
   text-align: center;
@@ -710,12 +611,8 @@ function handleHide() {
   color: var(--p-gray-600);
 }
 
-/* ==========================================
-   Advanced option layout CSS classes
-   Used by consumers in PrimeVue slot templates
-   ========================================== */
+/* Advanced option layout CSS classes (consumed by slot templates) */
 
-/* --- Entity icons variant (AC #3) --- */
 .ds-select-option-entity {
   display: flex;
   align-items: center;
@@ -729,12 +626,10 @@ function handleHide() {
   overflow: hidden;
 }
 
-/* Entity icons panel — tighter gap between checkbox, icon, and label (Figma: 4px) */
 .ds-select-panel--entity .p-multiselect-option {
   gap: 4px;
 }
 
-/* --- Badge / Dot indicator variant (AC #4) --- */
 .ds-select-option-badge {
   display: flex;
   align-items: center;
@@ -756,13 +651,11 @@ function handleHide() {
   color: var(--p-gray-900);
 }
 
-/* Badge panel — no checkboxes, standard padding */
 .ds-select-panel--badge .p-select-option,
 .ds-select-panel--badge .p-multiselect-option {
   padding: 8px 8px 8px 12px;
 }
 
-/* --- Two-line multi-selection variant (AC #5) --- */
 .ds-select-option-two-line-multi {
   display: flex;
   flex-direction: column;
@@ -785,9 +678,8 @@ function handleHide() {
   color: var(--p-gray-600);
 }
 
-/* Two-line multi-select panel — dividers and adjusted padding */
 .ds-select-panel--two-line-multi .p-multiselect-option {
-  padding: 6px 6px 6px 12px;
+  padding: 6px 10px 6px 12px;
 }
 
 .ds-select-panel--two-line-multi .p-multiselect-option + .p-multiselect-option {
@@ -795,7 +687,6 @@ function handleHide() {
   border-radius: 0;
 }
 
-/* --- Vendor variant (AC #6) --- */
 .ds-select-option-vendor {
   display: flex;
   align-items: center;
@@ -843,10 +734,9 @@ function handleHide() {
   text-overflow: ellipsis;
 }
 
-/* Vendor panel — dividers and adjusted padding, no checkboxes */
 .ds-select-panel--vendor .p-select-option,
 .ds-select-panel--vendor .p-multiselect-option {
-  padding: 6px 6px 6px 12px;
+  padding: 6px 10px 6px 12px;
 }
 
 .ds-select-panel--vendor .p-select-option + .p-select-option,
@@ -855,7 +745,6 @@ function handleHide() {
   border-radius: 0;
 }
 
-/* --- Mention variant (AC #7) --- */
 .ds-select-option-mention {
   display: flex;
   align-items: center;
@@ -925,14 +814,13 @@ function handleHide() {
   flex-shrink: 0;
 }
 
-/* Mention panel — wider, dividers within groups, group borders */
 .ds-select-panel--mention {
   width: 409px;
 }
 
 .ds-select-panel--mention .p-select-option,
 .ds-select-panel--mention .p-multiselect-option {
-  padding: 6px 6px 6px 12px;
+  padding: 6px 10px 6px 12px;
 }
 
 .ds-select-panel--mention .p-select-option + .p-select-option,
@@ -941,7 +829,6 @@ function handleHide() {
   border-radius: 0;
 }
 
-/* --- Big icon variant (AC #8) --- */
 .ds-select-option-big-icon {
   display: flex;
   align-items: center;
@@ -968,21 +855,18 @@ function handleHide() {
   color: var(--p-gray-800);
 }
 
-/* Big icon panel — adjusted padding */
 .ds-select-panel--big-icon .p-select-option,
 .ds-select-panel--big-icon .p-multiselect-option {
-  padding: 6px 8px 6px 12px;
+  padding: 6px 10px 6px 12px;
 }
 
-/* ==========================================
-   Select all header row (used via header slot)
-   ========================================== */
+/* Select all header row (used via header slot) */
 .ds-select-header-select-all {
   display: flex;
   align-items: center;
   gap: 8px;
   min-height: 40px;
-  padding: 8px;
+  padding: 10px 12px;
   border-bottom: 1px solid var(--p-gray-200);
 }
 
