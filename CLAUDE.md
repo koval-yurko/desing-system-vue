@@ -31,7 +31,10 @@ After component work, the validation triple is: `npm run build && npm test && np
 - Component naming: `DsX` (PascalCase, `Ds` prefix). Always import as `<DsX>` in templates — never kebab-case.
 - Props: exported TS interface in `<script setup>`, `withDefaults(defineProps<DsXProps>(), { ... })`, JSDoc on every prop including the default. No runtime array/object prop syntax.
 - Every component: `defineOptions({ inheritAttrs: false })` + `v-bind="$attrs"` on the root element.
-- Theming: never hardcode hex colors and never use `<style scoped>` to override PrimeVue design token CSS variables — override per-instance via the `:dt="..."` prop instead. Scoped styles are fine for component-specific structural CSS (overlays, transitions).
+- Theming: never hardcode hex colors. PrimeVue customization follows a strict priority order — pick the first one that fits, do not skip down the list:
+  1. **`:dt="..."`** — per-instance design token overrides. Use for any value PrimeVue exposes as a token (sizes, colors, radii, padding tiers). Survives PrimeVue upgrades and composes with `dsPreset`. See `DsButton.vue` / `DsInputText.vue` for the size-tier `sizeTokens` pattern.
+  2. **`:pt="..."`** — pass-through to attach your own class/attrs to specific PrimeVue inner parts (`header`, `overlay`, `pcCloseButton`, etc.) when tokens are not enough. Style the attached class with plain scoped CSS — no `:deep()`, no `!important`. See `DsModal.vue` / `DsSelect.vue`.
+  3. **`<style scoped>`** — only for DOM your wrapper owns (loading overlays, transitions, your own `<div>` layout). Avoid `:deep(.p-*)` selectors that fight PrimeVue internals; if you need to style an inner part, go back to step 2 and use `:pt` to attach a class.
 - Components are stateless and self-contained — no Pinia/Vuex, no shared composables, no cross-component imports (exception: composing primitives like `DsIconButton` using `DsIcon`).
 - Biome formatter: single quotes, 2-space indent, 100-char line width. Lint-staged runs `biome check --write` on commit.
 

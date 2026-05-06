@@ -62,7 +62,10 @@ Rules for the consuming code:
 - Compose icons via `<DsIcon name="..."/>` — do not inline SVGs that already exist in `src/assets/icons/`.
 - Use slots (`#leading`, `#trailing`, `#icon`) per each component's `ds-*.md` doc; do not invent prop names.
 - For colors / typography / spacing not encoded in a DS component, use Tailwind utilities backed by `dsPreset` tokens. If you must reach for a raw value, use a CSS custom property from the preset (`var(--p-surface-100)` etc.), never a hex.
-- Override PrimeVue tokens per-instance with `:dt="..."` — never via `<style scoped>`.
+- Customize PrimeVue in this priority order (pick the first that fits, do not skip ahead):
+  1. **`:dt="..."`** for design token overrides exposed by PrimeVue (sizes, colors, radii, padding tiers). Reference: `DsButton.vue`, `DsInputText.vue`.
+  2. **`:pt="..."`** to attach your own class/attrs to a specific inner part (`header`, `overlay`, `pcCloseButton`, …) when tokens cannot reach the property. Style the attached class with plain scoped CSS — no `:deep()`, no `!important`. Reference: `DsModal.vue`, `DsSelect.vue`.
+  3. **`<style scoped>`** for DOM your wrapper owns (loading overlays, transitions, your own layout). Do not use `:deep(.p-*)` to fight PrimeVue internals — if you need to style an inner part, return to step 2.
 - Components are stateless: keep view-state local to the screen, not in shared composables.
 
 If the design contains a Figma layer with no DS match and the user has not asked you to scaffold a new component, **flag it inline** and proceed:
@@ -138,7 +141,7 @@ For UI work that you *can* visually verify, use the available browser MCP tools 
 ## Anti-patterns (do not do)
 
 - Hardcoding hex colors instead of tokens.
-- Using `<style scoped>` to override PrimeVue design token CSS variables (use `:dt="..."` instead).
+- Skipping the customization priority order — reaching for `<style scoped>` + `:deep(.p-*)` (or worse, `!important` chains) before trying `:dt` and `:pt` first. Style PrimeVue internals via the `:pt` class hook, not by selecting their internal class names.
 - Kebab-case component tags in templates.
 - Runtime `defineProps([...])` array syntax.
 - Cross-component imports (other than the composing-primitive exception).
