@@ -17,7 +17,7 @@ app.use(PrimeVue, { theme: { preset: dsPreset } });
 All components are imported from the package root:
 
 ```ts
-import { DsAvatar, DsBadge, DsButton, DsChip, DsCodeInput, DsIcon, DsIconButton, DsInputText, DsLink, DsSearchField, DsSelect, DsTextarea } from '@failwin/desing-system-vue';
+import { DsAvatar, DsBadge, DsButton, DsChip, DsCodeInput, DsIcon, DsIconButton, DsInputText, DsLink, DsModal, DsSearchField, DsSelect, DsTextarea } from '@failwin/desing-system-vue';
 ```
 
 ## Component Inventory
@@ -33,6 +33,7 @@ import { DsAvatar, DsBadge, DsButton, DsChip, DsCodeInput, DsIcon, DsIconButton,
 | `DsIconButton` | Icon-only button with type variants (primary, outlined, text) and 3 sizes | `import { DsIconButton } from '@failwin/desing-system-vue'` | IconButton, Button/Icon | [ds-icon-button.md](./ds-icon-button.md) |
 | `DsInputText` | Text input with label, hint, error, clearable, and dropdown-icon support, 2 sizes | `import { DsInputText } from '@failwin/desing-system-vue'` | Input, TextField, TextInput | [ds-input-text.md](./ds-input-text.md) |
 | `DsLink` | Hyperlink with type variants (regular, smart, quiet), visibility options, and 2 sizes | `import { DsLink } from '@failwin/desing-system-vue'` | Link, Hyperlink, TextLink | [ds-link.md](./ds-link.md) |
+| `DsModal` | Centered overlay dialog with header (title + optional description + close), default content slot, and footer slot for actions; 3 size tiers (400/500/600 px) | `import { DsModal } from '@failwin/desing-system-vue'` | Modal, Dialog, Modal/Header, BottomBar | [ds-modal.md](./ds-modal.md) |
 | `DsSearchField` | Search input with built-in search icon, clear button, optional filter/help button, 4 sizes (XXS/XS/S/M) | `import { DsSearchField } from '@failwin/desing-system-vue'` | SearchField, Search, Search bar, Filter search | [ds-search-field.md](./ds-search-field.md) |
 | `DsSelect` | Single- or multi-selection dropdown with label, hint, error, leading icon, clear button, and 7 advanced dropdown variants (entity icons, badges, two-line multi-select, vendor, mention, big icon, no-match), 2 sizes | `import { DsSelect } from '@failwin/desing-system-vue'` | Dropdown, Select, Dropdown input | [ds-select.md](./ds-select.md) |
 | `DsTextarea` | Multi-line text input with label, hint, error, character counter, and clear button, 2 sizes | `import { DsTextarea } from '@failwin/desing-system-vue'` | Text-Area, Textarea | [ds-textarea.md](./ds-textarea.md) |
@@ -168,6 +169,15 @@ Common Figma layer naming patterns and their corresponding library components:
 - `Link/Quiet` → `<DsLink type="quiet" href="/path">Label</DsLink>`
 - Visibility: `high` (default), `low`. Note: `visibility` is ignored when `type="smart"` (always resolves to `high`).
 - Size variants: `small`, `medium` (default)
+
+**DsModal**
+- `Modal`, `Dialog`, container with `Modal/Header` + `BottomBar` → `<DsModal v-model:visible="open" title="…">…<template #footer>…</template></DsModal>`
+- `Modal/Header` title text → `title` prop
+- Header subtitle / "Fill the users details below" → `description` prop
+- `BottomBar` action row → `#footer` slot (typically two `<DsButton>`s)
+- Custom header layout (avatar + title + meta) → `#header` slot replaces the default title block
+- Width 400 / 500 / 600 px → `size="small" | "medium" | "large"` (default `medium` = 500 px)
+- Disable backdrop close: `:dismissable-mask="false"`. Disable Escape close: `:close-on-escape="false"`. Hide close icon: `:closable="false"`.
 
 **DsSearchField**
 - `SearchField/Default` → `<DsSearchField v-model="q" />`
