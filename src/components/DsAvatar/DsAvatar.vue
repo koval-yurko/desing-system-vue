@@ -144,6 +144,8 @@ const iconPresetSize = computed(() => {
   <Avatar
     v-bind="$attrs"
     :class="avatarClasses"
+    :dt="{ background: 'transparent' }"
+    :pt="{ root: { class: 'ds-avatar__inner' } }"
     shape="circle"
     role="img"
     :aria-label="resolvedAriaLabel"
@@ -190,11 +192,14 @@ const iconPresetSize = computed(() => {
   line-height: 1;
 }
 
-/* Strip PrimeVue Avatar internal styling — the wrapper owns all visual properties */
-.ds-avatar:deep(.p-avatar) {
-  background: transparent;
+/* Strip PrimeVue Avatar internal styling — the wrapper owns all visual properties.
+ * `ds-avatar` and PrimeVue's `p-avatar` render on the SAME element, so this class
+ * (attached via `:pt root`) and the `.ds-avatar` wrapper rules co-style one node.
+ * `background` is neutralized at the token level via `:dt="{ background: 'transparent' }"`
+ * (no Avatar token for padding/overflow/flex). `border-radius: 50%` is omitted —
+ * `shape="circle"` + the `.ds-avatar` wrapper already produce the circle. */
+.ds-avatar__inner {
   padding: 0;
-  border-radius: 50%;
   overflow: hidden;
   width: 100%;
   height: 100%;
