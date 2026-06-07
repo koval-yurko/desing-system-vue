@@ -57,11 +57,16 @@ const containerClasses = computed(() => ({
 //      must be on each cell for screen readers to announce it on focus.
 const otpPassThrough = computed(() => {
   const consumer = (attrs.pt ?? {}) as Record<string, Record<string, unknown>>;
+  const consumerRoot = (consumer.root ?? {}) as Record<string, unknown>;
   const consumerCell = (consumer.pcInputText ?? {}) as Record<string, Record<string, unknown>>;
   const consumerCellRoot = (consumerCell.root ?? {}) as Record<string, unknown>;
 
   const cellRoot: Record<string, unknown> = {
     ...consumerCellRoot,
+    // Attach our owned class so the cell `<input>` (grandchild-component DOM
+    // without our scoped data-v-) can be styled via `:deep(.ds-code-input__cell)`.
+    // Array form merges with any consumer-supplied class instead of clobbering it.
+    class: ['ds-code-input__cell', consumerCellRoot.class].filter(Boolean),
     placeholder: consumerCellRoot.placeholder ?? ' ',
   };
 
@@ -72,6 +77,12 @@ const otpPassThrough = computed(() => {
 
   return {
     ...consumer,
+    // Attach the row class to the OTP root (carries our data-v-, so styled
+    // with plain scoped `.ds-code-input__row`). Merge any consumer root class.
+    root: {
+      ...consumerRoot,
+      class: ['ds-code-input__row', consumerRoot.class].filter(Boolean),
+    },
     pcInputText: {
       ...consumerCell,
       root: cellRoot,
@@ -96,7 +107,6 @@ const otpPassThrough = computed(() => {
       :length="length"
       :disabled="disabled"
       :pt="otpPassThrough"
-      class="ds-code-input__otp"
     />
 
     <div v-if="showError" :id="errorId" class="ds-code-input__error-msg">
@@ -128,8 +138,9 @@ const otpPassThrough = computed(() => {
   margin-bottom: 2px;
 }
 
-/* OTP row — strip PrimeVue defaults, enforce 16px gap */
-.ds-code-input :deep(.p-inputotp) {
+/* OTP row — strip PrimeVue defaults, enforce 16px gap.
+   Plain scoped CSS: the OTP root carries our data-v- scope id. */
+.ds-code-input__row {
   display: inline-flex;
   gap: 16px;
   padding: 0;
@@ -137,7 +148,7 @@ const otpPassThrough = computed(() => {
 }
 
 /* Per-cell styles */
-.ds-code-input :deep(.p-inputotp-input) {
+.ds-code-input :deep(.ds-code-input__cell) {
   box-sizing: border-box;
   width: 43px;
   height: 58px;
@@ -160,39 +171,39 @@ const otpPassThrough = computed(() => {
 }
 
 /* The injected space placeholder must be invisible */
-.ds-code-input :deep(.p-inputotp-input)::placeholder {
+.ds-code-input :deep(.ds-code-input__cell)::placeholder {
   color: transparent;
 }
 
 /* Hover — empty, not focused */
-.ds-code-input--transitions :deep(.p-inputotp-input):placeholder-shown:hover:not(:focus) {
+.ds-code-input--transitions :deep(.ds-code-input__cell):placeholder-shown:hover:not(:focus) {
   background-color: var(--p-gray-200);
   border-color: var(--p-gray-800);
 }
 
 /* Focused — empty cell with keyboard focus */
-.ds-code-input :deep(.p-inputotp-input):focus {
+.ds-code-input :deep(.ds-code-input__cell):focus {
   background-color: var(--p-surface-0);
   border-color: var(--p-purple-600);
   box-shadow: 0 0 5px 0 rgba(120, 73, 255, 0.6);
 }
 
 /* Only show the purple glow for keyboard focus; suppress it for pointer focus */
-.ds-code-input :deep(.p-inputotp-input):focus:not(:focus-visible) {
+.ds-code-input :deep(.ds-code-input__cell):focus:not(:focus-visible) {
   box-shadow: none;
 }
 
 /* Input — cell has a value (placeholder no longer shown) */
-.ds-code-input :deep(.p-inputotp-input):not(:placeholder-shown) {
+.ds-code-input :deep(.ds-code-input__cell):not(:placeholder-shown) {
   background-color: var(--p-surface-0);
   border-color: var(--p-purple-600);
   color: var(--p-purple-600);
 }
 
 /* Error — overrides Focused / Input */
-.ds-code-input--error :deep(.p-inputotp-input),
-.ds-code-input--error :deep(.p-inputotp-input):not(:placeholder-shown),
-.ds-code-input--error :deep(.p-inputotp-input):focus {
+.ds-code-input--error :deep(.ds-code-input__cell),
+.ds-code-input--error :deep(.ds-code-input__cell):not(:placeholder-shown),
+.ds-code-input--error :deep(.ds-code-input__cell):focus {
   background-color: var(--p-red-50);
   border-color: var(--p-red-700);
   color: var(--p-gray-800);
@@ -200,12 +211,12 @@ const otpPassThrough = computed(() => {
   box-shadow: none;
 }
 
-.ds-code-input--error :deep(.p-inputotp-input):focus {
+.ds-code-input--error :deep(.ds-code-input__cell):focus {
   box-shadow: 0 0 0 3px var(--p-red-100);
 }
 
 /* Suppress the error focus ring for pointer focus (keyboard focus only) */
-.ds-code-input--error :deep(.p-inputotp-input):focus:not(:focus-visible) {
+.ds-code-input--error :deep(.ds-code-input__cell):focus:not(:focus-visible) {
   box-shadow: none;
 }
 
@@ -216,9 +227,9 @@ const otpPassThrough = computed(() => {
 }
 
 /* Disabled — overrides everything; no pointer events, muted colors */
-.ds-code-input--disabled :deep(.p-inputotp-input),
-.ds-code-input--disabled :deep(.p-inputotp-input):not(:placeholder-shown),
-.ds-code-input--disabled :deep(.p-inputotp-input):focus {
+.ds-code-input--disabled :deep(.ds-code-input__cell),
+.ds-code-input--disabled :deep(.ds-code-input__cell):not(:placeholder-shown),
+.ds-code-input--disabled :deep(.ds-code-input__cell):focus {
   background-color: var(--p-gray-100);
   border-color: var(--p-gray-300);
   color: var(--p-gray-500);
@@ -228,7 +239,7 @@ const otpPassThrough = computed(() => {
 
 /* Transitions — gated on --transitions (skipped when disabled) */
 @media (prefers-reduced-motion: no-preference) {
-  .ds-code-input--transitions :deep(.p-inputotp-input) {
+  .ds-code-input--transitions :deep(.ds-code-input__cell) {
     transition:
       background-color 150ms ease,
       border-color 150ms ease,

@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-27
-last_updated: 2026-06-07 (story 11.2 done; all Epic 11 stories complete → epic-11 done / Wave 2 complete)
+last_updated: 2026-06-08 (story 12.1 done: code review passed, Wave 3 complete → epic-12 done)
 
 project: desing-system-vue
 project_key: NOKEY
@@ -130,8 +130,8 @@ development_status:
   epic-11-retrospective: optional
 
   # Epic 12: Conform DsCodeInput cell styling (Wave 3)
-  epic-12: backlog
-  12-1-migrate-dscodeinput-cell-and-row-styling-to-pt-attached-owned-classes: backlog
+  epic-12: done
+  12-1-migrate-dscodeinput-cell-and-row-styling-to-pt-attached-owned-classes: done
   epic-12-retrospective: optional
 
   # Epic 13: Conform DsSelect — the long pole (Wave 4)

@@ -168,6 +168,34 @@ describe('DsCodeInput', () => {
       };
       expect(forwarded.pcInputText.root.placeholder).toBe('X');
     });
+
+    it('attaches the owned row + cell classes via pt', () => {
+      const wrapper = mount(DsCodeInput, { global: globalConfig });
+      const forwarded = wrapper.findComponent(InputOtp).props('pt') as {
+        root: { class: unknown[] };
+        pcInputText: { root: { class: unknown[] } };
+      };
+      expect(forwarded.root.class).toContain('ds-code-input__row');
+      expect(forwarded.pcInputText.root.class).toContain('ds-code-input__cell');
+    });
+
+    it('merges consumer root + cell classes with the owned classes', () => {
+      const wrapper = mount(DsCodeInput, {
+        attrs: {
+          pt: {
+            root: { class: 'consumer-row' },
+            pcInputText: { root: { class: 'consumer-cell' } },
+          },
+        },
+        global: globalConfig,
+      });
+      const forwarded = wrapper.findComponent(InputOtp).props('pt') as {
+        root: { class: unknown[] };
+        pcInputText: { root: { class: unknown[] } };
+      };
+      expect(forwarded.root.class).toEqual(['ds-code-input__row', 'consumer-row']);
+      expect(forwarded.pcInputText.root.class).toEqual(['ds-code-input__cell', 'consumer-cell']);
+    });
   });
 
   describe('hint', () => {
