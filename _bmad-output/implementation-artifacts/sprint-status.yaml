@@ -1,5 +1,5 @@
 # generated: 2026-03-27
-# last_updated: 2026-04-25 (story 9.3 done; epic-9 done)
+# last_updated: 2026-06-07 (sprint planning: added Styles Refactor epics 10-13)
 # project: desing-system-vue
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-27
-last_updated: 2026-04-25
+last_updated: 2026-06-07 (story 10.2 review: DsBadge :pt refactor, !important eliminated)
 
 project: desing-system-vue
 project_key: NOKEY
@@ -112,3 +112,33 @@ development_status:
   9-2-ai-knowledge-base-integration: done
   9-3-storybook-organization-release-validation: done
   epic-9-retrospective: optional
+
+  # ===== Styles Refactor (:dt -> :pt -> scoped own-DOM) =====
+
+  # Epic 10: Pilot the :pt-attach-class pattern (Wave 1)
+  epic-10: in-progress
+  10-1-refactor-dsavatar-root-styling-to-pt-attached-class-with-dt-token-migration: done
+  10-2-refactor-dsbadge-root-styling-to-pt-attached-class-and-eliminate-important: review
+  10-3-document-the-pt-attach-class-pattern-in-component-addition-guide: backlog
+  epic-10-retrospective: optional
+
+  # Epic 11: Conform Button family loading states (Wave 2)
+  epic-11: backlog
+  11-1-refactor-dsbutton-loading-state-visibility-and-icon-sizing-through-pt-keys: backlog
+  11-2-resolve-dsbutton-medium-font-size-important-rule: backlog
+  11-3-mirror-dsbutton-loading-state-refactor-in-dsiconbutton: backlog
+  epic-11-retrospective: optional
+
+  # Epic 12: Conform DsCodeInput cell styling (Wave 3)
+  epic-12: backlog
+  12-1-migrate-dscodeinput-cell-and-row-styling-to-pt-attached-owned-classes: backlog
+  epic-12-retrospective: optional
+
+  # Epic 13: Conform DsSelect — the long pole (Wave 4)
+  epic-13: backlog
+  13-1-establish-visual-regression-baseline-for-dsselect-before-rewrite: backlog
+  13-2-migrate-dsselect-inner-part-styling-to-pt-attached-classes: backlog
+  13-3-migrate-dsselect-trigger-root-to-pt-attached-class-with-dt-token-migration: backlog
+  13-4-migrate-dsselect-placeholder-color-via-dt-with-pt-fallback: backlog
+  13-5-audit-and-remove-residual-important-declarations-in-dsselect: backlog
+  epic-13-retrospective: optional
