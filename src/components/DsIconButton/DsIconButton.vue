@@ -246,11 +246,6 @@ const buttonClasses = computed(() => ({
   pointer-events: none;
 }
 
-.ds-icon-button--loading :deep(.p-button-label),
-.ds-icon-button--loading :deep(.p-button-icon) {
-  visibility: hidden;
-}
-
 /* Enforce square dimensions */
 .ds-icon-button {
   width: var(--ds-icon-button-dimension) !important;

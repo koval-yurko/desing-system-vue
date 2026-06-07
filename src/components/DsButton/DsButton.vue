@@ -171,6 +171,7 @@ const buttonClasses = computed(() => ({
     :variant="mappedVariant"
     :size="mappedPrimeVueSize"
     :dt="sizeTokens"
+    :pt="{ label: { class: 'ds-button__label' }, icon: { class: 'ds-button__icon' } }"
     :disabled="disabled"
     :class="buttonClasses"
     :style="{
@@ -210,8 +211,8 @@ const buttonClasses = computed(() => ({
   pointer-events: none;
 }
 
-.ds-button--loading :deep(.p-button-label),
-.ds-button--loading :deep(.p-button-icon) {
+.ds-button--loading .ds-button__label,
+.ds-button--loading .ds-button__icon {
   visibility: hidden;
 }
 
@@ -257,13 +258,19 @@ const buttonClasses = computed(() => ({
   }
 }
 
-.ds-button :deep(.p-button-icon) {
+.ds-button__icon {
   font-size: var(--ds-button-icon-size);
   width: var(--ds-button-icon-size);
   height: var(--ds-button-icon-size);
 }
 
+/* Medium has no .p-button-sm/-lg class, so PrimeVue's hardcoded
+   .p-button { font-size: 1rem } applies (there is no root font-size :dt token
+   to override it). This re-applies the :dt sizeTokens.medium.fontSize
+   (--p-button-font-size). Vue compiles this scoped selector to
+   .ds-button--medium[data-v-x] = specificity (0,2,0), which beats the
+   unlayered .p-button (0,1,0) — so the override wins without !important. */
 .ds-button--medium {
-  font-size: var(--p-button-font-size) !important;
+  font-size: var(--p-button-font-size);
 }
 </style>

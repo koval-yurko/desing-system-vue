@@ -1,5 +1,5 @@
 # generated: 2026-03-27
-# last_updated: 2026-06-07 (sprint planning: added Styles Refactor epics 10-13)
+# last_updated: 2026-06-07 (story 10.3 done: code review passed, Wave 1 complete → epic-10 done)
 # project: desing-system-vue
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-27
-last_updated: 2026-06-07 (story 10.2 done: DsBadge :pt refactor, !important eliminated, code review passed)
+last_updated: 2026-06-07 (story 11.2 done; all Epic 11 stories complete → epic-11 done / Wave 2 complete)
 
 project: desing-system-vue
 project_key: NOKEY
@@ -123,10 +123,10 @@ development_status:
   epic-10-retrospective: optional
 
   # Epic 11: Conform Button family loading states (Wave 2)
-  epic-11: backlog
-  11-1-refactor-dsbutton-loading-state-visibility-and-icon-sizing-through-pt-keys: backlog
-  11-2-resolve-dsbutton-medium-font-size-important-rule: backlog
-  11-3-mirror-dsbutton-loading-state-refactor-in-dsiconbutton: backlog
+  epic-11: done
+  11-1-refactor-dsbutton-loading-state-visibility-and-icon-sizing-through-pt-keys: done
+  11-2-resolve-dsbutton-medium-font-size-important-rule: done
+  11-3-mirror-dsbutton-loading-state-refactor-in-dsiconbutton: done
   epic-11-retrospective: optional
 
   # Epic 12: Conform DsCodeInput cell styling (Wave 3)
