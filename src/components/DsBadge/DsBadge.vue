@@ -66,6 +66,7 @@ const ariaLabel = computed(() => (props.type === 'loaded' ? 'Loading' : undefine
     :aria-label="ariaLabel"
     v-bind="$attrs"
     :class="badgeClasses"
+    :pt="{ root: { class: 'ds-badge__inner' } }"
   >
     <span v-if="hasLIcon" class="ds-badge__leading">
       <slot name="leading">
@@ -103,19 +104,14 @@ const ariaLabel = computed(() => (props.type === 'loaded' ? 'Loading' : undefine
   position: relative;
 }
 
-/* Strip PrimeVue Badge internal styling — DS wrapper owns all visual properties */
-.ds-badge:deep(.p-badge) {
-  background: transparent !important;
-  padding: 0 !important;
-  color: inherit !important;
-  border-radius: 0 !important;
-  outline: none !important;
-  min-width: 0 !important;
-  height: auto !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: inherit !important;
-}
+/* PrimeVue's `p-badge` root renders on the SAME <span> as `.ds-badge`
+ * (Badge merges the wrapper class onto its root via `ptmi('root')`), so the
+ * `.ds-badge` rules above already co-style that node and win over PrimeVue's
+ * layered defaults (scoped CSS is unlayered). The owned `:pt root` class
+ * `.ds-badge__inner` therefore needs no declarations — every former reset was
+ * either redundant with `.ds-badge` or would regress the baseline. The hook is
+ * kept (no rule) so any future neutralizer attaches here, never via deep selectors.
+ * `min-width` is intentionally not set: PrimeVue's 1.5rem default is the baseline. */
 
 /* Icon wrappers inherit currentColor */
 .ds-badge__leading,

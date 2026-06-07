@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-27
-last_updated: 2026-06-07 (story 10.2 review: DsBadge :pt refactor, !important eliminated)
+last_updated: 2026-06-07 (story 10.2 done: DsBadge :pt refactor, !important eliminated, code review passed)
 
 project: desing-system-vue
 project_key: NOKEY
@@ -118,7 +118,7 @@ development_status:
   # Epic 10: Pilot the :pt-attach-class pattern (Wave 1)
   epic-10: in-progress
   10-1-refactor-dsavatar-root-styling-to-pt-attached-class-with-dt-token-migration: done
-  10-2-refactor-dsbadge-root-styling-to-pt-attached-class-and-eliminate-important: review
+  10-2-refactor-dsbadge-root-styling-to-pt-attached-class-and-eliminate-important: done
   10-3-document-the-pt-attach-class-pattern-in-component-addition-guide: backlog
   epic-10-retrospective: optional
 
