@@ -130,7 +130,7 @@ const sizeTokens = computed(() => {
 - `withDefaults(defineProps<DsXProps>(), { ... })` — generic syntax, never runtime array syntax
 - Computed mappers translate DS prop values to PrimeVue prop values — some PrimeVue components need **both** `severity` and `variant` mapped separately (see DsButton for a full example)
 - Use `:dt="tokens"` to override PrimeVue design token values per size tier for exact Figma dimensions
-- Use `<style scoped>` only for component-specific CSS (loading overlays, transitions) — never to override PrimeVue design token custom properties. Use `:deep()` selectors within scoped styles when targeting PrimeVue internal classes (e.g., `.p-button-label`)
+- Use `<style scoped>` only for component-specific CSS (loading overlays, transitions) — never to override PrimeVue design token custom properties. When you need to style a PrimeVue internal part, **do not reach for `:deep(.p-*)`** — attach a class you own to that part via `:pt`, then style that class with plain scoped CSS (no `:deep`, no `!important`). See **Styling Customization Priority Order** (section 2c below) for the full ranked order and a worked example.
 - Never hardcode color hex values — always use design tokens from the preset
 
 #### 2b. Custom Tailwind Component Pattern
@@ -200,6 +200,85 @@ function handleActivate() {
 - The consumer API should feel indistinguishable from PrimeVue wrappers
 
 **For presentational (non-interactive) custom components** (like DsIcon): keyboard handlers and interactive ARIA are not needed, but the file structure, naming, prop patterns, and exports must still follow this guide.
+
+#### 2c. Styling Customization Priority Order
+
+When a PrimeVue wrapper needs a visual value that differs from the `dsPreset` defaults, **work down this ranked list and pick the first option that fits — do not skip ahead.** This is the same order documented in `CLAUDE.md#Conventions`; keep the two in sync.
+
+1. **`:dt="..."`** — per-instance design token overrides. Use for any value PrimeVue exposes as a token (sizes, colors, radii, padding tiers). Survives PrimeVue upgrades and composes with `dsPreset`. Precedent: `DsButton.vue` / `DsInputText.vue` (`sizeTokens`), `DsAvatar.vue` (`:dt="{ background: 'transparent' }"`).
+2. **`:pt="..."` + plain scoped CSS** — pass-through to attach a class you own to a specific PrimeVue inner part (`header`, `overlay`, `pcCloseButton`, `root`, etc.) when no token exposes the value. Style that class with **plain scoped CSS — no `:deep()`, no `!important`.** Precedent: `DsModal.vue` (multi-part — `root`/`header`/`content`/`pcCloseButton`/…), `DsSelect.vue` (single `overlay` part), `DsAvatar.vue` / `DsBadge.vue` (single `root` class).
+3. **`<style scoped>` for own-DOM only** — only for DOM your wrapper itself renders (loading overlays, transitions, your own `<div>` layout). Never use `:deep(.p-*)` selectors to reach into PrimeVue internals; if you need to style an inner part, go back to step 2.
+
+##### When to use `:pt` to attach a class
+
+> **Use `:pt` to attach an owned class when `:dt` does not expose the value — before reaching for `:deep`.**
+
+The mechanism: instead of writing a `:deep(.p-*)` selector that drills into PrimeVue's DOM, you hand PrimeVue a class you control via the `:pt` (pass-through) prop, and it renders that class onto the named inner part. You then style your own class with ordinary scoped CSS. No `:deep`, no `!important`, and the selector survives PrimeVue `.p-*` internal-class renames because you never referenced `.p-*` at all. (The `:pt` *key* — `root`, `header`, `pcCloseButton`, etc. — is still PrimeVue's part API and can change across major versions; this insulates you from CSS-class churn, not from part-API changes.)
+
+The override wins **without `!important`** because a wrapper's **unlayered** scoped CSS beats PrimeVue's `@layer primevue` defaults regardless of specificity — reaching for `!important` to win a specificity fight is the symptom this whole pattern cures.
+
+##### Worked example: DsAvatar (Story 10.1)
+
+`DsAvatar` (`src/components/DsAvatar/DsAvatar.vue`) originally styled the PrimeVue Avatar with a single `:deep(.p-*)` selector. The refactor split those declarations across steps 1 and 2 of the priority order.
+
+**Before** — one `:deep(.p-avatar)` block reaching into PrimeVue internals:
+
+```css
+.ds-avatar:deep(.p-avatar) {
+  background: transparent;
+  padding: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+```
+
+**After** — `:dt` neutralizes the token, `:pt` attaches an owned class for the rest:
+
+```vue
+<Avatar
+  v-bind="$attrs"
+  :class="avatarClasses"
+  :dt="{ background: 'transparent' }"
+  :pt="{ root: { class: 'ds-avatar__inner' } }"
+  shape="circle"
+  ...
+>
+```
+
+```css
+.ds-avatar__inner {
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+```
+
+**Decision table — what moved where, and why** (this is the teaching content):
+
+| Old `:deep(.p-avatar)` declaration | Destination | Why |
+|---|---|---|
+| `background: transparent` | `:dt="{ background: 'transparent' }"` | PrimeVue Avatar exposes a `background` token → neutralize at the token level (step 1). |
+| `border-radius: 50%` | **dropped** | Redundant: `shape="circle"` adds `p-avatar-circle`, and the wrapper's own `.ds-avatar` scoped rule (not shown above) already sets `border-radius: 50%` on the same node. |
+| `padding`, `overflow`, `width/height: 100%`, flex props, `color: inherit` | `.ds-avatar__inner` (step 2 owned class) | No matching PrimeVue token; layout/reset values kept as plain scoped CSS. |
+
+**Three gotchas to internalize:**
+
+1. **Same-element rendering — verify with a DOM probe, don't assume nesting.** `ds-avatar` and PrimeVue's `p-avatar` render on the **same** `<span>`, so `:pt="{ root: { class: 'ds-avatar__inner' } }"` lands the owned class on that one node alongside the wrapper's `.ds-avatar` rules. Notably, the old `.ds-avatar:deep(.p-avatar)` descendant selector matched **nothing** (it compiled to `.ds-avatar[data-v] .p-avatar`, but there is no nested `.p-avatar` child) — a `:deep` that matches nothing is a silent no-op. Always confirm where the class actually lands on the mounted DOM before trusting any internal-part selector.
+2. **Token first, class second.** Evaluate each declaration against the component's PrimeVue token keys — verify the token path exists in `src/theme/ds-preset.ts` + PrimeVue's theme, don't invent token names. Token-mappable → `:dt`; everything else → the `:pt`-owned class.
+3. **No `!important` needed.** The override wins purely because the wrapper's unlayered scoped CSS outranks PrimeVue's `@layer primevue` defaults. If you find yourself adding `!important`, stop — you have skipped a step in the priority order.
+
+> The one legitimate `:deep` exception is slotted content you own that is not a PrimeVue internal — e.g. `DsIcon`'s `span :deep(svg)` targeting a slotted SVG. The prohibition is specifically on `:deep(.p-*)` selectors that reach into PrimeVue's internal DOM.
 
 ### 3. Add TypeScript Prop Types
 
@@ -502,7 +581,10 @@ Use this checklist when adding any new component:
 - **No external composables** — components are self-contained
 - **No state management** (Pinia, Vuex, etc.) — components are stateless
 - **No global CSS** — use scoped styles or Tailwind utilities
-- **No scoped styles overriding PrimeVue design tokens** — `<style scoped>` is fine for component-specific CSS (loading overlays, transitions), but never use it to fight PrimeVue's token system
+- **No scoped styles overriding PrimeVue design tokens** — `<style scoped>` is fine for DOM your wrapper owns (loading overlays, transitions), but never use it to fight PrimeVue's token system; override tokens with `:dt` (see [Styling Customization Priority Order](#2c-styling-customization-priority-order))
+- **No `:deep(.p-*)` selectors reaching into PrimeVue internals** — attach an owned class via `:pt` and style it with plain scoped CSS instead (the one allowed exception is slotted content you own, e.g. `DsIcon`'s `span :deep(svg)`, which is not a PrimeVue internal)
+- **No `!important` to fight PrimeVue specificity** — an unlayered scoped class already beats PrimeVue's `@layer primevue` defaults; needing `!important` means you skipped a step in the priority order
+- **No `:host` selectors** — these components are not custom elements; style the wrapper's own class instead
 - **No hardcoded hex colors** — always use design tokens from the preset
 - **No runtime prop validation** — use TypeScript types with `defineProps<T>()`
 - **No cross-component imports** (exception: composing components like DsIconButton using DsIcon)

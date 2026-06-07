@@ -116,10 +116,10 @@ development_status:
   # ===== Styles Refactor (:dt -> :pt -> scoped own-DOM) =====
 
   # Epic 10: Pilot the :pt-attach-class pattern (Wave 1)
-  epic-10: in-progress
+  epic-10: done
   10-1-refactor-dsavatar-root-styling-to-pt-attached-class-with-dt-token-migration: done
   10-2-refactor-dsbadge-root-styling-to-pt-attached-class-and-eliminate-important: done
-  10-3-document-the-pt-attach-class-pattern-in-component-addition-guide: backlog
+  10-3-document-the-pt-attach-class-pattern-in-component-addition-guide: done
   epic-10-retrospective: optional
 
   # Epic 11: Conform Button family loading states (Wave 2)
